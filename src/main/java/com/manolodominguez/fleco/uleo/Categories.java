@@ -101,7 +101,7 @@ public enum Categories {
         }
         return categoriesList;
     }
-    
+
     public static CopyOnWriteArrayList<Genes> getGenesFor(Functions function, ImplementationGroups implementationGroup) {
         CopyOnWriteArrayList<Genes> genesList= new CopyOnWriteArrayList<>();
         for (Categories category: Categories.getCategoriesFor(function, implementationGroup)) {

@@ -81,6 +81,62 @@ public class Chromosome {
     }
 
     public void print() {
+        EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
+        EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
+        EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
+        Float assetValue = 0.0f;
+
+        float auxFunctionFitness = 0.0f;
+        float auxCategoryFitness = 0.0f;
+        int num = 0;
+        //System.out.println("Goals: " + numberOfGoals);
+        for (Functions f : Functions.values()) {
+            if (f.appliesToIG(implementationGroup)) {
+                auxFunctionFitness = 0.0f;
+
+                for (Categories c : f.getCategories(implementationGroup)) {
+                    auxCategoryFitness = 0.0f;
+                    for (Genes g : c.getGenes(implementationGroup)) {
+                        // Gene raw value
+                        genesValues.put(g, getAllele(g).getDLI());
+                        // To compute category fitness
+                        num++;
+                        auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
+                    }
+                    // Category raw value
+                    categoriesValues.put(c, auxCategoryFitness);
+                    // To compute Function fitness
+                    auxCategoryFitness *= c.getWeight(implementationGroup);
+                    if (auxCategoryFitness > c.getWeight(implementationGroup)) {
+                        auxCategoryFitness = c.getWeight(implementationGroup);
+                    }
+                    auxFunctionFitness += auxCategoryFitness;
+                }
+                // Function raw value
+                functionsValues.put(f, auxFunctionFitness);
+                // To compute asset fitness
+                auxFunctionFitness *= f.getWeight(implementationGroup);
+                if (auxFunctionFitness > f.getWeight(implementationGroup)) {
+                    auxFunctionFitness = f.getWeight(implementationGroup);
+                }
+                assetValue += auxFunctionFitness;
+            }
+        }
+        System.out.println();
+        System.out.println("---------------------------------------------------");
+        System.out.println("Global fitness: "+getFitness());
+        System.out.println("---------------------------------------------------");
+        System.out.println("Asset: "+assetValue);
+        for (Functions function: Functions.getFunctionsFor(implementationGroup)) {
+            System.out.println("\t"+function.name()+": "+functionsValues.get(function));
+            for (Categories category: function.getCategories(implementationGroup)) {
+                System.out.println("\t\t"+category.name()+": "+categoriesValues.get(category));
+                for (Genes gene: category.getGenes(implementationGroup)) {
+                    System.out.println("\t\t\t"+gene.name().substring(6)+": "+getAllele(gene).getDLI());
+                }
+            }
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     public float getFitness() {

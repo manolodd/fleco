@@ -55,7 +55,8 @@ public class Main {
         fleco.evolve();
         Chromosome chromosome = fleco.getBestChromosome();
         System.out.println("Best solution's fitness: " + chromosome.getFitness()+" ("+chromosome.getFitnessGlobalCybersecurityState()+"(0.05) and "+chromosome.getFitnessSimilarityToCurrentState(currentStatus)+"(0.15) and "+chromosome.getFitnessComplianceGoalsCoverage(sg)+"(0.8))");
-        //System.out.println("Best solution's fitness: " + currentStatus.getFitness());
+        chromosome.print();
+//System.out.println("Best solution's fitness: " + currentStatus.getFitness());
 /*
         fleco.evolve();
         chromosome = fleco.getBestChromosome();

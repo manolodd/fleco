@@ -22,7 +22,7 @@
  */
 package com.manolodominguez.fleco.uleo;
 
-import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -55,14 +55,23 @@ public enum Functions {
         return weights[implementationGroup.getImplementationGroup()] > 0.0f;
     }
     
-    public LinkedList<Categories> getCategories(ImplementationGroups implementationGroup) {
-        LinkedList<Categories> categories = new LinkedList<>();
-        for (Categories c: Categories.values()) {
-            if ((c.getFunction() == this) && (c.getWeight(implementationGroup) > 0.0f)) {
-                categories.add(c);
+    public CopyOnWriteArrayList<Categories> getCategories(ImplementationGroups implementationGroup) {
+        CopyOnWriteArrayList<Categories> categories = new CopyOnWriteArrayList<>();
+        for (Categories category: Categories.values()) {
+            if ((category.getFunction() == this) && (category.getWeight(implementationGroup) > 0.0f)) {
+                categories.add(category);
             }
         }
         return categories;
     }
     
+    public static CopyOnWriteArrayList<Functions> getFunctionsFor(ImplementationGroups implementationGroup) {
+        CopyOnWriteArrayList<Functions> functionsList= new CopyOnWriteArrayList<>();
+        for (Functions function: Functions.values()) {
+            if (function.appliesToIG(implementationGroup)) {
+                functionsList.add(function);
+            }
+        }
+        return functionsList;
+    }    
 }

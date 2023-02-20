@@ -29,6 +29,9 @@ import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG1;
 import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG2;
 import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.main.experiments.goals.BasicStrategicGoals;
+import com.manolodominguez.fleco.main.experiments.goals.ComplexStrategicGoals;
+import com.manolodominguez.fleco.main.experiments.goals.MediumStrategicGoals;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
@@ -67,6 +70,9 @@ public class Main {
         }
         // According to CyberTOMP, establish the strategic cybersecurity 
         // objectives for this asset.
+        //StrategicGoals strategicGoals = new BasicStrategicGoals(implementationGroup);
+        //StrategicGoals strategicGoals = new MediumStrategicGoals(implementationGroup);
+        //StrategicGoals strategicGoals = new ComplexStrategicGoals(implementationGroup);
         StrategicGoals strategicGoals = new VeryComplexStrategicGoals(implementationGroup);
         // Prints FLECO parameters
         System.out.println("####################################################");
@@ -93,18 +99,25 @@ public class Main {
         System.out.println("Evolving population to find a solution. FLECO will");
         System.out.println("stop after finding an optimum solution or after the");
         System.out.println("max number of generations is reached.\n");
+        Chromosome bestChromosome;
         FLECO fleco = new FLECO(initialPopulation, maxGenerations, mutationProbability, crossoverProbability, implementationGroup, currentStatus, strategicGoals);
-        fleco.evolve();
-        if (fleco.hasConverged()) {
-            System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
-        } else {
-            System.out.println("\nFLECO has not converged. A sub-optimal solutions has been found.\n");
-        }
+//        for (int i = 0; i < 100; i++) {
+//            FLECO fleco = new FLECO(initialPopulation, maxGenerations, mutationProbability, crossoverProbability, implementationGroup, currentStatus, strategicGoals);
+            fleco.evolve();
+            bestChromosome = fleco.getBestChromosome();
+            if (fleco.hasConverged()) {
+                    System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
+                //System.out.println(i + "#CONVERGED#" + fleco.getRequiredTime() + "#" + fleco.getRequiredGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessComplianceGoalsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+            } else {
+                //System.out.println(i + "#!CONVERGED#" + fleco.getRequiredTime() + "#" + fleco.getRequiredGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessComplianceGoalsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                    System.out.println("\nFLECO has not converged. A sub-optimal solutions has been found.\n");
+            }
+//        }
         // After the completion of FLECO, the optimal solution can be accessed.
+        
         System.out.println("####################################################");
         System.out.println("                       SOLUTION");
         System.out.println("####################################################\n");
-        Chromosome bestChromosome = fleco.getBestChromosome();
         System.out.println("Best solution's aggregated fitness: " + bestChromosome.getFitness());
         System.out.println("\tObjective 1): " + bestChromosome.getFitnessComplianceGoalsCoverage() + " (x0.94)");
         System.out.println("\tObjective 2): " + bestChromosome.getFitnessSimilarityToCurrentState() + " (x0.05)");
@@ -112,6 +125,7 @@ public class Main {
         System.out.println("Solution breakdown................: \n");
         bestChromosome.print(currentStatus);
         System.out.println("####################################################\n");
-        System.out.println("\nTime required: " + fleco.getRequiredTime() + " seconds  (" +fleco.getRequiredGenerations()+ " generations)\n");
+        System.out.println("\nTime required: " + fleco.getRequiredTime() + " seconds  (" + fleco.getRequiredGenerations() + " generations)\n");
+        
     }
 }

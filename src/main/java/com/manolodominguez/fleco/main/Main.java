@@ -112,6 +112,6 @@ public class Main {
         System.out.println("Solution breakdown................: \n");
         bestChromosome.print(currentStatus);
         System.out.println("####################################################\n");
-        System.out.println("\nTime required: " + fleco.getTimeRequired() + " seconds.\n");
+        System.out.println("\nTime required: " + fleco.getRequiredTime() + " seconds  (" +fleco.getRequiredGenerations()+ " generations)\n");
     }
 }

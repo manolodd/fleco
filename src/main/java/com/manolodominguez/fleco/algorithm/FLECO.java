@@ -54,7 +54,8 @@ public class FLECO {
     private Population population;
     private StrategicGoals strategicGoals;
     private Chromosome initialStatus;
-    private float timeRequired;
+    private float requiredTime;
+    private int requiredGenerations;
 
     private static final float DEFAULT_LOCAL_MINIMUM_PROBABILITY = 0.0f;
     private static final float LOCAL_MINIMUM_PROBABILITY_THRESSHOLD = 0.05f;
@@ -95,7 +96,8 @@ public class FLECO {
         this.maxGenerations = maxGenerations;
         this.mutationProbability = mutationProbability;
         this.crossoverProbability = crossoverProbability;
-        timeRequired = 0.0f;
+        requiredTime = 0.0f;
+        requiredGenerations = 0;
         population = new Population(initialPopulation, this.implementationGroup, this.initialStatus, this.strategicGoals);
     }
 
@@ -116,7 +118,7 @@ public class FLECO {
         Temporal begin = Instant.now();
         Temporal end;
         Duration duration;
-        timeRequired = 0.0f;
+        requiredTime = 0.0f;
         while (!hasToFinish(currentGeneration)) {
             // The probability of being in a local minimum is raised each time 
             // the best fitness remains constant. Otherwise, the probability is 
@@ -169,7 +171,8 @@ public class FLECO {
         }
         end = Instant.now();
         duration = Duration.between(begin, end);
-        timeRequired = (duration.get(ChronoUnit.SECONDS) + (duration.get(ChronoUnit.NANOS) / 1000000000.0f));
+        requiredTime = (duration.get(ChronoUnit.SECONDS) + (duration.get(ChronoUnit.NANOS) / 1000000000.0f));
+        requiredGenerations = currentGeneration;
     }
 
     /**
@@ -179,8 +182,19 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      * @return the number of seconds the execution of FLECO has lasted.
      */
-    public float getTimeRequired() {
-        return timeRequired;
+    public float getRequiredTime() {
+        return requiredTime;
+    }
+
+    /**
+     * This method returns the number of generations the execution of FLECO has
+     * required.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the number of generations the execution of FLECO has required.
+     */
+    public int getRequiredGenerations() {
+        return requiredGenerations;
     }
 
     /**

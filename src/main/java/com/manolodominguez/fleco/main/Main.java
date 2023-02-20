@@ -23,50 +23,95 @@
 package com.manolodominguez.fleco.main;
 
 import com.manolodominguez.fleco.algorithm.FLECO;
-import com.manolodominguez.fleco.business.Condition;
-import com.manolodominguez.fleco.business.Operators;
-import com.manolodominguez.fleco.business.StrategicGoals;
+import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.main.experiments.goals.VeryComplexStrategicGoals;
+import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG1;
+import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG2;
+import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.genetic.Chromosome;
-import com.manolodominguez.fleco.genetic.Genes;
-import com.manolodominguez.fleco.uleo.Categories;
-import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
+ * This class utilizes FLECO to optimize the cybersecurity status of a specific
+ * business asset.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
 public class Main {
 
     public static void main(String[] args) {
-        Chromosome currentStatus = new Chromosome(ImplementationGroups.IG3);
-        currentStatus.randomize();
-        //currentStatus.computeFitness(currentStatus);
-        StrategicGoals sg = new StrategicGoals(ImplementationGroups.IG3);
-        
-        sg.addGoal(Genes.DE_CM_CSC_13_1, new Condition(Operators.LESS, 1.0f));
-        sg.addGoal(Genes.RC_CO_RC_CO_3, new Condition(Operators.EQUAL, 0.0f));
-        sg.addGoal(Categories.PR_AT, new Condition(Operators.GREATER_OR_EQUAL, 0.75f));
-        sg.addGoal(Functions.RESPOND, new Condition(Operators.LESS, 0.5f));
-        sg.addGoal(Functions.IDENTIFY, new Condition(Operators.LESS_OR_EQUAL, 0.7f));
-        sg.addGoal(new Condition(Operators.GREATER_OR_EQUAL, 0.6f));
-
-        FLECO fleco = new FLECO(ImplementationGroups.IG3, currentStatus, sg);
+        // *************************
+        // Define FLECO's parameters 
+        // *************************
+        int initialPopulation = 50;
+        int maxGenerations = 50000;
+        float mutationProbability = 0.01f;
+        float crossoverProbability = 0.75f;
+        ImplementationGroups implementationGroup = ImplementationGroups.IG3;
+        // Define current cybersecurity status according to CyberTOMP. While it
+        // is possible to create a custom status by configuring a Chromosome, 
+        // some preconfigured statuses are available for quick use. See 
+        // com.manolodominguez.fleco.examples.status 
+        Chromosome currentStatus;
+        switch (implementationGroup) {
+            case IG1:
+                currentStatus = new InitialStatusForIG1();
+                break;
+            case IG2:
+                currentStatus = new InitialStatusForIG2();
+                break;
+            case IG3:
+            default:
+                currentStatus = new InitialStatusForIG3();
+                break;
+        }
+        // According to CyberTOMP, establish the strategic cybersecurity 
+        // objectives for this asset.
+        StrategicGoals strategicGoals = new VeryComplexStrategicGoals(implementationGroup);
+        // Prints FLECO parameters
+        System.out.println("####################################################");
+        System.out.println("# FLECO dynamic, genetic, multi-criteria algorithm #");
+        System.out.println("####################################################");
+        System.out.println("Initial population..........: " + initialPopulation);
+        System.out.println("Maximum generations.........: " + maxGenerations);
+        System.out.println("Mutation probability........: " + mutationProbability);
+        System.out.println("Crossover probability.......: " + crossoverProbability);
+        System.out.println("Asset's implementation group: " + implementationGroup.name());
+        System.out.println("Current status..............:");
+        currentStatus.print();
+        System.out.println("Strategic goals.............: " + strategicGoals.numberOfGoals());
+        strategicGoals.print();
+        System.out.println();
+        System.out.println("Algorithm objetives.........: 3");
+        System.out.println("\tObjective 1) Fulfill all defined cybersecurity strategic goals (once achieved, FLECO has converged)");
+        System.out.println("\tObjective 2) Maximize the similarity between the current status and the solution");
+        System.out.println("\tObjective 3) Maximize overall cybersecurity level");
+        System.out.println("####################################################\n");
+        // FLECO is employed to identify a collection of anticipated outcomes 
+        // and their corresponding discrete implementation levels that meet the 
+        // necessary strategic cybersecurity objectives for this asset.
+        System.out.println("Evolving population to find a solution. FLECO will");
+        System.out.println("stop after finding an optimum solution or after the");
+        System.out.println("max number of generations is reached.\n");
+        FLECO fleco = new FLECO(initialPopulation, maxGenerations, mutationProbability, crossoverProbability, implementationGroup, currentStatus, strategicGoals);
         fleco.evolve();
-        Chromosome chromosome = fleco.getBestChromosome();
-        System.out.println("Best solution's fitness: " + chromosome.getFitness()+" ("+chromosome.getFitnessGlobalCybersecurityState()+"(0.05) and "+chromosome.getFitnessSimilarityToCurrentState(currentStatus)+"(0.15) and "+chromosome.getFitnessComplianceGoalsCoverage(sg)+"(0.8))");
-        chromosome.print();
-//System.out.println("Best solution's fitness: " + currentStatus.getFitness());
-/*
-        fleco.evolve();
-        chromosome = fleco.getBestChromosome();
-        System.out.println("Best solution's fitness (2nd round): " + chromosome.getFitness());
-        fleco.evolve();
-        chromosome = fleco.getBestChromosome();
-        System.out.println("Best solution's fitness (3rd round): " + chromosome.getFitness());
-        fleco.evolve();
-        chromosome = fleco.getBestChromosome();
-        System.out.println("Best solution's fitness (4th round): " + chromosome.getFitness());
-*/
+        if (fleco.hasConverged()) {
+            System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
+        } else {
+            System.out.println("\nFLECO has not converged. A sub-optimal solutions has been found.\n");
+        }
+        // After the completion of FLECO, the optimal solution can be accessed.
+        System.out.println("####################################################");
+        System.out.println("                       SOLUTION");
+        System.out.println("####################################################\n");
+        Chromosome bestChromosome = fleco.getBestChromosome();
+        System.out.println("Best solution's aggregated fitness: " + bestChromosome.getFitness());
+        System.out.println("\tObjective 1): " + bestChromosome.getFitnessComplianceGoalsCoverage() + " (x0.94)");
+        System.out.println("\tObjective 2): " + bestChromosome.getFitnessSimilarityToCurrentState() + " (x0.05)");
+        System.out.println("\tObjective 3): " + bestChromosome.getFitnessGlobalCybersecurityState() + " (x0.01)");
+        System.out.println("Solution breakdown................: \n");
+        bestChromosome.print(currentStatus);
+        System.out.println("####################################################\n");
+        System.out.println("\nTime required: " + fleco.getTimeRequired() + " seconds.\n");
     }
 }

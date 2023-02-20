@@ -23,21 +23,36 @@
 package com.manolodominguez.fleco.uleo;
 
 /**
+ * This enum defines all implementation groups as defined in CyberTOMP proposal.
  *
- * @author manolodd
+ * @author manuel Domínguez-Dorado
  */
 public enum ImplementationGroups {
     IG1(0),
     IG2(1),
     IG3(2);
-    
-    private int implementationGroup;
-    
-    private ImplementationGroups(int implementationGroup) {
-        this.implementationGroup = implementationGroup;
+
+    private int implementationGroupIndex;
+
+    /**
+     * This is the constructor of the class. it creates the enum and assigns the
+     * corresponding values.
+     *
+     * @author manuel Domínguez-Dorado
+     * @param implementationGroupIndex The index of this implementation group,
+     * that would be used as array index afterwards.
+     */
+    private ImplementationGroups(int implementationGroupIndex) {
+        this.implementationGroupIndex = implementationGroupIndex;
     }
-    
-    public int getImplementationGroup() {
-        return this.implementationGroup;
+
+    /**
+     * This method returns the index associated to this implementation group.
+     *
+     * @author manuel Domínguez-Dorado
+     * @return the index associated to this implementation group.
+     */
+    public int getImplementationGroupIndex() {
+        return this.implementationGroupIndex;
     }
 }

@@ -23,8 +23,10 @@
 package com.manolodominguez.fleco.genetic;
 
 /**
+ * This enum define the Discrete Levels of Implementation of each expected
+ * outcomes as defined in CyberTOMP proposal.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
 public enum Alleles {
     DLI_0(0.0f),
@@ -34,63 +36,123 @@ public enum Alleles {
 
     private final float DLI;
 
+    /**
+     * This is the constructor of the class. it creates the enum and assigns the
+     * corresponding value.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param DLI Afloat value representing the discrete level of
+     * implementation. A number between 0.0 and 1.0.
+     */
     private Alleles(float DLI) {
         this.DLI = DLI;
     }
 
+    /**
+     * This method return the numeric value of the discrete level of
+     * implementation.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return The numeric value of the discrete level of implementation.
+     */
     public float getDLI() {
         return this.DLI;
     }
-    
+
+    /**
+     * This method returns the first DLI that is greater than the value
+     * specified as a parameter.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value The reference value.
+     * @return the first DLI that is greater than the value specified as a
+     * parameter, if exists. Otherwise, null.
+     */
     public static Alleles getGreater(Float value) {
-        Alleles result = null;
-        for (Alleles al: Alleles.values()) {
-            if (al.getDLI() > value) {
-                result = al;
+        Alleles result = Alleles.DLI_100;
+        for (Alleles allele : Alleles.values()) {
+            if (allele.getDLI() > value) {
+                result = allele;
                 break;
             }
         }
         return result;
     }
-    
+
+    /**
+     * This method returns the first DLI that is greater or equal than the value
+     * specified as a parameter.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value The reference value.
+     * @return the first DLI that is greater or equal than the value specified
+     * as a parameter, if exists. Otherwise, null.
+     */
     public static Alleles getGreaterOrEqual(Float value) {
-        Alleles result = null;
-        for (Alleles al: Alleles.values()) {
-            if (al.getDLI() >= value) {
-                result = al;
+        Alleles result = Alleles.DLI_100;
+        for (Alleles allele : Alleles.values()) {
+            if (allele.getDLI() >= value) {
+                result = allele;
                 break;
             }
         }
         return result;
     }
-    
+
+    /**
+     * This method returns the DLI that is equal than the value specified as a
+     * parameter.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value The reference value.
+     * @return the first DLI equal than the value specified as a parameter, if
+     * exists. Otherwise, null.
+     */
     public static Alleles getEqual(Float value) {
-        Alleles result = null;
-        for (Alleles al: Alleles.values()) {
-            if (al.getDLI() == value) {
-                result = al;
+        Alleles result = Alleles.DLI_0;
+        for (Alleles allele : Alleles.values()) {
+            if (allele.getDLI() == value) {
+                result = allele;
                 break;
             }
         }
         return result;
     }
 
+    /**
+     * This method returns the first DLI that is lesser or equal than the value
+     * specified as a parameter.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value The reference value.
+     * @return the first DLI that is lesser or equal than the value specified as
+     * a parameter, if exists. Otherwise, null.
+     */
     public static Alleles getLesserOrEqual(Float value) {
-        Alleles result = null;
-        for (Alleles al: Alleles.values()) {
-            if (al.getDLI() <= value) {
-                result = al;
+        Alleles result = Alleles.DLI_0;
+        for (Alleles allele : Alleles.values()) {
+            if (allele.getDLI() <= value) {
+                result = allele;
                 break;
             }
         }
         return result;
     }
 
+    /**
+     * This method returns the first DLI that is lesser than the value specified
+     * as a parameter.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value The reference value.
+     * @return the first DLI that is lesser than the value specified as a
+     * parameter, if exists. Otherwise, null.
+     */
     public static Alleles getLesser(Float value) {
-        Alleles result = null;
-        for (Alleles al: Alleles.values()) {
-            if (al.getDLI() < value) {
-                result = al;
+        Alleles result = Alleles.DLI_0;
+        for (Alleles allele : Alleles.values()) {
+            if (allele.getDLI() < value) {
+                result = allele;
                 break;
             }
         }

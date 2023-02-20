@@ -20,37 +20,33 @@
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  */
-package com.manolodominguez.fleco.algorithm;
+package com.manolodominguez.fleco.main.experiments.goals;
 
-import com.manolodominguez.fleco.genetic.Chromosome;
-import java.util.Comparator;
+import com.manolodominguez.fleco.strategicgoals.Goal;
+import com.manolodominguez.fleco.strategicgoals.ComparisonOperators;
+import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
- * This class implements a chromosome comparator used to sort chromosomes in
- * lists, trees, etc. It is based only on the aggregated fitness value of each
- * chromosome that is compared.
+ * This class implement a predefined set of strategic cybersecurity goals that
+ * are simple to solve because it contains only a goal related to the overall
+ * asset's cybersecurity status. It is intended only to ease the experiments.
  *
  * @author Manuel Domínguez-Dorado
  */
-public class ChromosomeComparator implements Comparator<Chromosome> {
+public class BasicStrategicGoals extends StrategicGoals {
 
     /**
-     * This methods compares two chromosomes in order to establish an order.
+     * This is the constuctor of the class. It creates a new instance and adds a
+     * single goal related the the overall asset's cybersecurity status.
      *
      * @author Manuel Domínguez-Dorado
-     * @param chromosome1 The first chromosome to be compared.
-     * @param chromosome2 The second chromosome to be compared.
-     * @return -1, 0, 1 depending on whether the chromosome1 is greater, equal
-     * or lesser than chromosome 2, respectively.
+     * @param implementationGroup The implementation groups that applies to the
+     * asset being considered.
      */
-    @Override
-    public int compare(Chromosome chromosome1, Chromosome chromosome2) {
-        if (chromosome1.getFitness() < chromosome2.getFitness()) {
-            return 1;
-        } else if (chromosome1.getFitness() > chromosome2.getFitness()) {
-            return -1;
-        }
-        return 0;
+    public BasicStrategicGoals(ImplementationGroups implementationGroup) {
+        super(implementationGroup);
+        addGoal(new Goal(ComparisonOperators.GREATER_OR_EQUAL, 0.6f));
     }
 
 }

@@ -20,13 +20,15 @@
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  */
-package com.manolodominguez.fleco.business;
+package com.manolodominguez.fleco.strategicgoals;
 
 /**
+ * This enum define the available comparison operators that are used when
+ * defining strategic cybersecurity goals.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
-public enum Operators {
+public enum ComparisonOperators {
     LESS,
     LESS_OR_EQUAL,
     EQUAL,

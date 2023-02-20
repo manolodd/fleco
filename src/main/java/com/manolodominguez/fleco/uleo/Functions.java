@@ -25,53 +25,107 @@ package com.manolodominguez.fleco.uleo;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * This enum defines all cyebrsecurity functions and also its weights as defined
+ * in CyberTOMP proposal, depending on whether implementation groups 1, 2, or 3
+ * applies.
  *
- * @author manolodd
+ * @author manuel Domínguez-Dorado
  */
 public enum Functions {
-    IDENTIFY((float) 4/15, (float) 6/20, (float) 6/23),
-    PROTECT( (float) 6/15, (float) 6/20, (float) 6/23),
-    DETECT(  (float) 3/15, (float) 3/20, (float) 3/23),
-    RESPOND( (float) 2/15, (float) 5/20, (float) 5/23),
-    RECOVER( (float) 0/15, (float) 0/20, (float) 3/23);
+    IDENTIFY((float) 4 / 15, (float) 6 / 20, (float) 6 / 23),
+    PROTECT((float) 6 / 15, (float) 6 / 20, (float) 6 / 23),
+    DETECT((float) 3 / 15, (float) 3 / 20, (float) 3 / 23),
+    RESPOND((float) 2 / 15, (float) 5 / 20, (float) 5 / 23),
+    RECOVER((float) 0 / 15, (float) 0 / 20, (float) 3 / 23);
 
     private float weights[] = new float[3];
 
+    /**
+     * This is the constructor of the class. it creates the enum and assigns the
+     * corresponding values.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param weightIG1 A float value representing the weight of this
+     * cybersecurity function when applying implementation group 1. A number
+     * between 0.0 and 1.0.
+     * @param weightIG2 A float value representing the weight of this
+     * cybersecurity function when applying implementation group 2. A number
+     * between 0.0 and 1.0.
+     * @param weightIG3 A float value representing the weight of this
+     * cybersecurity function when applying implementation group 3. A number
+     * between 0.0 and 1.0.
+     */
     private Functions(float weightIG1, float weightIG2, float weightIG3) {
         this.weights[0] = weightIG1;
         this.weights[1] = weightIG2;
         this.weights[2] = weightIG3;
-        
-        this.weights[ImplementationGroups.IG1.getImplementationGroup()] = weightIG1;
-        this.weights[ImplementationGroups.IG2.getImplementationGroup()] = weightIG2;
-        this.weights[ImplementationGroups.IG3.getImplementationGroup()] = weightIG3;
+
+        this.weights[ImplementationGroups.IG1.getImplementationGroupIndex()] = weightIG1;
+        this.weights[ImplementationGroups.IG2.getImplementationGroupIndex()] = weightIG2;
+        this.weights[ImplementationGroups.IG3.getImplementationGroupIndex()] = weightIG3;
     }
 
+    /**
+     * Thies method returns the weight of this cybersecurity function taking
+     * into consideration the impleentation group that applies.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param implementationGroup The implementation group that applies.
+     * @return the weight of the cybersecurity function taking into
+     * consideration the impleentation group that applies.
+     */
     public float getWeight(ImplementationGroups implementationGroup) {
-        return this.weights[implementationGroup.getImplementationGroup()];
+        return this.weights[implementationGroup.getImplementationGroupIndex()];
     }
 
+    /**
+     * Given an implementation group, this method returns whether the
+     * cybersecurity function applies for it or not.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param implementationGroup The applicable implementation group.
+     * @return true, if the cybersecurity function applies. Otherwise, false.
+     */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
-        return weights[implementationGroup.getImplementationGroup()] > 0.0f;
+        return weights[implementationGroup.getImplementationGroupIndex()] > 0.0f;
     }
-    
+
+    /**
+     * Given an implementation group, this method returns a list of
+     * cybersecurity categories that applies to that implementation group and
+     * belongs to the cybersecurity function.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param implementationGroup The applicable implementation group.
+     * @return a list of cybersecurity categories that applies to that
+     * implementation group and belongs to the cybersecurity function.
+     */
     public CopyOnWriteArrayList<Categories> getCategories(ImplementationGroups implementationGroup) {
         CopyOnWriteArrayList<Categories> categories = new CopyOnWriteArrayList<>();
-        for (Categories category: Categories.values()) {
+        for (Categories category : Categories.values()) {
             if ((category.getFunction() == this) && (category.getWeight(implementationGroup) > 0.0f)) {
                 categories.add(category);
             }
         }
         return categories;
     }
-    
+
+    /**
+     * This method returns the list of cybersecurity categories that are
+     * applicable for a given implementation group.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param implementationGroup The applicable implementation group.
+     * @return the list of cybersecurity categories that are applicable for a
+     * given implementation group
+     */
     public static CopyOnWriteArrayList<Functions> getFunctionsFor(ImplementationGroups implementationGroup) {
-        CopyOnWriteArrayList<Functions> functionsList= new CopyOnWriteArrayList<>();
-        for (Functions function: Functions.values()) {
+        CopyOnWriteArrayList<Functions> functionsList = new CopyOnWriteArrayList<>();
+        for (Functions function : Functions.values()) {
             if (function.appliesToIG(implementationGroup)) {
                 functionsList.add(function);
             }
         }
         return functionsList;
-    }    
+    }
 }

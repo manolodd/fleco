@@ -35,9 +35,7 @@ import java.util.Comparator;
 public class ChromosomeComparator implements Comparator<Chromosome> {
 
     /**
-     * This methods compares two chromosomes in order to establish an order. It
-     * follows a lexicographical order starting with the most relevant objective
-     * and finishing with the lesser.
+     * This methods compares two chromosomes in order to establish an order. 
      *
      * @author Manuel Domínguez-Dorado
      * @param chromosome1 The first chromosome to be compared.

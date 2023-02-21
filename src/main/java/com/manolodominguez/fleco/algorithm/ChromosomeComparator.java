@@ -47,23 +47,12 @@ public class ChromosomeComparator implements Comparator<Chromosome> {
      */
     @Override
     public int compare(Chromosome chromosome1, Chromosome chromosome2) {
-        if (chromosome1.getFitnessComplianceGoalsCoverage() < chromosome2.getFitnessComplianceGoalsCoverage()) {
+        if (chromosome1.getFitness() < chromosome2.getFitness()) {
             return 1;
-        } else if (chromosome1.getFitnessComplianceGoalsCoverage() > chromosome2.getFitnessComplianceGoalsCoverage()) {
+        } else if (chromosome1.getFitness() > chromosome2.getFitness()) {
             return -1;
         } else {
-            if (chromosome1.getFitnessSimilarityToCurrentState() < chromosome2.getFitnessSimilarityToCurrentState()) {
-                return 1;
-            } else if (chromosome1.getFitnessSimilarityToCurrentState() > chromosome2.getFitnessSimilarityToCurrentState()) {
-                return -1;
-            } else {
-                if (chromosome1.getFitnessGlobalCybersecurityState() < chromosome2.getFitnessGlobalCybersecurityState()) {
-                    return 1;
-                } else if (chromosome1.getFitnessGlobalCybersecurityState() > chromosome2.getFitnessGlobalCybersecurityState()) {
-                    return -1;
-                }
-                return 0;
-            }
+            return 0;
         }
     }
 

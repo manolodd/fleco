@@ -47,7 +47,7 @@ public class Main {
         // Define FLECO's parameters 
         // *************************
         int initialPopulation = 50;
-        int maxGenerations = 50000;
+        int maxGenerations = 100000;
         float mutationProbability = 0.01f;
         float crossoverProbability = 0.75f;
         ImplementationGroups implementationGroup = ImplementationGroups.IG3;

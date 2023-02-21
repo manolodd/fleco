@@ -35,7 +35,9 @@ import java.util.Comparator;
 public class ChromosomeComparator implements Comparator<Chromosome> {
 
     /**
-     * This methods compares two chromosomes in order to establish an order.
+     * This methods compares two chromosomes in order to establish an order. It
+     * follows a lexicographical order starting with the most relevant objective
+     * and finishing with the lesser.
      *
      * @author Manuel Domínguez-Dorado
      * @param chromosome1 The first chromosome to be compared.
@@ -45,12 +47,24 @@ public class ChromosomeComparator implements Comparator<Chromosome> {
      */
     @Override
     public int compare(Chromosome chromosome1, Chromosome chromosome2) {
-        if (chromosome1.getFitness() < chromosome2.getFitness()) {
+        if (chromosome1.getFitnessComplianceGoalsCoverage() < chromosome2.getFitnessComplianceGoalsCoverage()) {
             return 1;
-        } else if (chromosome1.getFitness() > chromosome2.getFitness()) {
+        } else if (chromosome1.getFitnessComplianceGoalsCoverage() > chromosome2.getFitnessComplianceGoalsCoverage()) {
             return -1;
+        } else {
+            if (chromosome1.getFitnessSimilarityToCurrentState() < chromosome2.getFitnessSimilarityToCurrentState()) {
+                return 1;
+            } else if (chromosome1.getFitnessSimilarityToCurrentState() > chromosome2.getFitnessSimilarityToCurrentState()) {
+                return -1;
+            } else {
+                if (chromosome1.getFitnessGlobalCybersecurityState() < chromosome2.getFitnessGlobalCybersecurityState()) {
+                    return 1;
+                } else if (chromosome1.getFitnessGlobalCybersecurityState() > chromosome2.getFitnessGlobalCybersecurityState()) {
+                    return -1;
+                }
+                return 0;
+            }
         }
-        return 0;
     }
 
 }

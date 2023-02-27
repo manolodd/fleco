@@ -36,7 +36,7 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class MediumStrategicGoals extends StrategicGoals {
+public class FunctionLevelStrategicGoals extends StrategicGoals {
 
     /**
      * This is the constuctor of the class. It creates a new instance and adds
@@ -47,7 +47,7 @@ public class MediumStrategicGoals extends StrategicGoals {
      * @param implementationGroup The implementation groups that applies to the
      * asset being considered.
      */
-    public MediumStrategicGoals(ImplementationGroups implementationGroup) {
+    public FunctionLevelStrategicGoals(ImplementationGroups implementationGroup) {
         super(implementationGroup);
         addGoal(new Goal(ComparisonOperators.GREATER_OR_EQUAL, 0.6f));
         addGoal(Functions.IDENTIFY, new Goal(ComparisonOperators.GREATER_OR_EQUAL, 0.5f));

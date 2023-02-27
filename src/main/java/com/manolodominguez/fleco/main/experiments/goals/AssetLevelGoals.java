@@ -34,7 +34,7 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class BasicStrategicGoals extends StrategicGoals {
+public class AssetLevelGoals extends StrategicGoals {
 
     /**
      * This is the constuctor of the class. It creates a new instance and adds a
@@ -44,7 +44,7 @@ public class BasicStrategicGoals extends StrategicGoals {
      * @param implementationGroup The implementation groups that applies to the
      * asset being considered.
      */
-    public BasicStrategicGoals(ImplementationGroups implementationGroup) {
+    public AssetLevelGoals(ImplementationGroups implementationGroup) {
         super(implementationGroup);
         addGoal(new Goal(ComparisonOperators.GREATER_OR_EQUAL, 0.6f));
     }

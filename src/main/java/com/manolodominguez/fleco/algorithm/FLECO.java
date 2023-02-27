@@ -49,7 +49,7 @@ public class FLECO {
     private float mutationProbability;
     private float crossoverProbability;
     private ImplementationGroups implementationGroup;
-    private int maxGenerations;
+    private int maxSeconds;
     private int initialPopulation;
     private Population population;
     private StrategicGoals strategicGoals;
@@ -57,8 +57,7 @@ public class FLECO {
     private float requiredTime;
     private int requiredGenerations;
 
-    private static final float DEFAULT_LOCAL_MINIMUM_PROBABILITY = 0.0f;
-    private static final float LOCAL_MINIMUM_PROBABILITY_THRESSHOLD = 0.05f;
+    private static final float LOCAL_MINIMUM_PROBABILITY_PERCENTAGE = 0.1f;
     private static final int DEFAULT_MUTATION_INCREASING_FACTOR = 1;
     private static final int HIGHER_MUTATION_INCREASING_FACTOR = 100;
     private static final float POPULATION_INCREASING_FACTOR = 1.5f;
@@ -73,7 +72,7 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      * @param initialPopulation The initial number of chromosomes in the
      * population.
-     * @param maxGenerations The max number of generations before finishing the
+     * @param maxSeconds The max number of seconds before finishing the
      * population's evolution.
      * @param mutationProbability The probability of mutating a chromosome
      * during population's evolution.
@@ -88,12 +87,12 @@ public class FLECO {
      * functions, categories or expected outcomes, that are understood as the
      * strategic cybersecurity goals.
      */
-    public FLECO(int initialPopulation, int maxGenerations, float mutationProbability, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicGoals strategicGoals) {
+    public FLECO(int initialPopulation, int maxSeconds, float mutationProbability, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicGoals strategicGoals) {
         this.implementationGroup = implementationGroup;
         this.initialStatus = initialStatus;
         this.strategicGoals = strategicGoals;
         this.initialPopulation = initialPopulation;
-        this.maxGenerations = maxGenerations;
+        this.maxSeconds = maxSeconds;
         this.mutationProbability = mutationProbability;
         this.crossoverProbability = crossoverProbability;
         requiredTime = 0.0f;
@@ -109,30 +108,29 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      */
     public void evolve() {
-        float localMinimumProbability = 0.0f;
         int currentGeneration = 0;
         float currentBestFitness = 0.0f;
         int mutationIncreasingFactor = 1;
-        float localMinimumprobabilityIncrement = 1.0f / maxGenerations;
+        float localMinimumprobabilityThresshold = maxSeconds * LOCAL_MINIMUM_PROBABILITY_PERCENTAGE;
         boolean isInALocalMinimum = false;
         Temporal begin = Instant.now();
         Temporal end;
+        Temporal latestBestFitnessChange = Instant.now();
         Duration duration;
         requiredTime = 0.0f;
-        while (!hasToFinish(currentGeneration)) {
+        while (!hasToFinish(begin)) {
             // The probability of being in a local minimum is raised each time 
             // the best fitness remains constant. Otherwise, the probability is 
             // reset to its default value.
-            if (currentBestFitness == population.get(BEST_CHROMOSOME_INDEX).getFitness()) {
-                localMinimumProbability += localMinimumprobabilityIncrement;
-            } else {
-                localMinimumProbability = DEFAULT_LOCAL_MINIMUM_PROBABILITY;
+            if (currentBestFitness != population.get(BEST_CHROMOSOME_INDEX).getFitness()) {
                 currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
+                latestBestFitnessChange = Instant.now();
             }
             // Once the cumulative probability of being in a local minimum 
             // surpasses the predetermined threshold, the algorithm is 
             // considered to be in a local minimum, requiring an escape plan.
-            isInALocalMinimum = (localMinimumProbability >= LOCAL_MINIMUM_PROBABILITY_THRESSHOLD);
+            Duration blockingDuration = Duration.between(latestBestFitnessChange, Instant.now());
+            isInALocalMinimum = (blockingDuration.get(ChronoUnit.SECONDS) > localMinimumprobabilityThresshold);
             // If the algorithm is in a local minimum, it amplifies the mutation
             // rate to the predefined higher value; otherwise, it resets the 
             // rate to the default value.
@@ -158,14 +156,17 @@ public class FLECO {
                 }
                 population.populateRandomly((int) (initialPopulation * POPULATION_INCREASING_FACTOR));
             }
-            // To prevent uncontrolled growth, reduce the population to the 
-            // default number of chromosomes.
-            population.reduceTo(initialPopulation);
             // Apply a mutation to the population with a predefined probability,
             // which can be raised if the algorithm is in a local minimum.
             population.mutate(mutationProbability * mutationIncreasingFactor);
             // Perform a crossover on the population.
             population.crossover(crossoverProbability);
+            // To maintain stable the number of individuals in the population,
+            // complete the population adding some random individuals if needed.
+            population.populateRandomly();
+            // To prevent uncontrolled growth, reduce the population to the 
+            // default number of chromosomes in case it is higher.
+            population.reduceTo(initialPopulation);
             // Increases the generation number
             currentGeneration++;
         }
@@ -197,19 +198,24 @@ public class FLECO {
         return requiredGenerations;
     }
 
+    public Population getPopulation() {
+        return population;
+    }
+
     /**
      * This method check whether the conditions to finish FLECO algorithm exist
      * or not.
      *
-     * @param currentGenerationNumber the current generation number in the
-     * FLECO's execution.
+     * @param begin the time when the algorithm started to evolve the
+     * population.
      *
      * @author Manuel Domínguez-Dorado
      * @return true, if the conditions to finish FLECO execution exist.
      * Otherwise return false.
      */
-    private boolean hasToFinish(int currentGenerationNumber) {
-        return population.hasConverged() || (currentGenerationNumber >= maxGenerations);
+    private boolean hasToFinish(Temporal begin) {
+        Duration duration = Duration.between(begin, Instant.now());
+        return (population.hasConverged() || (duration.get(ChronoUnit.SECONDS) > maxSeconds));
     }
 
     /**

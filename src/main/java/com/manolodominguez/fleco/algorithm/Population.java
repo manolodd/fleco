@@ -28,6 +28,7 @@ import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumSet;
+import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -131,16 +132,45 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     public void selectBestAdapted() {
         // First it compute fitness and sort the population based on it.
         computeFitnessAndSort();
-        CopyOnWriteArrayList<Chromosome> bestAdapted = new CopyOnWriteArrayList<>();
+        // Remove twins
+        CopyOnWriteArrayList<Chromosome> twinsFree = new CopyOnWriteArrayList<>();
+        twinsFree.addAll(this);
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            if (chromosome.getFitness() >= fitnessAverage) {
-                bestAdapted.add(chromosome);
+            boolean isTwin = true;
+            int instances = 0;
+            for (Chromosome otherChromosome : twinsFree.toArray(new Chromosome[0])) {
+                isTwin = true;
+                for (Genes gene : chromosome.getGenes().keySet()) {
+                    if (chromosome.getAllele(gene) != otherChromosome.getAllele(gene)) {
+                        isTwin = false;
+                        break;
+                    }
+                }
+                if (isTwin) {
+                    instances++;
+                    if (instances > 1) {
+                        twinsFree.remove(otherChromosome);
+                    }
+                }
             }
+        }
+        if (!twinsFree.isEmpty()) {
+            clear();
+            addAll(twinsFree);
+        }
+        sort(new ChromosomeComparator());
+        // 2/3 of the current population is selected for reproduction in the 
+        // next generation
+        int thresshold = size() * 2 / 3;
+        CopyOnWriteArrayList<Chromosome> bestAdapted = new CopyOnWriteArrayList<>();
+        for (int i = 0; i <= thresshold; i++) {
+            bestAdapted.add(get(i));
         }
         if (!bestAdapted.isEmpty()) {
             clear();
             addAll(bestAdapted);
         }
+        sort(new ChromosomeComparator());
     }
 
     /**
@@ -273,7 +303,9 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         sort(new ChromosomeComparator());
         if (!isEmpty()) {
             if (get(0).getFitnessComplianceGoalsCoverage() >= 1.0f) {
-                hasConverged = true;
+                if (get(0).getFitness() >= 0.99f) {
+                    hasConverged = true;
+                }
             }
         }
     }
@@ -318,6 +350,15 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
             }
             clear();
             addAll(auxPopulation);
+        }
+    }
+
+    public void print() {
+        int i = 0;
+        System.out.println("Final population:");
+        for (Chromosome chromosome : toArray(new Chromosome[0])) {
+            System.out.println("\t" +i+"#"+ chromosome.getFitness() + "#" + chromosome.getFitnessComplianceGoalsCoverage() + "#" + chromosome.getFitnessSimilarityToCurrentState() + "#" + chromosome.getFitnessGlobalCybersecurityState());
+            i++;
         }
     }
 }

@@ -22,8 +22,12 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
+import com.manolodominguez.fleco.genetic.Alleles;
 import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This class implement the singleton patter to provide a method to evaluate the
@@ -33,9 +37,11 @@ import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
  */
 public class FitnessEvaluatorFactory {
 
+    private static final int NUMBER_OF_OBJECTIVES = 2;
+    
     private static FitnessEvaluatorFactory instance = null;
-    private float fitnessValues[];
-
+    private float[] fitnessValues;
+    
     /**
      * This is the constructor of the class. It creates a new instance and a new
      * array to store the fitness values.
@@ -43,7 +49,7 @@ public class FitnessEvaluatorFactory {
      * @author Manuel Domínguez Dorado
      */
     private FitnessEvaluatorFactory() {
-        float fitnessValues[] = new float[3];
+        fitnessValues = new float[NUMBER_OF_OBJECTIVES];
     }
 
     /**
@@ -72,7 +78,8 @@ public class FitnessEvaluatorFactory {
      * optimized in an array of floats.
      *
      * @author Manuel Domínguez Dorado
-     * @param chromosome The chromosome whose fitnes is gpoing to be computed.
+     * @param intChromosome The set of alleles (JMetal style) for each gen of
+     * the chromosome.
      * @param strategicGoals The set of strategic goals the allow the
      * computation of f1(x).
      * @param initialStatus A chromosome representing the initial status, needed
@@ -80,11 +87,53 @@ public class FitnessEvaluatorFactory {
      * @return the fitness value for every function to be optimized in an array
      * of floats
      */
-    public float[] getFitness(Chromosome chromosome, StrategicGoals strategicGoals, Chromosome initialStatus) {
+    public float[] getFitness(int[] intChromosome, StrategicGoals strategicGoals, Chromosome initialStatus) {
+        // Detects the implementation group from the lenght of intChromosome
+        ImplementationGroups implementationGroup;
+        switch (intChromosome.length) {
+            case 47:
+                implementationGroup = ImplementationGroups.IG1;
+                break;
+            case 107:
+                implementationGroup = ImplementationGroups.IG2;
+                break;
+            case 167:
+                implementationGroup = ImplementationGroups.IG3;
+                break;
+            default:
+                throw new IllegalArgumentException("Incorrect length for intChromosomes. It should be 47, 107 or 167.");
+        }
+        // Create a new Chromosome using the correct implementation group
+        Chromosome chromosome = new Chromosome(implementationGroup);
+        // In a loop, parse each gen of the chromosome to the discrete level of 
+        // implementation instead of the int values provided as an parameter
+        CopyOnWriteArrayList<Genes> applicableGenes = Genes.getGenesFor(implementationGroup);
+        Alleles allele;
+        for (int i = 0; i < applicableGenes.size(); i++) {
+            switch (intChromosome[i]) {
+                case 0:
+                    allele = Alleles.DLI_0;
+                    break;
+                case 1:
+                    allele = Alleles.DLI_33;
+                    break;
+                case 2:
+                    allele = Alleles.DLI_67;
+                    break;
+                case 3:
+                    allele = Alleles.DLI_100;
+                    break;
+                default:
+                    throw new IllegalArgumentException("Value in position "+i+" of intChromosome is out of the range 0-3");
+            }
+            chromosome.updateAllele(applicableGenes.get(i), allele);
+        }
+        // Compute fitness
         chromosome.computeFitness(initialStatus, strategicGoals);
+        chromosome.print();
         fitnessValues[0] = chromosome.getFitnessComplianceGoalsCoverage();
         fitnessValues[1] = chromosome.getFitnessSimilarityToCurrentState();
-        fitnessValues[2] = chromosome.getFitnessGlobalCybersecurityState();
+        //fitnessValues[2] = chromosome.getFitnessGlobalCybersecurityState();
         return fitnessValues;
     }
 }

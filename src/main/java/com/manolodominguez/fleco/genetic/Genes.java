@@ -253,8 +253,7 @@ public enum Genes {
      *
      * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
-     * @return true, if the gene/expected outcome applies. Otherwise,
-     * false.
+     * @return true, if the gene/expected outcome applies. Otherwise, false.
      */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
         return (this.minImplementationGroup.getImplementationGroupIndex() <= implementationGroup.getImplementationGroupIndex());
@@ -287,6 +286,25 @@ public enum Genes {
         CopyOnWriteArrayList<Genes> genesList = new CopyOnWriteArrayList<>();
         for (Genes gene : Genes.values()) {
             if (gene.appliesToIG(implementationGroup) && (gene.getCategory() == category)) {
+                genesList.add(gene);
+            }
+        }
+        return genesList;
+    }
+
+    /**
+     * This method returns the list of genes that are applicable for a given
+     * implementation group.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param implementationGroup The applicable implementation group.
+     * @return the list of genes that are applicable for a given implementation
+     * group.
+     */
+    public static CopyOnWriteArrayList<Genes> getGenesFor(ImplementationGroups implementationGroup) {
+        CopyOnWriteArrayList<Genes> genesList = new CopyOnWriteArrayList<>();
+        for (Genes gene : Genes.values()) {
+            if (gene.appliesToIG(implementationGroup)) {
                 genesList.add(gene);
             }
         }

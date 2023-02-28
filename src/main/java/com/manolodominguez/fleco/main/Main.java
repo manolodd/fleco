@@ -23,16 +23,20 @@
 package com.manolodominguez.fleco.main;
 
 import com.manolodominguez.fleco.algorithm.FLECO;
+import com.manolodominguez.fleco.algorithm.FitnessEvaluatorFactory;
 import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
 import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG1;
 import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG2;
 import com.manolodominguez.fleco.main.experiments.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.main.experiments.goals.AssetLevelGoals;
 import com.manolodominguez.fleco.main.experiments.goals.CategoryLevelStrategicGoals;
 import com.manolodominguez.fleco.main.experiments.goals.FunctionLevelStrategicGoals;
 import com.manolodominguez.fleco.main.experiments.goals.ExpectedOutcomeLevelStrategicGoals;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This class utilizes FLECO to optimize the cybersecurity status of a specific
@@ -41,7 +45,18 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  * @author Manuel Domínguez-Dorado
  */
 public class Main {
-
+/*
+    public static void main(String[] args) {
+        int lenght = 47;
+        int[] intChromosome = new int[lenght];
+        for (int i=0; i<lenght; i++) {
+            intChromosome[i] = ThreadLocalRandom.current().nextInt(0, 3);
+        }
+        FitnessEvaluatorFactory fitnessEvaluator = FitnessEvaluatorFactory.getFitnessEvaluator();
+        fitnessEvaluator.getFitness(intChromosome, new AssetLevelGoals(ImplementationGroups.IG1), new InitialStatusForIG1());
+    }
+*/    
+    
     public static void main(String[] args) {
         // *************************
         // Define FLECO's parameters 
@@ -70,10 +85,10 @@ public class Main {
         }
         // According to CyberTOMP, establish the strategic cybersecurity 
         // objectives for this asset.
-        StrategicGoals strategicGoals = new AssetLevelGoals(implementationGroup);
+        //StrategicGoals strategicGoals = new AssetLevelGoals(implementationGroup);
         //StrategicGoals strategicGoals = new FunctionLevelStrategicGoals(implementationGroup);
         //StrategicGoals strategicGoals = new CategoryLevelStrategicGoals(implementationGroup);
-        //StrategicGoals strategicGoals = new ExpectedOutcomeLevelStrategicGoals(implementationGroup);
+        StrategicGoals strategicGoals = new ExpectedOutcomeLevelStrategicGoals(implementationGroup);
         // Prints FLECO parameters
         System.out.println("####################################################");
         System.out.println("# FLECO dynamic, genetic, multi-criteria algorithm #");
@@ -131,4 +146,5 @@ public class Main {
         
         //fleco.getPopulation().print();
     }
+     
 }

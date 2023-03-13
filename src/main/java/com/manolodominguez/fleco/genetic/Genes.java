@@ -310,4 +310,27 @@ public enum Genes {
         }
         return genesList;
     }
+
+    public static void print() {
+        System.out.println();
+        for (Genes gene : Genes.values()) {
+            System.out.print(gene.name());
+            if (gene.appliesToIG(ImplementationGroups.IG1)) {
+                System.out.print("#1");
+            } else {
+                System.out.print("#0");
+            }
+           if (gene.appliesToIG(ImplementationGroups.IG2)) {
+                System.out.print("#1");
+            } else {
+                System.out.print("#0");
+            }
+           if (gene.appliesToIG(ImplementationGroups.IG3)) {
+                System.out.print("#1");
+            } else {
+                System.out.print("#0");
+            }
+           System.out.println();
+        }
+    }
 }

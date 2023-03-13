@@ -22,7 +22,7 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetic.Alleles;
 import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.genetic.Genes;
@@ -46,7 +46,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     private final transient ImplementationGroups implementationGroup;
     private float fitnessAverage;
     private Chromosome initialStatus;
-    private StrategicGoals strategicGoals;
+    private StrategicConstraints strategicConstraints;
     private boolean hasConverged;
 
     /**
@@ -62,20 +62,21 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * business asset being considered.
      * @param initialStatus A Chromosome indicating the initial cybersecurity
      * status of the asset.
-     * @param strategicGoals A set of strategic cybersecurity goals.
+     * @param strategicConstraints A set of strategic cybersecurity constraints.
      */
-    public Population(int initialNumberOfChromosomes, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicGoals strategicGoals) {
+    public Population(int initialNumberOfChromosomes, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicConstraints strategicConstraints) {
         super();
         this.initialNumberOfChromosomes = initialNumberOfChromosomes;
         this.implementationGroup = implementationGroup;
         this.initialStatus = initialStatus;
-        this.strategicGoals = strategicGoals;
+        this.strategicConstraints = strategicConstraints;
         // Add the initial cybersecurity status as a chromosome in the 
         // population
         add(initialStatus);
-        // Depending on the strategic goals, several additional chromosomes can 
-        // be inferred that enhances the quality of the population.
-        addAll(strategicGoals.generatePrecandidatesBasedOn(initialStatus));
+        // Depending on the strategic constraints, several additional 
+        // chromosomes can be inferred that enhances the quality of the 
+        // population.
+        addAll(strategicConstraints.generatePrecandidatesBasedOn(initialStatus));
         computeFitnessAndSort();
         fitnessAverage = 0.0f;
         hasConverged = false;
@@ -160,7 +161,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         }
         sort(new ChromosomeComparator());
         // 2/3 of the current population is selected for reproduction in the 
-        // next generation
+        // next generation (1/3 is discarded).
         int thresshold = size() * 2 / 3;
         CopyOnWriteArrayList<Chromosome> bestAdapted = new CopyOnWriteArrayList<>();
         for (int i = 0; i <= thresshold; i++) {
@@ -210,7 +211,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
                 // Repeat until the number of mutations has been reached.
                 for (Genes gene : mutatedGenes) {
                     // Because the number of alleles is very reduced, this loop 
-                    // assure the mutation is effective and is not ersulting in 
+                    // assure the mutation is effective and is not resulting in 
                     // the same allele for the mutated gene.
                     while (chromosome.getAllele(gene) == mutatedChromosome.getAllele(gene)) {
                         // Select the allele
@@ -255,15 +256,15 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
                     }
                 }
                 // Randomly select one crossing point in the chromosome.
-                int crossingPoint = ThreadLocalRandom.current().nextInt(0, genesForTheNewChromosome.size());
+                int crossoverPoint = ThreadLocalRandom.current().nextInt(0, genesForTheNewChromosome.size());
                 // Ramdomly select whether the crossover will be from the 
                 // beginning of the chromosome to the crossing point or from the 
                 // crossing point to the end of the chromosome.
-                boolean fromBeginToCrossingPoint = (ThreadLocalRandom.current().nextInt(0, 1) == 0);
-                if (fromBeginToCrossingPoint) {
+                boolean beginningIsTheAnchorPoint = (ThreadLocalRandom.current().nextInt(0, 1) == 0);
+                if (beginningIsTheAnchorPoint) {
                     // Genes from chromosome A and B are exchanged from the 
                     // beginning of the chromosome to the crossing point.
-                    for (int j = crossingPoint; j < genesForTheNewChromosome.size(); j++) {
+                    for (int j = crossoverPoint; j < genesForTheNewChromosome.size(); j++) {
                         chromosomeA.updateAllele(genesForTheNewChromosome.get(j), get(i + 1).getAllele(genesForTheNewChromosome.get(j)));
                         chromosomeB.updateAllele(genesForTheNewChromosome.get(j), get(i).getAllele(genesForTheNewChromosome.get(j)));
                     }
@@ -272,7 +273,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
                 } else {
                     // Genes from chromosome A and B are exchanged from the 
                     // crossing point to the end of the chromosome.
-                    for (int j = 0; j < crossingPoint; j++) {
+                    for (int j = 0; j < crossoverPoint; j++) {
                         chromosomeA.updateAllele(genesForTheNewChromosome.get(j), get(i + 1).getAllele(genesForTheNewChromosome.get(j)));
                         chromosomeB.updateAllele(genesForTheNewChromosome.get(j), get(i).getAllele(genesForTheNewChromosome.get(j)));
                     }
@@ -296,14 +297,14 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         hasConverged = false;
         fitnessAverage = 0.0f;
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            chromosome.computeFitness(initialStatus, strategicGoals);
+            chromosome.computeFitness(initialStatus, strategicConstraints);
             fitnessAverage += chromosome.getFitness();
         }
         fitnessAverage /= size();
         sort(new ChromosomeComparator());
         if (!isEmpty()) {
-            if (get(0).getFitnessComplianceGoalsCoverage() >= 1.0f) {
-                if (get(0).getFitness() >= 0.99f) {
+            if (get(0).getFitnessConstraintsCoverage() >= 1.0f) {
+                if (get(0).getFitnessSimilarityToCurrentState() >= 0.85f) {
                     hasConverged = true;
                 }
             }
@@ -357,7 +358,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         int i = 0;
         System.out.println("Final population:");
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            System.out.println("\t" +i+"#"+ chromosome.getFitness() + "#" + chromosome.getFitnessComplianceGoalsCoverage() + "#" + chromosome.getFitnessSimilarityToCurrentState() + "#" + chromosome.getFitnessGlobalCybersecurityState());
+            System.out.println("\t" + i + "#" + chromosome.getFitness() + "#" + chromosome.getFitnessConstraintsCoverage() + "#" + chromosome.getFitnessSimilarityToCurrentState() + "#" + chromosome.getFitnessGlobalCybersecurityState());
             i++;
         }
     }

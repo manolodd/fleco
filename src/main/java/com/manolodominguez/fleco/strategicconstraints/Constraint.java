@@ -20,15 +20,15 @@
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  */
-package com.manolodominguez.fleco.strategicgoals;
+package com.manolodominguez.fleco.strategicconstraints;
 
 /**
- * This class implements an strategic goal that consist of a comparison operator
- * and a thresshold value it refers to.
+ * This class implements a strategic constraint that consist of a comparison
+ * operator and a thresshold value it refers to.
  *
  * @author Manuel Domínguez-Dorado
  */
-public class Goal {
+public class Constraint {
 
     private ComparisonOperators comparisonOperator;
     private float thresshold;
@@ -38,31 +38,31 @@ public class Goal {
      * attributes and create a new instance.
      *
      * @author Manuel Domínguez-Dorado
-     * @param operator A comparison operatos.
+     * @param operator A comparison operator.
      * @param thresshold A normalized float value, between 0.0 and 1.0, that
-     * represents a percentaje between 0'% and 100% and is related to the
+     * represents a percentaje between 0% and 100% and is related to the
      * defined operator.
      */
-    public Goal(ComparisonOperators operator, float thresshold) {
+    public Constraint(ComparisonOperators operator, float thresshold) {
         this.comparisonOperator = operator;
         this.thresshold = thresshold;
     }
 
     /**
-     * This method returns the the thresshold of this strategic goal.
+     * This method returns the the thresshold of this strategic constraint.
      *
      * @author Manuel Domínguez-Dorado
-     * @return the thresshold of this strategic goal.
+     * @return the thresshold of this strategic constraint.
      */
     public float getThresshold() {
         return thresshold;
     }
 
     /**
-     * This method returns the comparison operator of this strategic goal.
+     * This method returns the comparison operator of this strategic constraint.
      *
      * @author Manuel Domínguez-Dorado
-     * @return the comparison operator of this strategic goal.
+     * @return the comparison operator of this strategic constraint.
      */
     public ComparisonOperators getComparisonOperator() {
         return comparisonOperator;

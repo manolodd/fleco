@@ -25,7 +25,7 @@ package com.manolodominguez.fleco.algorithm;
 import com.manolodominguez.fleco.genetic.Alleles;
 import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.genetic.Genes;
-import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -80,14 +80,14 @@ public class FitnessEvaluatorFactory {
      * @author Manuel Domínguez Dorado
      * @param intChromosome The set of alleles (JMetal style) for each gen of
      * the chromosome.
-     * @param strategicGoals The set of strategic goals the allow the
+     * @param strategicConstraints The set of strategic constraints the allow the
      * computation of f1(x).
      * @param initialStatus A chromosome representing the initial status, needed
      * to compute f2(x).
      * @return the fitness value for every function to be optimized in an array
      * of floats
      */
-    public float[] getFitness(int[] intChromosome, StrategicGoals strategicGoals, Chromosome initialStatus) {
+    public float[] getFitness(int[] intChromosome, StrategicConstraints strategicConstraints, Chromosome initialStatus) {
         // Detects the implementation group from the lenght of intChromosome
         ImplementationGroups implementationGroup;
         switch (intChromosome.length) {
@@ -106,7 +106,7 @@ public class FitnessEvaluatorFactory {
         // Create a new Chromosome using the correct implementation group
         Chromosome chromosome = new Chromosome(implementationGroup);
         // In a loop, parse each gen of the chromosome to the discrete level of 
-        // implementation instead of the int values provided as an parameter
+        // implementation instead of the int values provided as a parameter
         CopyOnWriteArrayList<Genes> applicableGenes = Genes.getGenesFor(implementationGroup);
         Alleles allele;
         for (int i = 0; i < applicableGenes.size(); i++) {
@@ -129,11 +129,11 @@ public class FitnessEvaluatorFactory {
             chromosome.updateAllele(applicableGenes.get(i), allele);
         }
         // Compute fitness
-        chromosome.computeFitness(initialStatus, strategicGoals);
+        chromosome.computeFitness(initialStatus, strategicConstraints);
         chromosome.print();
-        fitnessValues[0] = chromosome.getFitnessComplianceGoalsCoverage();
+        fitnessValues[0] = chromosome.getFitnessConstraintsCoverage();
         fitnessValues[1] = chromosome.getFitnessSimilarityToCurrentState();
-        //fitnessValues[2] = chromosome.getFitnessGlobalCybersecurityState();
+        fitnessValues[2] = chromosome.getFitnessGlobalCybersecurityState();
         return fitnessValues;
     }
 }

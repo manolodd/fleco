@@ -22,7 +22,7 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.time.Duration;
@@ -52,15 +52,16 @@ public class FLECO {
     private int maxSeconds;
     private int initialPopulation;
     private Population population;
-    private StrategicGoals strategicGoals;
+    private StrategicConstraints strategicConstraints;
     private Chromosome initialStatus;
     private float requiredTime;
     private int requiredGenerations;
 
-    private static final float LOCAL_MINIMUM_PROBABILITY_PERCENTAGE = 0.1f;
+    private static final float LOCAL_MINIMUM_PROBABILITY_PERCENTAGE = 0.05f;
+    private static final float TOO_MUCH_TIME_STAGNATED_FACTOR = 1.25f;
     private static final int DEFAULT_MUTATION_INCREASING_FACTOR = 1;
-    private static final int HIGHER_MUTATION_INCREASING_FACTOR = 100;
-    private static final float POPULATION_INCREASING_FACTOR = 1.5f;
+    private static final int HIGHER_MUTATION_INCREASING_FACTOR = 20;
+    private static final float POPULATION_INCREASING_FACTOR = 1.50f;
     private static final int BEST_CHROMOSOME_INDEX = 0;
     private static final int REPORTING_CYCLE = 100;
 
@@ -83,21 +84,20 @@ public class FLECO {
      * criticality is LOW, MEDIUM or HIGH.
      * @param initialStatus A chromosome representing the initial cybersecurity
      * status of the asset, as defined in CyberTOMP.
-     * @param strategicGoals A set of constraints/goals over the asset,
-     * functions, categories or expected outcomes, that are understood as the
-     * strategic cybersecurity goals.
+     * @param strategicConstraints A set of constraints over the asset,
+     * functions, categories or expected outcomes.
      */
-    public FLECO(int initialPopulation, int maxSeconds, float mutationProbability, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicGoals strategicGoals) {
+    public FLECO(int initialPopulation, int maxSeconds, float mutationProbability, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicConstraints strategicConstraints) {
         this.implementationGroup = implementationGroup;
         this.initialStatus = initialStatus;
-        this.strategicGoals = strategicGoals;
+        this.strategicConstraints = strategicConstraints;
         this.initialPopulation = initialPopulation;
         this.maxSeconds = maxSeconds;
         this.mutationProbability = mutationProbability;
         this.crossoverProbability = crossoverProbability;
         requiredTime = 0.0f;
         requiredGenerations = 0;
-        population = new Population(initialPopulation, this.implementationGroup, this.initialStatus, this.strategicGoals);
+        population = new Population(initialPopulation, this.implementationGroup, this.initialStatus, this.strategicConstraints);
     }
 
     /**
@@ -113,6 +113,7 @@ public class FLECO {
         int mutationIncreasingFactor = 1;
         float localMinimumprobabilityThresshold = maxSeconds * LOCAL_MINIMUM_PROBABILITY_PERCENTAGE;
         boolean isInALocalMinimum = false;
+        boolean tooMuchTimeInALocalMinimum = false;
         Temporal begin = Instant.now();
         Temporal end;
         Temporal latestBestFitnessChange = Instant.now();
@@ -129,8 +130,17 @@ public class FLECO {
             // Once the cumulative probability of being in a local minimum 
             // surpasses the predetermined threshold, the algorithm is 
             // considered to be in a local minimum, requiring an escape plan.
-            Duration blockingDuration = Duration.between(latestBestFitnessChange, Instant.now());
-            isInALocalMinimum = (blockingDuration.get(ChronoUnit.SECONDS) > localMinimumprobabilityThresshold);
+            // When this period reach the double, it is considered to be too
+            // much time.
+            Duration stagnationTime = Duration.between(latestBestFitnessChange, Instant.now());
+            isInALocalMinimum = false;
+            tooMuchTimeInALocalMinimum = false;
+            if (stagnationTime.get(ChronoUnit.SECONDS) > localMinimumprobabilityThresshold) {
+                isInALocalMinimum = true;
+                if (stagnationTime.get(ChronoUnit.SECONDS) > (localMinimumprobabilityThresshold * TOO_MUCH_TIME_STAGNATED_FACTOR)) {
+                    tooMuchTimeInALocalMinimum = true;
+                }
+            }
             // If the algorithm is in a local minimum, it amplifies the mutation
             // rate to the predefined higher value; otherwise, it resets the 
             // rate to the default value.
@@ -143,16 +153,18 @@ public class FLECO {
             if ((currentGeneration % REPORTING_CYCLE) == 0) {
                 System.out.println("Generation: " + currentGeneration + "   Current best solution: " + population.get(BEST_CHROMOSOME_INDEX).getFitness() + "   Population size: " + population.size() + "   Population's average fitness: " + population.getFitnessAverage());
             }
-            // Calculate the fitness and arrange the population accordingly, 
-            // taking it into consideration.
+            // Calculate the fitness and arrange the population accordingly. 
+            // Reduce the population removing the worst individuals.
             population.selectBestAdapted();
-            // If the algorithm is trapped in a local minimum, it removes the 
-            // currently selected best chromosome and injects a predefined 
-            // quantity of random chromosomes into the population to enhance 
-            // diversity. 
+            // If the algorithm is trapped in a local minimum, injects a 
+            // predefined quantity of random chromosomes into the population to 
+            // increase diversity. Moreover, if it has been stagnated too much
+            // time, it removes the currently selected best chromosome.
             if (isInALocalMinimum) {
-                if (!population.isEmpty()) {
-                    population.remove(BEST_CHROMOSOME_INDEX);
+                if (tooMuchTimeInALocalMinimum) {
+                    if (!population.isEmpty()) {
+                        population.remove(BEST_CHROMOSOME_INDEX);
+                    }
                 }
                 population.populateRandomly((int) (initialPopulation * POPULATION_INCREASING_FACTOR));
             }

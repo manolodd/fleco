@@ -22,8 +22,8 @@
  */
 package com.manolodominguez.fleco.genetic;
 
-import com.manolodominguez.fleco.strategicgoals.Goal;
-import com.manolodominguez.fleco.strategicgoals.StrategicGoals;
+import com.manolodominguez.fleco.strategicconstraints.Constraint;
+import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
@@ -191,6 +191,62 @@ public class Chromosome {
     }
 
     /**
+     * This method prints in console a plain version of the chromosome showing
+     * the value of every gene.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    public void printGenes() {
+        EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
+        EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
+        EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
+        Float assetValue = 0.0f;
+
+        float auxFunctionFitness = 0.0f;
+        float auxCategoryFitness = 0.0f;
+        int num = 0;
+        for (Functions f : Functions.values()) {
+            if (f.appliesToIG(implementationGroup)) {
+                auxFunctionFitness = 0.0f;
+
+                for (Categories c : f.getCategories(implementationGroup)) {
+                    auxCategoryFitness = 0.0f;
+                    for (Genes g : c.getGenes(implementationGroup)) {
+                        // Gene raw value
+                        genesValues.put(g, getAllele(g).getDLI());
+                        // To compute category fitness
+                        num++;
+                        auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
+                    }
+                    // Category raw value
+                    categoriesValues.put(c, auxCategoryFitness);
+                    // To compute Function fitness
+                    auxCategoryFitness *= c.getWeight(implementationGroup);
+                    if (auxCategoryFitness > c.getWeight(implementationGroup)) {
+                        auxCategoryFitness = c.getWeight(implementationGroup);
+                    }
+                    auxFunctionFitness += auxCategoryFitness;
+                }
+                // Function raw value
+                functionsValues.put(f, auxFunctionFitness);
+                // To compute asset fitness
+                auxFunctionFitness *= f.getWeight(implementationGroup);
+                if (auxFunctionFitness > f.getWeight(implementationGroup)) {
+                    auxFunctionFitness = f.getWeight(implementationGroup);
+                }
+                assetValue += auxFunctionFitness;
+            }
+        }
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            for (Categories category : function.getCategories(implementationGroup)) {
+                for (Genes gene : category.getGenes(implementationGroup)) {
+                    System.out.println(gene.name() + "#" + getAllele(gene).getDLI());
+                }
+            }
+        }
+    }
+
+    /**
      * This method prints in console a beautified version of the chromosome.It
      * includes information to compare the chromosome to a previous initial
      * state.
@@ -288,44 +344,45 @@ public class Chromosome {
      * @author Manuel Domínguez-Dorado
      * @param initialStatus A chromosome representing an initial cybersecurity
      * status.
-     * @param strategicGoals A ser of strategic goals to be takein into
-     * consideration when optimizing the three optimization objectives.
+     * @param strategicConstraints A ser of strategic constraints to be takein
+     * into consideration when optimizing the three optimization objectives.
      */
-    public void computeFitness(Chromosome initialStatus, StrategicGoals strategicGoals) {
-        fitness1 = computeFitnessComplianceGoalsCoverage(strategicGoals);
+    public void computeFitness(Chromosome initialStatus, StrategicConstraints strategicConstraints) {
+        fitness1 = computeFitnessConstraintsCoverage(strategicConstraints);
         fitness2 = computeFitnessSimilarityToCurrentState(initialStatus);
         fitness3 = computeFitnessGlobalCybersecurityState();
     }
 
     /**
      * This method returns the fitness related to the optimization objective 1
-     * (compliance with the defined strategic goals).
+     * (compliance with the defined strategic constraints).
      *
      * @author Manuel Domínguez-Dorado
      * @return the fitness related to the optimization objective 1 (compliance
-     * with the defined strategic goals).
+     * with the defined strategic constraints).
      */
-    public float getFitnessComplianceGoalsCoverage() {
+    public float getFitnessConstraintsCoverage() {
         return this.fitness1;
     }
 
     /**
      * This method returns the fitness related to the optimization objective 1
-     * (compliance with the defined strategic goals). This method goes goal by
-     * goal checking whether the goal is satisfied by the current chromosome. If
-     * this is the case, the goal is considered as satisfied (+1.0). Otherwise,
-     * a linear value between 0.0 and 1.0 is asigned depending on the degree of
-     * compliance regarding the goal. Finally a value representing the number of
-     * goals satisfied by this chromosome in relation to the total number of
-     * goals is returned as a normalized value between 0.0 and 1.0.
+     * (compliance with the defined strategic constraints). This method goes
+     * constraint by constraint checking whether the constraint is satisfied by
+     * the current chromosome. If this is the case, the constraint is considered
+     * as satisfied (+1.0). Otherwise, a linear value between 0.0 and 1.0 is
+     * asigned depending on the degree of compliance regarding the constraint.
+     * Finally a value representing the number of constraints satisfied by this
+     * chromosome in relation to the total number of constraints is returned as
+     * a normalized value between 0.0 and 1.0.
      *
      * @author Manuel Domínguez-Dorado
      * @return the fitness related to the optimization objective 1 (compliance
-     * with the defined strategic goals).
+     * with the defined strategic constraints).
      */
-    private float computeFitnessComplianceGoalsCoverage(StrategicGoals strategicGoals) {
-        float numberOfGoals = strategicGoals.numberOfGoals();
-        float satisfiedGoals = 0.0f;
+    private float computeFitnessConstraintsCoverage(StrategicConstraints strategicConstraints) {
+        float numberOfConstraints = strategicConstraints.numberOfConstraints();
+        float satisfiedConstraints = 0.0f;
         EnumMap<Genes, Float> genesValues = new EnumMap<>(Genes.class);
         EnumMap<Categories, Float> categoriesValues = new EnumMap<>(Categories.class);
         EnumMap<Functions, Float> functionsValues = new EnumMap<>(Functions.class);
@@ -368,53 +425,53 @@ public class Chromosome {
         }
 
         for (Genes gene : genesValues.keySet()) {
-            if (strategicGoals.hasDefinedGoal(gene)) {
-                Goal goal = strategicGoals.getGoal(gene);
-                switch (goal.getComparisonOperator()) {
+            if (strategicConstraints.hasDefinedConstraint(gene)) {
+                Constraint constraint = strategicConstraints.getConstraint(gene);
+                switch (constraint.getComparisonOperator()) {
 
                     case LESS:
-                        if (genesValues.get(gene) < goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if ((genesValues.get(gene) == 1.0f) && (goal.getThresshold() == 1.0f)) {
-                            satisfiedGoals += 0.99f;
+                        if (genesValues.get(gene) < constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if ((genesValues.get(gene) == 1.0f) && (constraint.getThresshold() == 1.0f)) {
+                            satisfiedConstraints += 0.99f;
                         } else {
-                            satisfiedGoals += (-0.99f / (1.0f - goal.getThresshold())) * genesValues.get(gene) + (0.99f - (-0.99f / (1.0f - goal.getThresshold())) * goal.getThresshold());
+                            satisfiedConstraints += (-0.99f / (1.0f - constraint.getThresshold())) * genesValues.get(gene) + (0.99f - (-0.99f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
                         }
                         break;
 
                     case LESS_OR_EQUAL:
-                        if (genesValues.get(gene) <= goal.getThresshold()) {
-                            satisfiedGoals++;
+                        if (genesValues.get(gene) <= constraint.getThresshold()) {
+                            satisfiedConstraints++;
                         } else {
-                            satisfiedGoals += (-1.0f / (1.0f - goal.getThresshold())) * genesValues.get(gene) + (1.0f - (-1.0f / (1.0f - goal.getThresshold())) * goal.getThresshold());
+                            satisfiedConstraints += (-1.0f / (1.0f - constraint.getThresshold())) * genesValues.get(gene) + (1.0f - (-1.0f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
                         }
                         break;
 
                     case EQUAL:
-                        if (genesValues.get(gene) == goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if (genesValues.get(gene) > goal.getThresshold()) {
-                            satisfiedGoals += (-1.0f / (1.0f - goal.getThresshold())) * genesValues.get(gene) + (1.0f - (-1.0f / (1.0f - goal.getThresshold())) * goal.getThresshold());
-                        } else if (genesValues.get(gene) > goal.getThresshold()) {
-                            satisfiedGoals += ((genesValues.get(gene) / goal.getThresshold()));
+                        if (genesValues.get(gene) == constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if (genesValues.get(gene) > constraint.getThresshold()) {
+                            satisfiedConstraints += (-1.0f / (1.0f - constraint.getThresshold())) * genesValues.get(gene) + (1.0f - (-1.0f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
+                        } else if (genesValues.get(gene) > constraint.getThresshold()) {
+                            satisfiedConstraints += ((genesValues.get(gene) / constraint.getThresshold()));
                         }
                         break;
 
                     case GREATER:
-                        if (genesValues.get(gene) > goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if ((genesValues.get(gene) == 0.0f) && (goal.getThresshold() == 0.0f)) {
-                            satisfiedGoals += 0.99f;
+                        if (genesValues.get(gene) > constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if ((genesValues.get(gene) == 0.0f) && (constraint.getThresshold() == 0.0f)) {
+                            satisfiedConstraints += 0.99f;
                         } else {
-                            satisfiedGoals += ((0.99f * genesValues.get(gene)) / goal.getThresshold());
+                            satisfiedConstraints += ((0.99f * genesValues.get(gene)) / constraint.getThresshold());
                         }
                         break;
 
                     case GREATER_OR_EQUAL:
-                        if (genesValues.get(gene) >= goal.getThresshold()) {
-                            satisfiedGoals++;
+                        if (genesValues.get(gene) >= constraint.getThresshold()) {
+                            satisfiedConstraints++;
                         } else {
-                            satisfiedGoals += ((genesValues.get(gene) / goal.getThresshold()));
+                            satisfiedConstraints += ((genesValues.get(gene) / constraint.getThresshold()));
                         }
                         break;
 
@@ -425,48 +482,48 @@ public class Chromosome {
         }
 
         for (Categories category : categoriesValues.keySet()) {
-            if (strategicGoals.hasDefinedGoal(category)) {
-                Goal goal = strategicGoals.getGoal(category);
-                switch (goal.getComparisonOperator()) {
+            if (strategicConstraints.hasDefinedConstraint(category)) {
+                Constraint constraint = strategicConstraints.getConstraint(category);
+                switch (constraint.getComparisonOperator()) {
                     case LESS:
-                        if (categoriesValues.get(category) < goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if ((categoriesValues.get(category) == 1.0f) && (goal.getThresshold() == 1.0f)) {
-                            satisfiedGoals += 0.99f;
+                        if (categoriesValues.get(category) < constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if ((categoriesValues.get(category) == 1.0f) && (constraint.getThresshold() == 1.0f)) {
+                            satisfiedConstraints += 0.99f;
                         } else {
-                            satisfiedGoals += (-0.99f / (1.0f - goal.getThresshold())) * categoriesValues.get(category) + (0.99f - (-0.99f / (1.0f - goal.getThresshold())) * goal.getThresshold());
+                            satisfiedConstraints += (-0.99f / (1.0f - constraint.getThresshold())) * categoriesValues.get(category) + (0.99f - (-0.99f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
                         }
                         break;
                     case LESS_OR_EQUAL:
-                        if (categoriesValues.get(category) <= goal.getThresshold()) {
-                            satisfiedGoals++;
+                        if (categoriesValues.get(category) <= constraint.getThresshold()) {
+                            satisfiedConstraints++;
                         } else {
-                            satisfiedGoals += (-1.0f / (1.0f - goal.getThresshold())) * categoriesValues.get(category) + (1.0f - (-1.0f / (1.0f - goal.getThresshold())) * goal.getThresshold());
+                            satisfiedConstraints += (-1.0f / (1.0f - constraint.getThresshold())) * categoriesValues.get(category) + (1.0f - (-1.0f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
                         }
                         break;
                     case EQUAL:
-                        if (categoriesValues.get(category) == goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if (categoriesValues.get(category) > goal.getThresshold()) {
-                            satisfiedGoals += (-1.0f / (1.0f - goal.getThresshold())) * categoriesValues.get(category) + (1.0f - (-1.0f / (1.0f - goal.getThresshold())) * goal.getThresshold());
-                        } else if (categoriesValues.get(category) > goal.getThresshold()) {
-                            satisfiedGoals += ((categoriesValues.get(category) / goal.getThresshold()));
+                        if (categoriesValues.get(category) == constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if (categoriesValues.get(category) > constraint.getThresshold()) {
+                            satisfiedConstraints += (-1.0f / (1.0f - constraint.getThresshold())) * categoriesValues.get(category) + (1.0f - (-1.0f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
+                        } else if (categoriesValues.get(category) > constraint.getThresshold()) {
+                            satisfiedConstraints += ((categoriesValues.get(category) / constraint.getThresshold()));
                         }
                         break;
                     case GREATER:
-                        if (categoriesValues.get(category) > goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if ((categoriesValues.get(category) == 0.0f) && (goal.getThresshold() == 0.0f)) {
-                            satisfiedGoals += 0.99f;
+                        if (categoriesValues.get(category) > constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if ((categoriesValues.get(category) == 0.0f) && (constraint.getThresshold() == 0.0f)) {
+                            satisfiedConstraints += 0.99f;
                         } else {
-                            satisfiedGoals += ((0.99f * categoriesValues.get(category)) / goal.getThresshold());
+                            satisfiedConstraints += ((0.99f * categoriesValues.get(category)) / constraint.getThresshold());
                         }
                         break;
                     case GREATER_OR_EQUAL:
-                        if (categoriesValues.get(category) >= goal.getThresshold()) {
-                            satisfiedGoals++;
+                        if (categoriesValues.get(category) >= constraint.getThresshold()) {
+                            satisfiedConstraints++;
                         } else {
-                            satisfiedGoals += ((categoriesValues.get(category) / goal.getThresshold()));
+                            satisfiedConstraints += ((categoriesValues.get(category) / constraint.getThresshold()));
                         }
                         break;
                     default:
@@ -476,48 +533,48 @@ public class Chromosome {
         }
 
         for (Functions function : functionsValues.keySet()) {
-            if (strategicGoals.hasDefinedGoal(function)) {
-                Goal goal = strategicGoals.getGoal(function);
-                switch (goal.getComparisonOperator()) {
+            if (strategicConstraints.hasDefinedConstraint(function)) {
+                Constraint constraint = strategicConstraints.getConstraint(function);
+                switch (constraint.getComparisonOperator()) {
                     case LESS:
-                        if (functionsValues.get(function) < goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if ((functionsValues.get(function) == 1.0f) && (goal.getThresshold() == 1.0f)) {
-                            satisfiedGoals += 0.99f;
+                        if (functionsValues.get(function) < constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if ((functionsValues.get(function) == 1.0f) && (constraint.getThresshold() == 1.0f)) {
+                            satisfiedConstraints += 0.99f;
                         } else {
-                            satisfiedGoals += (-0.99f / (1.0f - goal.getThresshold())) * functionsValues.get(function) + (0.99f - (-0.99f / (1.0f - goal.getThresshold())) * goal.getThresshold());
+                            satisfiedConstraints += (-0.99f / (1.0f - constraint.getThresshold())) * functionsValues.get(function) + (0.99f - (-0.99f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
                         }
                         break;
                     case LESS_OR_EQUAL:
-                        if (functionsValues.get(function) <= goal.getThresshold()) {
-                            satisfiedGoals++;
+                        if (functionsValues.get(function) <= constraint.getThresshold()) {
+                            satisfiedConstraints++;
                         } else {
-                            satisfiedGoals += (-1.0f / (1.0f - goal.getThresshold())) * functionsValues.get(function) + (1.0f - (-1.0f / (1.0f - goal.getThresshold())) * goal.getThresshold());
+                            satisfiedConstraints += (-1.0f / (1.0f - constraint.getThresshold())) * functionsValues.get(function) + (1.0f - (-1.0f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
                         }
                         break;
                     case EQUAL:
-                        if (functionsValues.get(function) == goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if (functionsValues.get(function) > goal.getThresshold()) {
-                            satisfiedGoals += (-1.0f / (1.0f - goal.getThresshold())) * functionsValues.get(function) + (1.0f - (-1.0f / (1.0f - goal.getThresshold())) * goal.getThresshold());
-                        } else if (functionsValues.get(function) > goal.getThresshold()) {
-                            satisfiedGoals += ((functionsValues.get(function) / goal.getThresshold()));
+                        if (functionsValues.get(function) == constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if (functionsValues.get(function) > constraint.getThresshold()) {
+                            satisfiedConstraints += (-1.0f / (1.0f - constraint.getThresshold())) * functionsValues.get(function) + (1.0f - (-1.0f / (1.0f - constraint.getThresshold())) * constraint.getThresshold());
+                        } else if (functionsValues.get(function) > constraint.getThresshold()) {
+                            satisfiedConstraints += ((functionsValues.get(function) / constraint.getThresshold()));
                         }
                         break;
                     case GREATER:
-                        if (functionsValues.get(function) > goal.getThresshold()) {
-                            satisfiedGoals++;
-                        } else if ((functionsValues.get(function) == 0.0f) && (goal.getThresshold() == 0.0f)) {
-                            satisfiedGoals += 0.99f;
+                        if (functionsValues.get(function) > constraint.getThresshold()) {
+                            satisfiedConstraints++;
+                        } else if ((functionsValues.get(function) == 0.0f) && (constraint.getThresshold() == 0.0f)) {
+                            satisfiedConstraints += 0.99f;
                         } else {
-                            satisfiedGoals += ((0.99f * functionsValues.get(function)) / goal.getThresshold());
+                            satisfiedConstraints += ((0.99f * functionsValues.get(function)) / constraint.getThresshold());
                         }
                         break;
                     case GREATER_OR_EQUAL:
-                        if (functionsValues.get(function) >= goal.getThresshold()) {
-                            satisfiedGoals++;
+                        if (functionsValues.get(function) >= constraint.getThresshold()) {
+                            satisfiedConstraints++;
                         } else {
-                            satisfiedGoals += ((functionsValues.get(function) / goal.getThresshold()));
+                            satisfiedConstraints += ((functionsValues.get(function) / constraint.getThresshold()));
                         }
                         break;
                     default:
@@ -526,58 +583,58 @@ public class Chromosome {
             }
         }
 
-        if (strategicGoals.hasDefinedGoal()) {
-            Goal condition = strategicGoals.getGoal();
+        if (strategicConstraints.hasDefinedConstraint()) {
+            Constraint condition = strategicConstraints.getConstraint();
             switch (condition.getComparisonOperator()) {
                 case LESS:
                     if (assetValue < condition.getThresshold()) {
-                        satisfiedGoals++;
+                        satisfiedConstraints++;
                     } else if ((assetValue == 1.0f) && (condition.getThresshold() == 1.0f)) {
-                        satisfiedGoals += 0.99f;
+                        satisfiedConstraints += 0.99f;
                     } else {
-                        satisfiedGoals += (-0.99f / (1.0f - condition.getThresshold())) * assetValue + (0.99f - (-0.99f / (1.0f - condition.getThresshold())) * condition.getThresshold());
+                        satisfiedConstraints += (-0.99f / (1.0f - condition.getThresshold())) * assetValue + (0.99f - (-0.99f / (1.0f - condition.getThresshold())) * condition.getThresshold());
                     }
                     break;
                 case LESS_OR_EQUAL:
                     if (assetValue <= condition.getThresshold()) {
-                        satisfiedGoals++;
+                        satisfiedConstraints++;
                     } else {
-                        satisfiedGoals += (-1.0f / (1.0f - condition.getThresshold())) * assetValue + (1.0f - (-1.0f / (1.0f - condition.getThresshold())) * condition.getThresshold());
+                        satisfiedConstraints += (-1.0f / (1.0f - condition.getThresshold())) * assetValue + (1.0f - (-1.0f / (1.0f - condition.getThresshold())) * condition.getThresshold());
                     }
                     break;
                 case EQUAL:
                     if (assetValue == condition.getThresshold()) {
-                        satisfiedGoals++;
+                        satisfiedConstraints++;
                     } else if (assetValue > condition.getThresshold()) {
-                        satisfiedGoals += (-1.0f / (1.0f - condition.getThresshold())) * assetValue + (1.0f - (-1.0f / (1.0f - condition.getThresshold())) * condition.getThresshold());
+                        satisfiedConstraints += (-1.0f / (1.0f - condition.getThresshold())) * assetValue + (1.0f - (-1.0f / (1.0f - condition.getThresshold())) * condition.getThresshold());
                     } else if (assetValue > condition.getThresshold()) {
-                        satisfiedGoals += ((assetValue / condition.getThresshold()));
+                        satisfiedConstraints += ((assetValue / condition.getThresshold()));
                     }
                     break;
                 case GREATER:
                     if (assetValue > condition.getThresshold()) {
-                        satisfiedGoals++;
+                        satisfiedConstraints++;
                     } else if ((assetValue == 0.0f) && (condition.getThresshold() == 0.0f)) {
-                        satisfiedGoals += 0.99f;
+                        satisfiedConstraints += 0.99f;
                     } else {
-                        satisfiedGoals += ((0.99f * assetValue) / condition.getThresshold());
+                        satisfiedConstraints += ((0.99f * assetValue) / condition.getThresshold());
                     }
                     break;
                 case GREATER_OR_EQUAL:
                     if (assetValue >= condition.getThresshold()) {
-                        satisfiedGoals++;
+                        satisfiedConstraints++;
                     } else {
-                        satisfiedGoals += ((assetValue / condition.getThresshold()));
+                        satisfiedConstraints += ((assetValue / condition.getThresshold()));
                     }
                     break;
                 default:
                     break;
             }
         }
-        if (numberOfGoals == 0.0f) {
+        if (numberOfConstraints == 0.0f) {
             return 1.0f;
         } else {
-            return (satisfiedGoals / numberOfGoals);
+            return (satisfiedConstraints / numberOfConstraints);
         }
     }
 

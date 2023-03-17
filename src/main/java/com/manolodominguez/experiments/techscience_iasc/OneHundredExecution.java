@@ -22,13 +22,13 @@
  */
 package com.manolodominguez.experiments.techscience_iasc;
 
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCEOLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG1;
+import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG2;
+import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.experiments.statuses.InitialStatusForIG1;
-import com.manolodominguez.experiments.techscience_iasc.experiments.statuses.InitialStatusForIG2;
-import com.manolodominguez.experiments.techscience_iasc.experiments.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.genetic.Chromosome;
-import com.manolodominguez.experiments.techscience_iasc.experiments.constraints.AFCEOLevelStrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
@@ -70,7 +70,7 @@ public class OneHundredExecution {
         //StrategicConstraints strategicConstraints = new AFLevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
         StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
-        // Prints FLECO parameters
+        //Prints FLECO parameters
         System.out.println("##################################################################");
         System.out.println("# FLECO dynamic, constrained, multi-objective, genetic algorithm #");
         System.out.println("##################################################################");

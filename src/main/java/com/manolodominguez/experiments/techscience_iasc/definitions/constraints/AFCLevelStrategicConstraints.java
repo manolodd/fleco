@@ -20,7 +20,7 @@
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  */
-package com.manolodominguez.experiments.techscience_iasc.experiments.constraints;
+package com.manolodominguez.experiments.techscience_iasc.definitions.constraints;
 
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;

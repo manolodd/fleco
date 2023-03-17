@@ -22,23 +22,14 @@
  */
 package com.manolodominguez.experiments.techscience_iasc;
 
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCEOLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG1;
+import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG2;
+import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.algorithm.FLECO;
-import com.manolodominguez.fleco.algorithm.FitnessEvaluatorFactory;
-import com.manolodominguez.fleco.events.ProgressEvent;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.experiments.statuses.InitialStatusForIG1;
-import com.manolodominguez.experiments.techscience_iasc.experiments.statuses.InitialStatusForIG2;
-import com.manolodominguez.experiments.techscience_iasc.experiments.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.genetic.Chromosome;
-import com.manolodominguez.fleco.genetic.Genes;
-import com.manolodominguez.experiments.techscience_iasc.experiments.constraints.ALevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.experiments.constraints.AFCLevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.experiments.constraints.AFLevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.experiments.constraints.AFCEOLevelStrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ThreadLocalRandom;
-import com.manolodominguez.fleco.events.IProgressEventListener;
 import com.manolodominguez.fleco.events.DefaultProgressEventListener;
 
 /**

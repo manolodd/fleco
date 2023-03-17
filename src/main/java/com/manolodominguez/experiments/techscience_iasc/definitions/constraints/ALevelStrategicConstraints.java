@@ -20,7 +20,7 @@
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  */
-package com.manolodominguez.experiments.techscience_iasc.experiments.constraints;
+package com.manolodominguez.experiments.techscience_iasc.definitions.constraints;
 
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
@@ -28,9 +28,10 @@ import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
- * This class implement a predefined set of strategic cybersecurity constraints that
- * are simple to solve because it contains only a constraint related to the overall
- * asset's cybersecurity status. It is intended only to ease the experiments.
+ * This class implement a predefined set of strategic cybersecurity constraints
+ * that are simple to solve because it contains only a constraint related to the
+ * overall asset's cybersecurity status. It is intended only to ease the
+ * experiments.
  *
  * @author Manuel Domínguez-Dorado
  */

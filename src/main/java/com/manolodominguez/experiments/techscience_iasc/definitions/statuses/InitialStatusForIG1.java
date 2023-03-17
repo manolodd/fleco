@@ -20,7 +20,7 @@
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  */
-package com.manolodominguez.experiments.techscience_iasc.experiments.statuses;
+package com.manolodominguez.experiments.techscience_iasc.definitions.statuses;
 
 import com.manolodominguez.fleco.genetic.Alleles;
 import com.manolodominguez.fleco.genetic.Chromosome;

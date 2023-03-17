@@ -114,6 +114,9 @@ public class FLECO {
      * @param progressEventListener the progress event listener.
      */
     public void setProgressEventListener(IProgressEventListener progressEventListener) {
+        if (this.progressEventListener != null) {
+            throw new IllegalArgumentException("FLECO already has a progress event listener. Only one is allowed.");
+        }
         this.progressEventListener = progressEventListener;
     }
 

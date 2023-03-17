@@ -47,29 +47,8 @@ import com.manolodominguez.fleco.events.DefaultProgressEventListener;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class Main {
-/*
-    public static void main(String[] args) {
-        new InitialStatusForIG3().print();
-    }
-*/    
-    /*
-    public static void main(String[] args) {
-        Genes.print();
-    }
-  */  
-    /*
-    public static void main(String[] args) {
-        int lenght = 47;
-        int[] intChromosome = new int[lenght];
-        for (int i=0; i<lenght; i++) {
-            intChromosome[i] = ThreadLocalRandom.current().nextInt(0, 3);
-        }
-        FitnessEvaluatorFactory fitnessEvaluator = FitnessEvaluatorFactory.getFitnessEvaluator();
-        fitnessEvaluator.getFitness(intChromosome, new ALevelStrategicConstraints(ImplementationGroups.IG1), new InitialStatusForIG1());
-    }
-*/    
-    
+public class OneExecution {
+
     public static void main(String[] args) {
         // *************************
         // Define FLECO's parameters 
@@ -102,6 +81,7 @@ public class Main {
         //StrategicConstraints strategicConstraints = new AFLevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
         StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
+        
         // Prints FLECO parameters
         System.out.println("##################################################################");
         System.out.println("# FLECO dynamic, constrained, multi-objective, genetic algorithm #");
@@ -128,22 +108,18 @@ public class Main {
         System.out.println("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
         System.out.println("\t  and also the fitness of objetive 2 for that individual is greater or equal than 0.85).");
         System.out.println("\t· The maximum number of seconds have elapsed.\n");
+        
         Chromosome bestChromosome;
         FLECO fleco;
         fleco = new FLECO(initialPopulation, maxSeconds, mutationProbability, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
         fleco.setProgressEventListener(new DefaultProgressEventListener());
-        //for (int i = 0; i < 100; i++) {
-            //fleco = new FLECO(initialPopulation, maxSeconds, mutationProbability, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
-            fleco.evolve();
-            bestChromosome = fleco.getBestChromosome();
-            if (fleco.hasConverged()) {
-                System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
-                //System.out.println(i + "#CONVERGED#" + fleco.getRequiredTime() + "#" + fleco.getRequiredGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
-            } else {
-                //System.out.println(i + "#!CONVERGED#" + fleco.getRequiredTime() + "#" + fleco.getRequiredGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
-                System.out.println("\nFLECO has not converged. A sub-optimal solutions has been found.\n");
-            }
-        //}
+        fleco.evolve();
+        bestChromosome = fleco.getBestChromosome();
+        if (fleco.hasConverged()) {
+            System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
+        } else {
+            System.out.println("\nFLECO has not converged. A sub-optimal solutions has been found.\n");
+        }
 
         // After the completion of FLECO, the optimal solution can be accessed.
         System.out.println("####################################################");
@@ -157,8 +133,5 @@ public class Main {
         bestChromosome.print(initialStatus);
         System.out.println("####################################################\n");
         System.out.println("\nTime required: " + fleco.getRequiredTime() + " seconds  (" + fleco.getRequiredGenerations() + " generations)\n");
-
-        //fleco.getPopulation().print();
     }
-     
 }

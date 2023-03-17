@@ -22,6 +22,9 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
+import com.manolodominguez.fleco.events.IProgressEventListener;
+import com.manolodominguez.fleco.events.ProgressEvent;
+import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
@@ -56,6 +59,8 @@ public class FLECO {
     private Chromosome initialStatus;
     private float requiredTime;
     private int requiredGenerations;
+    private IProgressEventListener progressEventListener;
+    private RotaryIDGenerator rotaryIDGenerator;
 
     private static final float LOCAL_MINIMUM_PROBABILITY_PERCENTAGE = 0.05f;
     private static final float TOO_MUCH_TIME_STAGNATED_FACTOR = 1.25f;
@@ -98,6 +103,18 @@ public class FLECO {
         requiredTime = 0.0f;
         requiredGenerations = 0;
         population = new Population(initialPopulation, this.implementationGroup, this.initialStatus, this.strategicConstraints);
+        rotaryIDGenerator = new RotaryIDGenerator();
+        progressEventListener = null;
+    }
+
+    /**
+     * This method sets the progress event listener for FLECO.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param progressEventListener the progress event listener.
+     */
+    public void setProgressEventListener(IProgressEventListener progressEventListener) {
+        this.progressEventListener = progressEventListener;
     }
 
     /**
@@ -149,13 +166,16 @@ public class FLECO {
             } else {
                 mutationIncreasingFactor = DEFAULT_MUTATION_INCREASING_FACTOR;
             }
-            // Output relevant information as necessary.
-            if ((currentGeneration % REPORTING_CYCLE) == 0) {
-                System.out.println("Generation: " + currentGeneration + "   Current best solution: " + population.get(BEST_CHROMOSOME_INDEX).getFitness() + "   Population size: " + population.size() + "   Population's average fitness: " + population.getFitnessAverage());
-            }
             // Calculate the fitness and arrange the population accordingly. 
             // Reduce the population removing the worst individuals.
             population.selectBestAdapted();
+            // Spread progress event.
+            if (progressEventListener != null) {
+                long totalTime = maxSeconds * 1000;
+                long currentTime = Instant.now().toEpochMilli() - Instant.from(begin).toEpochMilli();
+                ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(0), population.hasConverged());
+                progressEventListener.onProgressEventReceived(event);
+            }
             // If the algorithm is trapped in a local minimum, injects a 
             // predefined quantity of random chromosomes into the population to 
             // increase diversity. Moreover, if it has been stagnated too much

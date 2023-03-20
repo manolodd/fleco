@@ -39,6 +39,15 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
  */
 public class OneHundredExecution {
 
+    /**
+     * This methods run an experiment that takes a initial cybersecurity status
+     * for a given asset and also a set of strategic cybersecurity constraints 
+     * and run FLECO one hundred times to find one hundred solutions in the form
+     * of desired cybersecurity statuses.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         // *************************
         // Define FLECO's parameters 
@@ -103,9 +112,9 @@ public class OneHundredExecution {
             fleco.evolve();
             bestChromosome = fleco.getBestChromosome();
             if (fleco.hasConverged()) {
-                System.out.println(i + "#CONVERGED#" + fleco.getRequiredTime() + "#" + fleco.getRequiredGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                System.out.println(i + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
             } else {
-                System.out.println(i + "#!CONVERGED#" + fleco.getRequiredTime() + "#" + fleco.getRequiredGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                System.out.println(i + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
             }
         }
     }

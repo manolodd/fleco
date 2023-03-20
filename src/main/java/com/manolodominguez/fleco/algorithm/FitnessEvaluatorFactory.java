@@ -31,17 +31,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This class implement the singleton patter to provide a method to evaluate the
- * fitnesses of a chromosome (required by JMetal).
+ * fitnesses of a chromosome. This implementation is not required by FLECO
+ * itself but eases the integration of FLECO into JMetal Framework to run
+ * pre-existent genetic algorithm using FLECO's fitnes functions.
  *
  * @author Manuel Domínguez Dorado
  */
 public class FitnessEvaluatorFactory {
 
     private static final int NUMBER_OF_OBJECTIVES = 2;
-    
+
     private static FitnessEvaluatorFactory instance = null;
     private float[] fitnessValues;
-    
+
     /**
      * This is the constructor of the class. It creates a new instance and a new
      * array to store the fitness values.
@@ -80,8 +82,8 @@ public class FitnessEvaluatorFactory {
      * @author Manuel Domínguez Dorado
      * @param intChromosome The set of alleles (JMetal style) for each gen of
      * the chromosome.
-     * @param strategicConstraints The set of strategic constraints the allow the
-     * computation of f1(x).
+     * @param strategicConstraints The set of strategic constraints the allow
+     * the computation of f1(x).
      * @param initialStatus A chromosome representing the initial status, needed
      * to compute f2(x).
      * @return the fitness value for every function to be optimized in an array
@@ -124,7 +126,7 @@ public class FitnessEvaluatorFactory {
                     allele = Alleles.DLI_100;
                     break;
                 default:
-                    throw new IllegalArgumentException("Value in position "+i+" of intChromosome is out of the range 0-3");
+                    throw new IllegalArgumentException("Value in position " + i + " of intChromosome is out of the range 0-3");
             }
             chromosome.updateAllele(applicableGenes.get(i), allele);
         }

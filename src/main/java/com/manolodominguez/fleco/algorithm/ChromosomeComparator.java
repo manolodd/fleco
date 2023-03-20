@@ -27,7 +27,7 @@ import java.util.Comparator;
 
 /**
  * This class implements a chromosome comparator used to sort chromosomes in
- * lists, trees, etc. It is based only on the aggregated fitness value of each
+ * lists, trees, etc. It is based only on the weighted fitness function of each
  * chromosome that is compared.
  *
  * @author Manuel Domínguez-Dorado
@@ -35,7 +35,7 @@ import java.util.Comparator;
 public class ChromosomeComparator implements Comparator<Chromosome> {
 
     /**
-     * This methods compares two chromosomes in order to establish an order. 
+     * This methods compares two chromosomes in order to establish an order.
      *
      * @author Manuel Domínguez-Dorado
      * @param chromosome1 The first chromosome to be compared.

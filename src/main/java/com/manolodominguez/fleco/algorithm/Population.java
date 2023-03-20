@@ -28,7 +28,6 @@ import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumSet;
-import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -107,7 +106,8 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * This class randomly generates the specified number of chromosomes, and
      * insert them in the population, independently on whether the resulting
      * population's size is greater than the initial number of chromosomes or
-     * not.
+     * not. It is used to enlarge the population's size under certain
+     * circumstances.
      *
      * @author Manuel Domínguez-Dorado
      * @param additionalChromosomes the number of random chromosomes to add to
@@ -124,9 +124,9 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     }
 
     /**
-     * this method select those chromosomes whose fitness is beyond the average
-     * of the population as parents for the next generation. It discards the
-     * rest.
+     * This method select the established percentage of the population's best
+     * individuals as parents for the next generation, removing the twins if
+     * they exist. It discards the rest.
      *
      * @author Manuel Domínguez-Dorado
      */

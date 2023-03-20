@@ -57,8 +57,8 @@ public class FLECO {
     private Population population;
     private StrategicConstraints strategicConstraints;
     private Chromosome initialStatus;
-    private float requiredTime;
-    private int requiredGenerations;
+    private float usedTime;
+    private int usedGenerations;
     private IProgressEventListener progressEventListener;
     private RotaryIDGenerator rotaryIDGenerator;
 
@@ -68,7 +68,6 @@ public class FLECO {
     private static final int HIGHER_MUTATION_INCREASING_FACTOR = 20;
     private static final float POPULATION_INCREASING_FACTOR = 1.50f;
     private static final int BEST_CHROMOSOME_INDEX = 0;
-    private static final int REPORTING_CYCLE = 100;
 
     /**
      * This is the constructor of the class. It creates a new instance of FLECO
@@ -100,8 +99,8 @@ public class FLECO {
         this.maxSeconds = maxSeconds;
         this.mutationProbability = mutationProbability;
         this.crossoverProbability = crossoverProbability;
-        requiredTime = 0.0f;
-        requiredGenerations = 0;
+        usedTime = 0.0f;
+        usedGenerations = 0;
         population = new Population(initialPopulation, this.implementationGroup, this.initialStatus, this.strategicConstraints);
         rotaryIDGenerator = new RotaryIDGenerator();
         progressEventListener = null;
@@ -138,7 +137,7 @@ public class FLECO {
         Temporal end;
         Temporal latestBestFitnessChange = Instant.now();
         Duration duration;
-        requiredTime = 0.0f;
+        usedTime = 0.0f;
         while (!hasToFinish(begin)) {
             // The probability of being in a local minimum is raised each time 
             // the best fitness remains constant. Otherwise, the probability is 
@@ -207,8 +206,8 @@ public class FLECO {
         }
         end = Instant.now();
         duration = Duration.between(begin, end);
-        requiredTime = (duration.get(ChronoUnit.SECONDS) + (duration.get(ChronoUnit.NANOS) / 1000000000.0f));
-        requiredGenerations = currentGeneration;
+        usedTime = (duration.get(ChronoUnit.SECONDS) + (duration.get(ChronoUnit.NANOS) / 1000000000.0f));
+        usedGenerations = currentGeneration;
     }
 
     /**
@@ -218,8 +217,8 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      * @return the number of seconds the execution of FLECO has lasted.
      */
-    public float getRequiredTime() {
-        return requiredTime;
+    public float getUsedTime() {
+        return usedTime;
     }
 
     /**
@@ -229,12 +228,8 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      * @return the number of generations the execution of FLECO has required.
      */
-    public int getRequiredGenerations() {
-        return requiredGenerations;
-    }
-
-    public Population getPopulation() {
-        return population;
+    public int getUsedGenerations() {
+        return usedGenerations;
     }
 
     /**

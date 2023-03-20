@@ -40,6 +40,15 @@ import com.manolodominguez.fleco.events.DefaultProgressEventListener;
  */
 public class OneExecution {
 
+    /**
+     * This methods run an experiment that takes a initial cybersecurity status
+     * for a given asset and also a set of strategic cybersecurity constraints 
+     * and run FLECO to find a solution in the form of a desired cybersecurity 
+     * status.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         // *************************
         // Define FLECO's parameters 
@@ -66,13 +75,13 @@ public class OneExecution {
                 initialStatus = new InitialStatusForIG3();
                 break;
         }
-        // According to CyberTOMP, establish the strategic cybersecurity 
-        // objectives for this asset.
+        // According to CyberTOMP, this establishes the strategic cybersecurity 
+        // objectives for the asset.
         //StrategicConstraints strategicConstraints = new ALevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFLevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
         StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
-        
+
         // Prints FLECO parameters
         System.out.println("##################################################################");
         System.out.println("# FLECO dynamic, constrained, multi-objective, genetic algorithm #");
@@ -94,12 +103,12 @@ public class OneExecution {
         System.out.println("####################################################\n");
         // FLECO is employed to identify a collection of anticipated outcomes 
         // and their corresponding discrete implementation levels that meet the 
-        // necessary strategic cybersecurity objectives for this asset.
+        // necessary strategic cybersecurity constraints for the asset.
         System.out.println("Evolving population to find a solution. FLECO will stop when one of the following happens:");
         System.out.println("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
         System.out.println("\t  and also the fitness of objetive 2 for that individual is greater or equal than 0.85).");
         System.out.println("\t· The maximum number of seconds have elapsed.\n");
-        
+
         Chromosome bestChromosome;
         FLECO fleco;
         fleco = new FLECO(initialPopulation, maxSeconds, mutationProbability, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
@@ -109,7 +118,7 @@ public class OneExecution {
         if (fleco.hasConverged()) {
             System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
         } else {
-            System.out.println("\nFLECO has not converged. A sub-optimal solutions has been found.\n");
+            System.out.println("\nFLECO has not converged. No solution has been found that meet all criteria.\n");
         }
 
         // After the completion of FLECO, the optimal solution can be accessed.
@@ -123,6 +132,6 @@ public class OneExecution {
         System.out.println("Solution breakdown................: \n");
         bestChromosome.print(initialStatus);
         System.out.println("####################################################\n");
-        System.out.println("\nTime required: " + fleco.getRequiredTime() + " seconds  (" + fleco.getRequiredGenerations() + " generations)\n");
+        System.out.println("\nTime required: " + fleco.getUsedTime() + " seconds  (" + fleco.getUsedGenerations() + " generations)\n");
     }
 }

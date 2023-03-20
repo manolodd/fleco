@@ -1,9 +1,16 @@
 /* 
- * Open Licensing Risk Analysis Engine (Open LRAE) is a licensing risk analysis 
- * engine in the form of Java library that allow the detection of risks related 
- * to licensing from the set of components (and their respective licenses) you
- * are using in a given project.
- * 
+ *******************************************************************************
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic, 
+ * Constrained and Multi-objective Genetic Algorithm is a genetic algorithm 
+ * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
+ * decisions during the application of CyberTOMP(1), aimed at managing 
+ * comprehensive cybersecurity at both tactical and operational levels.
+ *
+ * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
+ * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
+ * manage asset-focused cybersecurity from tactical and operational levels. IEEE
+ * Access, 10, 122454-122485.
+ *******************************************************************************
  * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
  * 
  * This program is free software: you can redistribute it and/or modify it under 
@@ -19,6 +26,7 @@
  * You should have received a copy of the GNU Lesser General Public License 
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
+ *******************************************************************************
  */
 package com.manolodominguez.fleco.events;
 
@@ -57,7 +65,7 @@ public class RotaryIDGenerator {
      * This method generates a new ID.
      *
      * @author Manuel Domínguez Dorado
-     * @return an integer value that is unique.
+     * @return the next identifier, as an integer value.
      */
     synchronized public int getNextIdentifier() {
         if (identifier >= Integer.MAX_VALUE) {
@@ -68,17 +76,4 @@ public class RotaryIDGenerator {
         return (identifier);
     }
 
-    /**
-     * This method sets the new internal value of the ID generator .
-     *
-     * @author Manuel Domínguez Dorado
-     * @param newInternalIDValue the ID generator new internal value.
-     */
-    synchronized public void setIdentifier(int newInternalIDValue) {
-        if (newInternalIDValue < RotaryIDGenerator.DEFAULT_ID) {
-            throw new IllegalArgumentException("newInternalIDValue is out of range");
-        } else {
-            identifier = newInternalIDValue;
-        }
-    }
 }

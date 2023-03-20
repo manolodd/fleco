@@ -1,9 +1,16 @@
 /* 
- * Open Licensing Risk Analysis Engine (Open LRAE) is a licensing risk analysis 
- * engine in the form of Java library that allow the detection of risks related 
- * to licensing from the set of components (and their respective licenses) you
- * are using in a given project.
- * 
+ *******************************************************************************
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic, 
+ * Constrained and Multi-objective Genetic Algorithm is a genetic algorithm 
+ * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
+ * decisions during the application of CyberTOMP(1), aimed at managing 
+ * comprehensive cybersecurity at both tactical and operational levels.
+ *
+ * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
+ * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
+ * manage asset-focused cybersecurity from tactical and operational levels. IEEE
+ * Access, 10, 122454-122485.
+ *******************************************************************************
  * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
  * 
  * This program is free software: you can redistribute it and/or modify it under 
@@ -19,6 +26,7 @@
  * You should have received a copy of the GNU Lesser General Public License 
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
+ *******************************************************************************
  */
 package com.manolodominguez.fleco.events;
 
@@ -30,7 +38,7 @@ import java.time.Instant;
  * This class implements a progress event that will allow knowing the state of
  * the FLECO execution when it is running.
  *
- * @author Manuel Domínguez Dorado
+ * @author Manuel Domínguez-Dorado
  */
 @SuppressWarnings("serial")
 public class ProgressEvent extends FLECOEvent {
@@ -45,16 +53,20 @@ public class ProgressEvent extends FLECOEvent {
 
     /**
      * This method is the constrctor of the class.It creates a new instance of
- TProgressEvent.
+     * ProgressEvent.
      *
      * @author Manuel Domínguez Dorado
      * @param eventID The unique event identifier.
      * @param eventGenerator The object that generates the event.
-     * @param totalTime
-     * @param currentTime
-     * @param currentGeneration
-     * @param currentBestChromosome
-     * @param converged
+     * @param totalTime the total amount of time allowed before finishing the
+     * FLECO execution, as milliseconds.
+     * @param currentTime the time that has elapsed from the begining of FLECO
+     * execution, as milliseconds.
+     * @param currentGeneration the current generation of the FLECO's
+     * pupolation.
+     * @param currentBestChromosome the current best individual in FLECO's
+     * population.
+     * @param converged Whether the FLECO has converged (true) or not (false).
      */
     public ProgressEvent(FLECO eventGenerator, long eventID, long totalTime, long currentTime, long currentGeneration, Chromosome currentBestChromosome, boolean converged) {
         super(eventGenerator, eventID, Instant.now());
@@ -82,18 +94,43 @@ public class ProgressEvent extends FLECOEvent {
         return 1.0f;
     }
 
+    /**
+     * This method returns the current generation of FLECO's population.
+     *
+     * @author Manuel Domínguez Dorado
+     * @return the current generation of FLECO's population.
+     */
     public long getCurrentGeneration() {
         return currentGeneration;
     }
 
+    /**
+     * This method returns the current FLECO's population's best chromosome.
+     *
+     * @author Manuel Domínguez Dorado
+     * @return the current FLECO's population's best chromosome.
+     */
     public Chromosome getCurrentBestChromosome() {
         return this.currentBestChromosome;
     }
 
+    /**
+     * This method returns whether the FLECO's population has converged or not.
+     *
+     * @author Manuel Domínguez Dorado
+     * @return true, if the FLECO's population has converged. Otherwise, returns
+     * false.
+     */
     public boolean hasConverged() {
         return this.converged;
     }
 
+    /**
+     * This method prints the information of the event if the current generation
+     * is a multiple of 100 (to avoid being too much verbose).
+     *
+     * @author Manuel Domínguez Dorado
+     */
     public void print() {
         if ((currentGeneration % 100) == 0) {
             System.out.println("Time: " + currentTime + "/" + totalTime + "(" + (float) currentTime / totalTime + "%) Generation: " + currentGeneration + " Current best solution: " + currentBestChromosome.getFitness());
@@ -101,12 +138,12 @@ public class ProgressEvent extends FLECOEvent {
     }
 
     /**
-     * This method return the type of this event. It is one of the constants
-     * defined in TOpenSimMPLSEvent.
+     * This method return the type of this event. It is one of the enums defined
+     * in EventTypes.
      *
      * @author Manuel Domínguez Dorado
-     * @return The type of this event. It is one of the constants defined in
-     * TOpenSimMPLSEvent.
+     * @return The type of this event. It is one of the enums defined in
+     * EventTypes.
      */
     @Override
     public EventTypes getType() {

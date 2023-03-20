@@ -7,7 +7,7 @@
     },
     "componentbindings": [
         {
-            "component": "own-code",
+            "component": "own-fleco-code",
             "version": "1.1",
             "license": "LGPL_3_0_OR_LATER",
             "weight": "HIGH",

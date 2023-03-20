@@ -1,9 +1,16 @@
 /* 
- * Open Licensing Risk Analysis Engine (Open LRAE) is a licensing risk analysis 
- * engine in the form of Java library that allow the detection of risks related 
- * to licensing from the set of components (and their respective licenses) you
- * are using in a given project.
- * 
+ *******************************************************************************
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic, 
+ * Constrained and Multi-objective Genetic Algorithm is a genetic algorithm 
+ * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
+ * decisions during the application of CyberTOMP(1), aimed at managing 
+ * comprehensive cybersecurity at both tactical and operational levels.
+ *
+ * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
+ * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
+ * manage asset-focused cybersecurity from tactical and operational levels. IEEE
+ * Access, 10, 122454-122485.
+ *******************************************************************************
  * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
  * 
  * This program is free software: you can redistribute it and/or modify it under 
@@ -19,6 +26,7 @@
  * You should have received a copy of the GNU Lesser General Public License 
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
+ *******************************************************************************
  */
 package com.manolodominguez.fleco.events;
 
@@ -28,7 +36,7 @@ import java.util.EventObject;
 
 /**
  * This class is the superclass of all events generated in FLECO. It is an
- * abstract class that has to be implemented by all subclassess.
+ * abstract class that has to be implemented by every subclass.
  *
  * @author Manuel Domínguez Dorado
  */
@@ -87,7 +95,7 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
 
     /**
      * This method compares the current instance to another instance of
-     * FLECOEvent to know the ordinal position of one to respect the other.
+     * FLECOEvent to know the ordinal position of one with respect the other.
      *
      * @author Manuel Domínguez Dorado
      * @param anotherEvent a FLECOEvent instance to be compared to the current
@@ -112,11 +120,11 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
     }
 
     /**
-     * This method gets the event type of this event. It will be one of the
-     * constants defined in this class.
+     * This is an abstract method that should gets the event type of this event.
+     * It will be one of the enum defined in EventTypes.
      *
-     * @return the event type of this event.It will be one of the constants
-     * defined in this class.
+     * @return the event type of this event. It will be one of the enum defined
+     * in EventTypes.
      * @author Manuel Domínguez Dorado
      */
     public abstract EventTypes getType();

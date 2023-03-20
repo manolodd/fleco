@@ -1,9 +1,16 @@
 /* 
- * Open Licensing Risk Analysis Engine (Open LRAE) is a licensing risk analysis 
- * engine in the form of Java library that allow the detection of risks related 
- * to licensing from the set of components (and their respective licenses) you
- * are using in a given project.
- * 
+ *******************************************************************************
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic, 
+ * Constrained and Multi-objective Genetic Algorithm is a genetic algorithm 
+ * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
+ * decisions during the application of CyberTOMP(1), aimed at managing 
+ * comprehensive cybersecurity at both tactical and operational levels.
+ *
+ * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
+ * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
+ * manage asset-focused cybersecurity from tactical and operational levels. IEEE
+ * Access, 10, 122454-122485.
+ *******************************************************************************
  * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
  * 
  * This program is free software: you can redistribute it and/or modify it under 
@@ -19,22 +26,27 @@
  * You should have received a copy of the GNU Lesser General Public License 
  * along with this program. If not, see 
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
+ *******************************************************************************
  */
 package com.manolodominguez.fleco.events;
 
 /**
+ * This class implements a progress event listener that will receive progress
+ * event from a FLECO instance.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
 public class DefaultProgressEventListener implements IProgressEventListener {
 
-    public DefaultProgressEventListener() {
-        
-    }
-    
+    /**
+     * This methods receive a progress event from a FLECO instance and print the
+     * information contained on it.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     @Override
     public void onProgressEventReceived(ProgressEvent progressEvent) {
         progressEvent.print();
     }
-    
+
 }

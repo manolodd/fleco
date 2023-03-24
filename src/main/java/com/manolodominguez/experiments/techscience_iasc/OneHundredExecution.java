@@ -1,7 +1,7 @@
 /* 
  *******************************************************************************
- * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic, 
- * Constrained and Multi-objective Genetic Algorithm is a genetic algorithm 
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Adaptive, 
+ * Constrained, and Multi-objective Genetic Algorithm is a genetic algorithm  
  * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
  * decisions during the application of CyberTOMP(1), aimed at managing 
  * comprehensive cybersecurity at both tactical and operational levels.
@@ -50,7 +50,7 @@ public class OneHundredExecution {
 
     /**
      * This methods run an experiment that takes a initial cybersecurity status
-     * for a given asset and also a set of strategic cybersecurity constraints 
+     * for a given asset and also a set of strategic cybersecurity constraints
      * and run FLECO one hundred times to find one hundred solutions in the form
      * of desired cybersecurity statuses.
      *
@@ -90,7 +90,7 @@ public class OneHundredExecution {
         StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
         //Prints FLECO parameters
         System.out.println("##################################################################");
-        System.out.println("# FLECO dynamic, constrained, multi-objective, genetic algorithm #");
+        System.out.println("# FLECO adaptive, constrained, multi-objective, genetic algorithm #");
         System.out.println("##################################################################");
         System.out.println("Initial population..........: " + initialPopulation);
         System.out.println("Maximum seconds.............: " + maxSeconds);

@@ -1,7 +1,7 @@
 /* 
  *******************************************************************************
- * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic, 
- * Constrained and Multi-objective Genetic Algorithm is a genetic algorithm 
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Adaptive, 
+ * Constrained, and Multi-objective Genetic Algorithm is a genetic algorithm  
  * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
  * decisions during the application of CyberTOMP(1), aimed at managing 
  * comprehensive cybersecurity at both tactical and operational levels.
@@ -44,8 +44,8 @@ import java.time.temporal.Temporal;
 
 /**
  * The present class implements the FLECO (Fast, Lightweight, and Efficient
- * Cybersecurity Optimization) Dynamic, Constrained and Multi-objective Genetic
- * Algorithm. This genetic algorithm is designed to assist the Asset's
+ * Cybersecurity Optimization) Adaptive, Constrained, and Multi-objective
+ * Genetic Algorithm. This genetic algorithm is designed to assist the Asset's
  * Cybersecurity Committee (ACC) in making decisions during the application of
  * CyberTOMP(1), aimed at managing comprehensive cybersecurity at both tactical
  * and operational levels.
@@ -81,8 +81,9 @@ public class FLECO {
 
     /**
      * This is the constructor of the class. It creates a new instance of FLECO
-     * (Fast, Lightweight, and Efficient Cybersecurity Optimization) Dynamic
-     * Genetic Algorithm with the parameters specified.
+     * (Fast, Lightweight, and Efficient Cybersecurity Optimization) Adaptive,
+     * Constrained, and Multi-Objectives Genetic Algorithm with the parameters
+     * specified.
      *
      * @author Manuel Domínguez-Dorado
      * @param initialPopulation The initial number of chromosomes in the

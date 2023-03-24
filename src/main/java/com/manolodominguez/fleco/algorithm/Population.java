@@ -183,51 +183,43 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     }
 
     /**
-     * This method generate mutated chromosomes from the current population. For
-     * each time a mutation applies, a new cromosome is created with 1, 2, or 3
-     * genes mutated depending on whether the applicabe implementation group is
-     * IG1, IG2 or IG3. This is because the greater the implementation group the
-     * larger the chromosome.
+     * This method generate mutated chromosomes from the current population. It
+     * goes across all genes of each chromosome applying a mutation when
+     * applicable due to the defiend mutation rate.
      *
      * @author Manuel Domínguez-Dorado
      * @param mutationProbablity the probability that a chromosome is mutated.
      */
     public void mutate(float mutationProbablity) {
         Alleles[] allelesArray = Alleles.values();
-        int numberOfMutatedGenes = 0;
         CopyOnWriteArrayList<Chromosome> mutatedChromosomes = new CopyOnWriteArrayList<>();
-        Chromosome mutatedChromosome = new Chromosome(implementationGroup);
-        numberOfMutatedGenes = implementationGroup.getImplementationGroupIndex() + 1;
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            // For each chromosome in the population, if the possibility of 
-            // being mutated is met, a new clon chromosome is created.
-            if (Math.random() < mutationProbablity) {
-                EnumSet<Genes> mutatedGenes = EnumSet.noneOf(Genes.class);
-                int randomAllele = 0;
-                CopyOnWriteArrayList<Genes> genesForTheNewChromosome = new CopyOnWriteArrayList<>();
-                for (Genes gene : chromosome.getGenes().keySet()) {
-                    if (gene.appliesToIG(implementationGroup)) {
-                        genesForTheNewChromosome.add(gene);
+            // A new chromosome is created as a copy the current one.
+            Chromosome mutatedChromosome = new Chromosome(implementationGroup);
+            mutatedChromosome.setGenes(chromosome.getGenes());
+            int randomAllele = 0;
+            boolean mutated = false;
+            // All genes of such chromosome are reviewed
+            for (Genes gene : mutatedChromosome.getGenes().keySet()) {
+                if (gene.appliesToIG(implementationGroup)) {
+                    // If the mutation probability recommends to mutate the 
+                    // chromosome
+                    if (Math.random() < mutationProbablity) {
+                        // Tag the chromosome as mutated. Non mutated 
+                        // chromosomes are discarded ath the end because they ç
+                        // are twins.
+                        mutated = true;
+                        // Repeat until mutation is effectively done.
+                        while (chromosome.getAllele(gene) == mutatedChromosome.getAllele(gene)) {
+                            // Select the allele
+                            randomAllele = ThreadLocalRandom.current().nextInt(0, allelesArray.length);
+                            // Update the allele for the mutated gene
+                            mutatedChromosome.updateAllele(gene, allelesArray[randomAllele]);
+                        }
                     }
                 }
-                mutatedChromosome.setGenes(chromosome.getGenes());
-                // Randomly select mutation points in the chromosome. One for
-                // each required mutation without repetitions.
-                while (mutatedGenes.size() < numberOfMutatedGenes) {
-                    mutatedGenes.add(genesForTheNewChromosome.get(ThreadLocalRandom.current().nextInt(0, genesForTheNewChromosome.size())));
-                }
-                // Repeat until the number of mutations has been reached.
-                for (Genes gene : mutatedGenes) {
-                    // Because the number of alleles is very reduced, this loop 
-                    // assure the mutation is effective and is not resulting in 
-                    // the same allele for the mutated gene.
-                    while (chromosome.getAllele(gene) == mutatedChromosome.getAllele(gene)) {
-                        // Select the allele
-                        randomAllele = ThreadLocalRandom.current().nextInt(0, allelesArray.length);
-                        // Update the allele for the mutated gene
-                        mutatedChromosome.updateAllele(gene, allelesArray[randomAllele]);
-                    }
-                }
+            }
+            if (mutated) {
                 mutatedChromosomes.add(mutatedChromosome);
             }
         }

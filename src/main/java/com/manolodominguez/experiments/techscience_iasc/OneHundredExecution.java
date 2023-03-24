@@ -37,6 +37,7 @@ import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.Ini
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
@@ -93,7 +94,7 @@ public class OneHundredExecution {
         System.out.println("##################################################################");
         System.out.println("Initial population..........: " + initialPopulation);
         System.out.println("Maximum seconds.............: " + maxSeconds);
-        System.out.println("Mutation probability........: " + mutationProbability);
+        System.out.println("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));
         System.out.println("Crossover probability.......: " + crossoverProbability);
         System.out.println("Asset's implementation group: " + implementationGroup.name());
         System.out.println("Current status..............:");
@@ -116,7 +117,7 @@ public class OneHundredExecution {
         FLECO fleco;
         Chromosome bestChromosome;
         for (int i = 0; i < 100; i++) {
-            fleco = new FLECO(initialPopulation, maxSeconds, mutationProbability, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
+            fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
             fleco.evolve();
             bestChromosome = fleco.getBestChromosome();
             if (fleco.hasConverged()) {

@@ -31,6 +31,8 @@
 package com.manolodominguez.experiments.techscience_iasc;
 
 import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCEOLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.ALevelStrategicConstraints;
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG1;
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG2;
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG3;
@@ -39,6 +41,7 @@ import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import com.manolodominguez.fleco.events.DefaultProgressEventListener;
+import com.manolodominguez.fleco.genetic.Genes;
 
 /**
  * This class utilizes FLECO to optimize the cybersecurity status of a specific
@@ -63,7 +66,6 @@ public class OneExecution {
         // *************************
         int initialPopulation = 30;
         int maxSeconds = 5 * 60;
-        float mutationProbability = 0.05f;
         float crossoverProbability = 0.90f;
         ImplementationGroups implementationGroup = ImplementationGroups.IG3;
         // Define current cybersecurity status according to CyberTOMP. While it
@@ -88,7 +90,7 @@ public class OneExecution {
         //StrategicConstraints strategicConstraints = new ALevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFLevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
-        StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
+        //StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
 
         // Prints FLECO parameters
         System.out.println("##################################################################");
@@ -96,7 +98,7 @@ public class OneExecution {
         System.out.println("##################################################################");
         System.out.println("Initial population..........: " + initialPopulation);
         System.out.println("Maximum seconds.............: " + maxSeconds);
-        System.out.println("Mutation probability........: " + mutationProbability);
+        System.out.println("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));
         System.out.println("Crossover probability.......: " + crossoverProbability);
         System.out.println("Asset's implementation group: " + implementationGroup.name());
         System.out.println("Current status..............:");
@@ -119,7 +121,7 @@ public class OneExecution {
 
         Chromosome bestChromosome;
         FLECO fleco;
-        fleco = new FLECO(initialPopulation, maxSeconds, mutationProbability, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
+        fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
         fleco.setProgressEventListener(new DefaultProgressEventListener());
         fleco.evolve();
         bestChromosome = fleco.getBestChromosome();

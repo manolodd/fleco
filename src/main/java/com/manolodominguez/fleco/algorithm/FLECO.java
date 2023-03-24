@@ -35,6 +35,7 @@ import com.manolodominguez.fleco.events.ProgressEvent;
 import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.time.Duration;
 import java.time.Instant;
@@ -61,7 +62,7 @@ public class FLECO {
     private float mutationProbability;
     private float crossoverProbability;
     private ImplementationGroups implementationGroup;
-    private int maxSeconds;
+    private int maxAvailableSeconds;
     private int initialPopulation;
     private Population population;
     private StrategicConstraints strategicConstraints;
@@ -71,8 +72,8 @@ public class FLECO {
     private IProgressEventListener progressEventListener;
     private RotaryIDGenerator rotaryIDGenerator;
 
-    private static final float LOCAL_MINIMUM_PROBABILITY_PERCENTAGE = 0.05f;
-    private static final float TOO_MUCH_TIME_STAGNATED_FACTOR = 1.25f;
+    private static final float STAGNATION_THRESHOLD_PERCENTAGE = 0.05f;
+    private static final float DEEP_STAGNATION_THRESHOLD_FACTOR = 1.25f;
     private static final int DEFAULT_MUTATION_INCREASING_FACTOR = 1;
     private static final int HIGHER_MUTATION_INCREASING_FACTOR = 20;
     private static final float POPULATION_INCREASING_FACTOR = 1.50f;
@@ -86,27 +87,25 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      * @param initialPopulation The initial number of chromosomes in the
      * population.
-     * @param maxSeconds The max number of seconds before finishing the
+     * @param maxAvailableSeconds The max number of seconds before finishing the
      * population's evolution.
-     * @param mutationProbability The probability of mutating a chromosome
-     * during population's evolution.
      * @param crossoverProbability The probability of crossing over a couple of
      * chromosomes during population's evolution.
      * @param implementationGroup The applicable implementation group as defined
-     * in CyberTOMP. it can be IG1, IG2 and IG3 depending on whether the asset
+     * in CyberTOMP. It can be IG1, IG2 and IG3 depending on whether the asset
      * criticality is LOW, MEDIUM or HIGH.
      * @param initialStatus A chromosome representing the initial cybersecurity
      * status of the asset, as defined in CyberTOMP.
      * @param strategicConstraints A set of constraints over the asset,
      * functions, categories or expected outcomes.
      */
-    public FLECO(int initialPopulation, int maxSeconds, float mutationProbability, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicConstraints strategicConstraints) {
+    public FLECO(int initialPopulation, int maxAvailableSeconds, float crossoverProbability, ImplementationGroups implementationGroup, Chromosome initialStatus, StrategicConstraints strategicConstraints) {
         this.implementationGroup = implementationGroup;
         this.initialStatus = initialStatus;
         this.strategicConstraints = strategicConstraints;
         this.initialPopulation = initialPopulation;
-        this.maxSeconds = maxSeconds;
-        this.mutationProbability = mutationProbability;
+        this.maxAvailableSeconds = maxAvailableSeconds;
+        this.mutationProbability = 1.0f / (Genes.getGenesFor(this.implementationGroup).size());
         this.crossoverProbability = crossoverProbability;
         usedTime = 0.0f;
         usedGenerations = 0;
@@ -139,9 +138,9 @@ public class FLECO {
         int currentGeneration = 0;
         float currentBestFitness = 0.0f;
         int mutationIncreasingFactor = 1;
-        float localMinimumprobabilityThresshold = maxSeconds * LOCAL_MINIMUM_PROBABILITY_PERCENTAGE;
+        float stagnationThreshold = maxAvailableSeconds * STAGNATION_THRESHOLD_PERCENTAGE;
         boolean isInALocalMinimum = false;
-        boolean tooMuchTimeInALocalMinimum = false;
+        boolean isDeeplyStagnated = false;
         Temporal begin = Instant.now();
         Temporal end;
         Temporal latestBestFitnessChange = Instant.now();
@@ -162,11 +161,11 @@ public class FLECO {
             // much time.
             Duration stagnationTime = Duration.between(latestBestFitnessChange, Instant.now());
             isInALocalMinimum = false;
-            tooMuchTimeInALocalMinimum = false;
-            if (stagnationTime.get(ChronoUnit.SECONDS) > localMinimumprobabilityThresshold) {
+            isDeeplyStagnated = false;
+            if (stagnationTime.get(ChronoUnit.SECONDS) > stagnationThreshold) {
                 isInALocalMinimum = true;
-                if (stagnationTime.get(ChronoUnit.SECONDS) > (localMinimumprobabilityThresshold * TOO_MUCH_TIME_STAGNATED_FACTOR)) {
-                    tooMuchTimeInALocalMinimum = true;
+                if (stagnationTime.get(ChronoUnit.SECONDS) > (stagnationThreshold * DEEP_STAGNATION_THRESHOLD_FACTOR)) {
+                    isDeeplyStagnated = true;
                 }
             }
             // If the algorithm is in a local minimum, it amplifies the mutation
@@ -182,7 +181,7 @@ public class FLECO {
             population.selectBestAdapted();
             // Spread progress event.
             if (progressEventListener != null) {
-                long totalTime = maxSeconds * 1000;
+                long totalTime = maxAvailableSeconds * 1000;
                 long currentTime = Instant.now().toEpochMilli() - Instant.from(begin).toEpochMilli();
                 ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(0), population.hasConverged());
                 progressEventListener.onProgressEventReceived(event);
@@ -192,7 +191,7 @@ public class FLECO {
             // increase diversity. Moreover, if it has been stagnated too much
             // time, it removes the currently selected best chromosome.
             if (isInALocalMinimum) {
-                if (tooMuchTimeInALocalMinimum) {
+                if (isDeeplyStagnated) {
                     if (!population.isEmpty()) {
                         population.remove(BEST_CHROMOSOME_INDEX);
                     }
@@ -254,7 +253,7 @@ public class FLECO {
      */
     private boolean hasToFinish(Temporal begin) {
         Duration duration = Duration.between(begin, Instant.now());
-        return (population.hasConverged() || (duration.get(ChronoUnit.SECONDS) > maxSeconds));
+        return (population.hasConverged() || (duration.get(ChronoUnit.SECONDS) > maxAvailableSeconds));
     }
 
     /**

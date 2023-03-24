@@ -90,7 +90,7 @@ public class OneExecution {
         //StrategicConstraints strategicConstraints = new ALevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFLevelStrategicConstraints(implementationGroup);
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
-        //StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
+        StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
 
         // Prints FLECO parameters
         System.out.println("##################################################################");

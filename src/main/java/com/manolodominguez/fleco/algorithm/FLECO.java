@@ -140,7 +140,7 @@ public class FLECO {
         float currentBestFitness = 0.0f;
         int mutationIncreasingFactor = 1;
         float stagnationThreshold = maxAvailableSeconds * STAGNATION_THRESHOLD_PERCENTAGE;
-        boolean isInALocalMinimum = false;
+        boolean seemsALocalMinimum = false;
         boolean isDeeplyStagnated = false;
         Temporal begin = Instant.now();
         Temporal end;
@@ -161,10 +161,10 @@ public class FLECO {
             // When this period reach the double, it is considered to be too
             // much time.
             Duration stagnationTime = Duration.between(latestBestFitnessChange, Instant.now());
-            isInALocalMinimum = false;
+            seemsALocalMinimum = false;
             isDeeplyStagnated = false;
             if (stagnationTime.get(ChronoUnit.SECONDS) > stagnationThreshold) {
-                isInALocalMinimum = true;
+                seemsALocalMinimum = true;
                 if (stagnationTime.get(ChronoUnit.SECONDS) > (stagnationThreshold * DEEP_STAGNATION_THRESHOLD_FACTOR)) {
                     isDeeplyStagnated = true;
                 }
@@ -172,7 +172,7 @@ public class FLECO {
             // If the algorithm is in a local minimum, it amplifies the mutation
             // rate to the predefined higher value; otherwise, it resets the 
             // rate to the default value.
-            if (isInALocalMinimum) {
+            if (seemsALocalMinimum) {
                 mutationIncreasingFactor = HIGHER_MUTATION_INCREASING_FACTOR;
             } else {
                 mutationIncreasingFactor = DEFAULT_MUTATION_INCREASING_FACTOR;
@@ -191,7 +191,7 @@ public class FLECO {
             // predefined quantity of random chromosomes into the population to 
             // increase diversity. Moreover, if it has been stagnated too much
             // time, it removes the currently selected best chromosome.
-            if (isInALocalMinimum) {
+            if (seemsALocalMinimum) {
                 if (isDeeplyStagnated) {
                     if (!population.isEmpty()) {
                         population.remove(BEST_CHROMOSOME_INDEX);

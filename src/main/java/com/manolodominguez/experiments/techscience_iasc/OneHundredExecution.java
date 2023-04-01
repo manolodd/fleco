@@ -31,6 +31,9 @@
 package com.manolodominguez.experiments.techscience_iasc;
 
 import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCEOLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFLevelStrategicConstraints;
+import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.ALevelStrategicConstraints;
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG1;
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG2;
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG3;
@@ -63,7 +66,6 @@ public class OneHundredExecution {
         // *************************
         int initialPopulation = 30;
         int maxSeconds = 5 * 60;
-        float mutationProbability = 0.05f;
         float crossoverProbability = 0.90f;
         ImplementationGroups implementationGroup = ImplementationGroups.IG3;
         // Define current cybersecurity status according to CyberTOMP. While it
@@ -89,9 +91,9 @@ public class OneHundredExecution {
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
         StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
         //Prints FLECO parameters
-        System.out.println("##################################################################");
+        System.out.println("###################################################################");
         System.out.println("# FLECO adaptive, constrained, multi-objective, genetic algorithm #");
-        System.out.println("##################################################################");
+        System.out.println("###################################################################");
         System.out.println("Initial population..........: " + initialPopulation);
         System.out.println("Maximum seconds.............: " + maxSeconds);
         System.out.println("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));

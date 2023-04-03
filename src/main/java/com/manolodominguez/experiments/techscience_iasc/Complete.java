@@ -96,44 +96,15 @@ public class Complete {
                                 strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
                                 break;
                         }
-
-                        //Prints FLECO parameters
-                        /*
-                        System.out.println("###################################################################");
-                        System.out.println("# FLECO adaptive, constrained, multi-objective, genetic algorithm #");
-                        System.out.println("###################################################################");
-                        System.out.println("Initial population..........: " + initialPopulation);
-                        System.out.println("Maximum seconds.............: " + maxSeconds);
-                        System.out.println("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));
-                        System.out.println("Crossover probability.......: " + crossoverProbability);
-                        System.out.println("Asset's implementation group: " + implementationGroup.name());
-                        System.out.println("Current status..............:");
-                        initialStatus.print();
-                        System.out.println("Strategic constraints.............: " + strategicConstraints.numberOfConstraints());
-                        strategicConstraints.print();
-                        System.out.println();
-                        System.out.println("Algorithm objetives.........: 3");
-                        System.out.println("\tObjective 1) Maximize the coverage of all defined strategic cybersecurity constraints");
-                        System.out.println("\tObjective 2) Maximize the similarity between the initial status and the solution");
-                        System.out.println("\tObjective 3) Maximize overall cybersecurity level");
-                        System.out.println("####################################################\n");
-                        // FLECO is employed to identify a collection of anticipated outcomes 
-                        // and their corresponding discrete implementation levels that meet the 
-                        // necessary strategic cybersecurity objectives for this asset.
-                        System.out.println("Evolving population to find a solution. FLECO will stop when one of the following happens:");
-                        System.out.println("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
-                        System.out.println("\t  and also the fitness of objetive 2 for that individual is greater or equal than 0.85).");
-                        System.out.println("\t· The maximum number of seconds have elapsed.\n");
-*/
                         FLECO fleco;
                         Chromosome bestChromosome;
                         fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
                         fleco.evolve();
                         bestChromosome = fleco.getBestChromosome();
                         if (fleco.hasConverged()) {
-                            System.out.println(implementationGroup.name()+"#"+seed+"#"+execution+"#"+constraints + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                            System.out.println(implementationGroup.name() + "#Seed:" + seed + "#Execution:" + execution + "#Constraints:" + constraints + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
                         } else {
-                            System.out.println(implementationGroup.name()+"#"+seed+"#"+execution+"#"+constraints + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                            System.out.println(implementationGroup.name() + "#Seed:" + seed + "#Execution:" + execution + "#Constraints:" + constraints + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
                         }
                     }
                 }

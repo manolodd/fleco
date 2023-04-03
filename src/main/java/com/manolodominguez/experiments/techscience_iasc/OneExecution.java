@@ -53,8 +53,8 @@ public class OneExecution {
 
     /**
      * This methods run an experiment that takes a initial cybersecurity status
-     * for a given asset and also a set of strategic cybersecurity constraints 
-     * and run FLECO to find a solution in the form of a desired cybersecurity 
+     * for a given asset and also a set of strategic cybersecurity constraints
+     * and run FLECO to find a solution in the form of a desired cybersecurity
      * status.
      *
      * @author Manuel Domínguez-Dorado
@@ -116,7 +116,6 @@ public class OneExecution {
         // necessary strategic cybersecurity constraints for the asset.
         System.out.println("Evolving population to find a solution. FLECO will stop when one of the following happens:");
         System.out.println("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
-        System.out.println("\t  and also the fitness of objetive 2 for that individual is greater or equal than 0.85).");
         System.out.println("\t· The maximum number of seconds have elapsed.\n");
 
         Chromosome bestChromosome;
@@ -126,7 +125,7 @@ public class OneExecution {
         fleco.evolve();
         bestChromosome = fleco.getBestChromosome();
         if (fleco.hasConverged()) {
-            System.out.println("\nFLECO has converged. An optimal solutions has been found.\n");
+            System.out.println("\nFLECO has converged. A solutions has been found.\n");
         } else {
             System.out.println("\nFLECO has not converged. No solution has been found that meet all criteria.\n");
         }

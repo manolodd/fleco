@@ -35,7 +35,6 @@ import com.manolodominguez.fleco.genetic.Alleles;
 import com.manolodominguez.fleco.genetic.Chromosome;
 import com.manolodominguez.fleco.genetic.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
-import java.util.EnumSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -48,13 +47,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Population extends CopyOnWriteArrayList<Chromosome> {
 
     private static final long serialVersionUID = 1L;
+    private static final int BEST_CHROMOSOME_INDEX = 0;
 
     private final int initialNumberOfChromosomes;
     private final transient ImplementationGroups implementationGroup;
     private float fitnessAverage;
     private Chromosome initialStatus;
     private StrategicConstraints strategicConstraints;
-    private boolean hasConverged;
+    private boolean hasHighQualityBestIndividual;
+    private boolean hasGoodEnoughBestIndividual;
 
     /**
      * This is the constructor of the class, which initializes the population
@@ -86,7 +87,8 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         addAll(strategicConstraints.generatePrecandidatesBasedOn(initialStatus));
         computeFitnessAndSort();
         fitnessAverage = 0.0f;
-        hasConverged = false;
+        hasHighQualityBestIndividual = false;
+        hasGoodEnoughBestIndividual = false;
         // Complete the population with random chromosomes until the initial 
         // number of chromosomes are reached.
         populateRandomly();
@@ -294,7 +296,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * @author Manuel Domínguez-Dorado
      */
     private void computeFitnessAndSort() {
-        hasConverged = false;
+        hasHighQualityBestIndividual = false;
         fitnessAverage = 0.0f;
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
             chromosome.computeFitness(initialStatus, strategicConstraints);
@@ -303,24 +305,63 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         fitnessAverage /= size();
         sort(new ChromosomeComparator());
         if (!isEmpty()) {
-            if (get(0).getFitnessConstraintsCoverage() >= 1.0f) {
-                if (get(0).getFitnessSimilarityToCurrentState() >= 0.85f) {
-                    hasConverged = true;
+            if (get(BEST_CHROMOSOME_INDEX).getFitnessConstraintsCoverage() >= 1.0f) {
+                hasGoodEnoughBestIndividual = true;
+                if (get(BEST_CHROMOSOME_INDEX).getFitnessSimilarityToCurrentState() >= 0.80f) {
+                    hasHighQualityBestIndividual = true;
+                } else {
+                    hasHighQualityBestIndividual = false;
                 }
+            } else {
+                hasGoodEnoughBestIndividual = false;
             }
         }
     }
 
     /**
-     * This method returns whether the population has converged towards an
-     * optimal solution or not.
+     * This method perform a soft reset of the algorithm by replacing the best
+     * fitted individual with random ones and recomputing the fitness
+     * accordingly.
      *
      * @author Manuel Domínguez-Dorado
-     * @return true, if the population has converged to an optimal solution.
-     * Otherwise, false.
      */
-    public boolean hasConverged() {
-        return hasConverged;
+    public void softReset() {
+        fitnessAverage = 0.0f;
+        hasHighQualityBestIndividual = false;
+        hasGoodEnoughBestIndividual = false;
+        int oneThird = size() / 2;
+        for (int i = 0; i < oneThird; i++) {
+            if (!isEmpty()) {
+                remove(BEST_CHROMOSOME_INDEX);
+            }
+        }
+        populateRandomly();
+        reduceTo(this.initialNumberOfChromosomes);
+        computeFitnessAndSort();
+    }
+
+    /**
+     * This method returns whether the population contains a high quality
+     * individual as best one, or not.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return true, if the population contains a high quality individual as
+     * best one. Otherwise, false.
+     */
+    public boolean hasHighQualityBestIndividual() {
+        return hasHighQualityBestIndividual;
+    }
+
+    /**
+     * This method returns whether the population contains a best individual
+     * with enough quality, or not.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return true, if the population contains a best individual with enough
+     * quality. Otherwise, false.
+     */
+    public boolean hasGoodEnoughBestIndividual() {
+        return hasGoodEnoughBestIndividual;
     }
 
     /**

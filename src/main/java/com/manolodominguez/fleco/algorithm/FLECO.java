@@ -72,7 +72,7 @@ public class FLECO {
     private IProgressEventListener progressEventListener;
     private RotaryIDGenerator rotaryIDGenerator;
 
-    private static final float STAGNATION_THRESHOLD_PERCENTAGE = 0.05f;
+    private static final float STAGNATION_THRESHOLD_PERCENTAGE = 0.025f;
     private static final float DEEP_STAGNATION_THRESHOLD_FACTOR = 1.25f;
     private static final int DEFAULT_MUTATION_INCREASING_FACTOR = 1;
     private static final int HIGHER_MUTATION_INCREASING_FACTOR = 20;
@@ -110,7 +110,7 @@ public class FLECO {
         this.crossoverProbability = crossoverProbability;
         usedTime = 0.0f;
         usedGenerations = 0;
-        population = new Population(initialPopulation, this.implementationGroup, this.initialStatus, this.strategicConstraints);
+        population = new Population(this.initialPopulation, this.implementationGroup, this.initialStatus, this.strategicConstraints);
         rotaryIDGenerator = new RotaryIDGenerator();
         progressEventListener = null;
     }
@@ -147,11 +147,11 @@ public class FLECO {
         Temporal latestBestFitnessChange = Instant.now();
         Duration duration;
         usedTime = 0.0f;
-        while (!hasToFinish(begin)) {
+        while (!hasToFinish(begin, isDeeplyStagnated)) {
             // The probability of being in a local minimum is raised each time 
             // the best fitness remains constant. Otherwise, the probability is 
             // reset to its default value.
-            if (currentBestFitness != population.get(BEST_CHROMOSOME_INDEX).getFitness()) {
+            if (currentBestFitness > population.get(BEST_CHROMOSOME_INDEX).getFitness()) {
                 currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
                 latestBestFitnessChange = Instant.now();
             }
@@ -184,18 +184,22 @@ public class FLECO {
             if (progressEventListener != null) {
                 long totalTime = maxAvailableSeconds * 1000;
                 long currentTime = Instant.now().toEpochMilli() - Instant.from(begin).toEpochMilli();
-                ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(0), population.hasConverged());
+                ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(BEST_CHROMOSOME_INDEX), population.hasHighQualityBestIndividual());
                 progressEventListener.onProgressEventReceived(event);
             }
-            // If the algorithm is trapped in a local minimum, injects a 
-            // predefined quantity of random chromosomes into the population to 
-            // increase diversity. Moreover, if it has been stagnated too much
-            // time, it removes the currently selected best chromosome.
+            // If the algorithm forecast it could be trapped in a local minimum,
+            // injects a predefined quantity of random chromosomes into the 
+            // population to increase diversity. Moreover, if it has been 
+            // stagnated too much time without complying with the strategic
+            // requiremens, it performs a soft reset removing the best 50% 
+            // individuals.
             if (seemsALocalMinimum) {
                 if (isDeeplyStagnated) {
-                    if (!population.isEmpty()) {
-                        population.remove(BEST_CHROMOSOME_INDEX);
-                    }
+                    if (!population.hasGoodEnoughBestIndividual()) {
+                        population.softReset();
+                        currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
+                        latestBestFitnessChange = Instant.now();
+                    } 
                 }
                 population.populateRandomly((int) (initialPopulation * POPULATION_INCREASING_FACTOR));
             }
@@ -252,9 +256,12 @@ public class FLECO {
      * @return true, if the conditions to finish FLECO execution exist.
      * Otherwise return false.
      */
-    private boolean hasToFinish(Temporal begin) {
+    private boolean hasToFinish(Temporal begin, boolean isDeeplyStagnated) {
         Duration duration = Duration.between(begin, Instant.now());
-        return (population.hasConverged() || (duration.get(ChronoUnit.SECONDS) > maxAvailableSeconds));
+        if (population.hasHighQualityBestIndividual() || (duration.get(ChronoUnit.SECONDS) > maxAvailableSeconds)) {
+            return true;
+        }
+        return isDeeplyStagnated && population.hasGoodEnoughBestIndividual();
     }
 
     /**
@@ -262,11 +269,13 @@ public class FLECO {
      *
      * @author Manuel Domínguez-Dorado
      *
-     * @return true if FLECO algorithm has converged. Otherwise, return false.
+     * @return true if FLECO algorithm has converged to a high quality solution.
+     * Otherwise, return false.
      */
     public boolean hasConverged() {
-        return population.hasConverged();
+        return (population.hasHighQualityBestIndividual() && population.hasGoodEnoughBestIndividual());
     }
+
 
     /**
      * This method returns the chromosome with the best fitness in the

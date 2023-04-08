@@ -170,9 +170,9 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
             addAll(twinsFree);
         }
         sort(new ChromosomeComparator());
-        // 2/3 of the current population is selected for reproduction in the 
-        // next generation (1/3 is discarded).
-        int thresshold = size() * 2 / 3;
+        // 1/5 of the current population is selected for reproduction in the 
+        // next generation (4/5 are discarded).
+        int thresshold = size() * 1 / 5;
         CopyOnWriteArrayList<Chromosome> bestAdapted = new CopyOnWriteArrayList<>();
         for (int i = 0; i <= thresshold; i++) {
             bestAdapted.add(get(i));

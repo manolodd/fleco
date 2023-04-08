@@ -75,12 +75,12 @@ public class Complete {
         StrategicConstraints strategicConstraints = new ALevelStrategicConstraints(implementationGroup);
 
         for (ImplementationGroups value : ImplementationGroups.values()) {
-            implementationGroup = value;
-            initialStatus = new Chromosome(implementationGroup);
-            for (int seed = 0; seed < 15; seed++) {
-                initialStatus.randomizeGenes();
-                for (int execution = 0; execution < 15; execution++) {
-                    for (int constraints = 0; constraints < 4; constraints++) {
+            for (int constraints = 0; constraints < 4; constraints++) {
+                implementationGroup = value;
+                initialStatus = new Chromosome(implementationGroup);
+                for (int seed = 0; seed < 15; seed++) {
+                    initialStatus.randomizeGenes();
+                    for (int execution = 0; execution < 15; execution++) {
                         switch (constraints) {
                             case 0:
                                 strategicConstraints = new ALevelStrategicConstraints(implementationGroup);
@@ -102,12 +102,13 @@ public class Complete {
                         fleco.evolve();
                         bestChromosome = fleco.getBestChromosome();
                         if (fleco.hasConverged()) {
-                            System.out.println(implementationGroup.name() + "#Seed:" + seed + "#Execution:" + execution + "#Constraints:" + constraints + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
                         } else {
-                            System.out.println(implementationGroup.name() + "#Seed:" + seed + "#Execution:" + execution + "#Constraints:" + constraints + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
                         }
                     }
                 }
+                System.out.println();
             }
         }
     }

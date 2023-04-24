@@ -30,7 +30,7 @@
  */
 package com.manolodominguez.fleco.uleo;
 
-import com.manolodominguez.fleco.genetic.Genes;
+import com.manolodominguez.fleco.genetics.Genes;
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 

@@ -31,7 +31,7 @@
 package com.manolodominguez.fleco.events;
 
 import com.manolodominguez.fleco.algorithm.FLECO;
-import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetics.Chromosome;
 import java.time.Instant;
 
 /**
@@ -89,7 +89,7 @@ public class ProgressEvent extends FLECOEvent {
      */
     public float getProgressPercentage() {
         if (totalTime != 0) {
-            return (float) (currentTime / totalTime);
+            return (float) currentTime / (float) totalTime;
         }
         return 1.0f;
     }

@@ -30,9 +30,9 @@
  */
 package com.manolodominguez.experiments.techscience_iasc.definitions.statuses;
 
-import com.manolodominguez.fleco.genetic.Alleles;
-import com.manolodominguez.fleco.genetic.Chromosome;
-import com.manolodominguez.fleco.genetic.Genes;
+import com.manolodominguez.fleco.genetics.Alleles;
+import com.manolodominguez.fleco.genetics.Chromosome;
+import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**

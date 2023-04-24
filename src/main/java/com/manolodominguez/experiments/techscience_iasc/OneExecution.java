@@ -38,10 +38,10 @@ import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.Ini
 import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
-import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import com.manolodominguez.fleco.events.DefaultProgressEventListener;
-import com.manolodominguez.fleco.genetic.Genes;
+import com.manolodominguez.fleco.genetics.Genes;
 
 /**
  * This class utilizes FLECO to optimize the cybersecurity status of a specific

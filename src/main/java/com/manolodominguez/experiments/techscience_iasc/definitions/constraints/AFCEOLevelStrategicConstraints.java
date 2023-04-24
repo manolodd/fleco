@@ -33,7 +33,7 @@ package com.manolodominguez.experiments.techscience_iasc.definitions.constraints
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
-import com.manolodominguez.fleco.genetic.Genes;
+import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;

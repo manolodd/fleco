@@ -62,7 +62,7 @@ public class Constraint {
      * @author Manuel Domínguez-Dorado
      * @return the thresshold of this strategic constraint.
      */
-    public float getThresshold() {
+    public float getThreshold() {
         return thresshold;
     }
 

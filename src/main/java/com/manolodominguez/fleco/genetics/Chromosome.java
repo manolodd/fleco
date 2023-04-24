@@ -81,7 +81,7 @@ public class Chromosome {
     public ImplementationGroups getImplementationGroup() {
         return this.implementationGroup;
     }
-    
+
     /**
      * This method returns the allele of the specified gene.
      *
@@ -231,6 +231,9 @@ public class Chromosome {
                         auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
                     }
                     // Category raw value
+                    if (auxCategoryFitness > 1.0f) {
+                        auxCategoryFitness = 1.0f;
+                    }
                     categoriesValues.put(c, auxCategoryFitness);
                     // To compute Function fitness
                     auxCategoryFitness *= c.getWeight(implementationGroup);
@@ -240,6 +243,9 @@ public class Chromosome {
                     auxFunctionFitness += auxCategoryFitness;
                 }
                 // Function raw value
+                if (auxFunctionFitness > 1.0f) {
+                    auxFunctionFitness = 1.0f;
+                }
                 functionsValues.put(f, auxFunctionFitness);
                 // To compute asset fitness
                 auxFunctionFitness *= f.getWeight(implementationGroup);
@@ -290,6 +296,9 @@ public class Chromosome {
                         auxCategoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
                     }
                     // Category raw value
+                    if (auxCategoryFitness > 1.0f) {
+                        auxCategoryFitness = 1.0f;
+                    }
                     categoriesValues.put(c, auxCategoryFitness);
                     // To compute Function fitness
                     auxCategoryFitness *= c.getWeight(implementationGroup);
@@ -299,6 +308,9 @@ public class Chromosome {
                     auxFunctionFitness += auxCategoryFitness;
                 }
                 // Function raw value
+                if (auxFunctionFitness > 1.0f) {
+                    auxFunctionFitness = 1.0f;
+                }
                 functionsValues.put(f, auxFunctionFitness);
                 // To compute asset fitness
                 auxFunctionFitness *= f.getWeight(implementationGroup);

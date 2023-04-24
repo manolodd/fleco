@@ -34,8 +34,8 @@ import com.manolodominguez.fleco.events.IProgressEventListener;
 import com.manolodominguez.fleco.events.ProgressEvent;
 import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
-import com.manolodominguez.fleco.genetic.Chromosome;
-import com.manolodominguez.fleco.genetic.Genes;
+import com.manolodominguez.fleco.genetics.Chromosome;
+import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.time.Duration;
 import java.time.Instant;
@@ -199,7 +199,7 @@ public class FLECO {
                         population.softReset();
                         currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
                         latestBestFitnessChange = Instant.now();
-                    } 
+                    }
                 }
                 population.populateRandomly((int) (initialPopulation * POPULATION_INCREASING_FACTOR));
             }
@@ -273,9 +273,8 @@ public class FLECO {
      * Otherwise, return false.
      */
     public boolean hasConverged() {
-        return (population.hasHighQualityBestIndividual() && population.hasGoodEnoughBestIndividual());
+        return population.hasGoodEnoughBestIndividual();
     }
-
 
     /**
      * This method returns the chromosome with the best fitness in the

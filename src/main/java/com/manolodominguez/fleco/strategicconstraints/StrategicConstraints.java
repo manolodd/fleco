@@ -30,9 +30,9 @@
  */
 package com.manolodominguez.fleco.strategicconstraints;
 
-import com.manolodominguez.fleco.genetic.Chromosome;
-import com.manolodominguez.fleco.genetic.Genes;
-import com.manolodominguez.fleco.genetic.Alleles;
+import com.manolodominguez.fleco.genetics.Chromosome;
+import com.manolodominguez.fleco.genetics.Genes;
+import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
@@ -67,6 +67,19 @@ public class StrategicConstraints {
         categoryConstraints = new EnumMap<>(Categories.class);
         functionConstraints = new EnumMap<>(Functions.class);
         this.implementationGroup = implementationGroup;
+        this.assetConstraint = null;
+    }
+
+    /**
+     * This method removes all the strategic constraint defined at whatever
+     * levels.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    public void removeAll() {
+        geneConstraints = new EnumMap<>(Genes.class);
+        categoryConstraints = new EnumMap<>(Categories.class);
+        functionConstraints = new EnumMap<>(Functions.class);
         this.assetConstraint = null;
     }
 
@@ -228,6 +241,48 @@ public class StrategicConstraints {
     }
 
     /**
+     * This method removes the strategic constraint defined at asset level.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    public void removeConstraint() {
+        assetConstraint = null;
+    }
+
+    /**
+     * This method removes the strategic constraint defined at function level
+     * and associated to the specified function.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param function the specified function.
+     */
+    public void removeConstraint(Functions function) {
+        functionConstraints.remove(function);
+    }
+
+    /**
+     * This method removes the strategic constraint defined at category level
+     * and associated to the specified category.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param category the specified category.
+     */
+    public void removeConstraint(Categories category) {
+        categoryConstraints.remove(category);
+    }
+
+    /**
+     * This method removes the strategic constraint defined at expected outcome
+     * or gene level and associated to the specified gene.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param gene the specified category.
+     */
+    public void removeConstraint(Genes gene) {
+        geneConstraints.remove(gene);
+    }
+
+    /**
      * This method generate some individuals of high quality based on the set of
      * defined strategic constraints and also depending on the initial status of
      * cybersecurity. They can be used as part of the starting population for
@@ -249,28 +304,28 @@ public class StrategicConstraints {
             for (Genes gene : geneConstraints.keySet()) {
                 switch (geneConstraints.get(gene).getComparisonOperator()) {
                     case LESS:
-                        if (Alleles.getLesser(geneConstraints.get(gene).getThresshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getLesser(geneConstraints.get(gene).getThresshold()));
+                        if (Alleles.getLesser(geneConstraints.get(gene).getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getLesser(geneConstraints.get(gene).getThreshold()));
                         }
                         break;
                     case LESS_OR_EQUAL:
-                        if (Alleles.getLesserOrEqual(geneConstraints.get(gene).getThresshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getLesserOrEqual(geneConstraints.get(gene).getThresshold()));
+                        if (Alleles.getLesserOrEqual(geneConstraints.get(gene).getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getLesserOrEqual(geneConstraints.get(gene).getThreshold()));
                         }
                         break;
                     case EQUAL:
-                        if (Alleles.getEqual(geneConstraints.get(gene).getThresshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getEqual(geneConstraints.get(gene).getThresshold()));
+                        if (Alleles.getEqual(geneConstraints.get(gene).getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getEqual(geneConstraints.get(gene).getThreshold()));
                         }
                         break;
                     case GREATER:
-                        if (Alleles.getGreater(geneConstraints.get(gene).getThresshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getGreater(geneConstraints.get(gene).getThresshold()));
+                        if (Alleles.getGreater(geneConstraints.get(gene).getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getGreater(geneConstraints.get(gene).getThreshold()));
                         }
                         break;
                     case GREATER_OR_EQUAL:
-                        if (Alleles.getGreaterOrEqual(geneConstraints.get(gene).getThresshold()) != null) {
-                            candidate.updateAllele(gene, Alleles.getGreaterOrEqual(geneConstraints.get(gene).getThresshold()));
+                        if (Alleles.getGreaterOrEqual(geneConstraints.get(gene).getThreshold()) != null) {
+                            candidate.updateAllele(gene, Alleles.getGreaterOrEqual(geneConstraints.get(gene).getThreshold()));
                         }
                         break;
                     default:
@@ -285,17 +340,17 @@ public class StrategicConstraints {
             candidate.setGenes(initialStatus.getGenes());
             for (Categories category : categoryConstraints.keySet()) {
                 if (category.appliesToIG(implementationGroup)) {
-                    if (categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.EQUAL) {
-                        CopyOnWriteArrayList<Genes> genesAplicables;
-                        if (categoryConstraints.get(category).getThresshold() == Alleles.DLI_0.getDLI()) {
-                            genesAplicables = Genes.getGenesFor(category, implementationGroup);
-                            for (Genes gene : genesAplicables) {
+                    if ((categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.EQUAL) || (categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL) || (categoryConstraints.get(category).getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL)) {
+                        CopyOnWriteArrayList<Genes> applicableGenes;
+                        if (categoryConstraints.get(category).getThreshold() == Alleles.DLI_0.getDLI()) {
+                            applicableGenes = Genes.getGenesFor(category, implementationGroup);
+                            for (Genes gene : applicableGenes) {
                                 candidate.updateAllele(gene, Alleles.DLI_0);
                                 created = true;
                             }
-                        } else if (categoryConstraints.get(category).getThresshold() == Alleles.DLI_100.getDLI()) {
-                            genesAplicables = Genes.getGenesFor(category, implementationGroup);
-                            for (Genes gene : genesAplicables) {
+                        } else if (categoryConstraints.get(category).getThreshold() == Alleles.DLI_100.getDLI()) {
+                            applicableGenes = Genes.getGenesFor(category, implementationGroup);
+                            for (Genes gene : applicableGenes) {
                                 candidate.updateAllele(gene, Alleles.DLI_100);
                                 created = true;
                             }
@@ -313,17 +368,17 @@ public class StrategicConstraints {
             candidate.setGenes(initialStatus.getGenes());
             for (Functions function : functionConstraints.keySet()) {
                 if (function.appliesToIG(implementationGroup)) {
-                    if (functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.EQUAL) {
-                        CopyOnWriteArrayList<Genes> genesAplicables;
-                        if (functionConstraints.get(function).getThresshold() == Alleles.DLI_0.getDLI()) {
-                            genesAplicables = Categories.getGenesFor(function, implementationGroup);
-                            for (Genes gene : genesAplicables) {
+                    if ((functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.EQUAL) || (functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL) || (functionConstraints.get(function).getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL)) {
+                        CopyOnWriteArrayList<Genes> applicableGenes;
+                        if (functionConstraints.get(function).getThreshold() == Alleles.DLI_0.getDLI()) {
+                            applicableGenes = Categories.getGenesFor(function, implementationGroup);
+                            for (Genes gene : applicableGenes) {
                                 candidate.updateAllele(gene, Alleles.DLI_0);
                                 created = true;
                             }
-                        } else if (functionConstraints.get(function).getThresshold() == Alleles.DLI_100.getDLI()) {
-                            genesAplicables = Categories.getGenesFor(function, implementationGroup);
-                            for (Genes gene : genesAplicables) {
+                        } else if (functionConstraints.get(function).getThreshold() == Alleles.DLI_100.getDLI()) {
+                            applicableGenes = Categories.getGenesFor(function, implementationGroup);
+                            for (Genes gene : applicableGenes) {
                                 candidate.updateAllele(gene, Alleles.DLI_100);
                                 created = true;
                             }
@@ -340,15 +395,15 @@ public class StrategicConstraints {
             boolean created = false;
             candidate = new Chromosome(implementationGroup);
             candidate.setGenes(initialStatus.getGenes());
-            if (assetConstraint.getComparisonOperator() == ComparisonOperators.EQUAL) {
-                if (assetConstraint.getThresshold() == Alleles.DLI_0.getDLI()) {
+            if ((assetConstraint.getComparisonOperator() == ComparisonOperators.EQUAL) || (assetConstraint.getComparisonOperator() == ComparisonOperators.GREATER_OR_EQUAL) || (assetConstraint.getComparisonOperator() == ComparisonOperators.LESS_OR_EQUAL)) {
+                if (assetConstraint.getThreshold() == Alleles.DLI_0.getDLI()) {
                     for (Genes gene : Genes.values()) {
                         if (gene.appliesToIG(implementationGroup)) {
                             candidate.updateAllele(gene, Alleles.DLI_0);
                             created = true;
                         }
                     }
-                } else if (assetConstraint.getThresshold() == Alleles.DLI_100.getDLI()) {
+                } else if (assetConstraint.getThreshold() == Alleles.DLI_100.getDLI()) {
                     for (Genes gene : Genes.values()) {
                         if (gene.appliesToIG(implementationGroup)) {
                             candidate.updateAllele(gene, Alleles.DLI_100);
@@ -392,15 +447,15 @@ public class StrategicConstraints {
      * @author Manuel Domínguez-Dorado
      */
     public void print() {
-        System.out.println("\tAsset constraint...........: " + this.assetConstraint.getComparisonOperator().name() + " " + this.assetConstraint.getThresshold());
+        System.out.println("\tAsset constraint...........: " + this.assetConstraint.getComparisonOperator().name() + " " + this.assetConstraint.getThreshold());
         for (Functions function : this.functionConstraints.keySet()) {
-            System.out.println("\tFunction constraint........: " + function.name() + " " + this.functionConstraints.get(function).getComparisonOperator().name() + " " + this.functionConstraints.get(function).getThresshold());
+            System.out.println("\tFunction constraint........: " + function.name() + " " + this.functionConstraints.get(function).getComparisonOperator().name() + " " + this.functionConstraints.get(function).getThreshold());
         }
         for (Categories category : this.categoryConstraints.keySet()) {
-            System.out.println("\tCategory constraint........: " + category.name() + " " + this.categoryConstraints.get(category).getComparisonOperator().name() + " " + this.categoryConstraints.get(category).getThresshold());
+            System.out.println("\tCategory constraint........: " + category.name() + " " + this.categoryConstraints.get(category).getComparisonOperator().name() + " " + this.categoryConstraints.get(category).getThreshold());
         }
         for (Genes gene : this.geneConstraints.keySet()) {
-            System.out.println("\tExpected outcome constraint: " + gene.name() + " " + this.geneConstraints.get(gene).getComparisonOperator().name() + " " + this.geneConstraints.get(gene).getThresshold());
+            System.out.println("\tExpected outcome constraint: " + gene.name() + " " + this.geneConstraints.get(gene).getComparisonOperator().name() + " " + this.geneConstraints.get(gene).getThreshold());
         }
     }
 }

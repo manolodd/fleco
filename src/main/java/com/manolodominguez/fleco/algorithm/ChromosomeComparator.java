@@ -30,7 +30,7 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.fleco.genetic.Chromosome;
+import com.manolodominguez.fleco.genetics.Chromosome;
 import java.util.Comparator;
 
 /**

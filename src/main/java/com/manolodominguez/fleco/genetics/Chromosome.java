@@ -203,6 +203,28 @@ public class Chromosome {
     }
 
     /**
+     * This method returns the genes of this chromosome as JSON strings to be
+     * treated automatically whenever needed.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the genes of this chromosome as JSON strings.
+     */
+    public String getGenesAsJSONString() {
+        String JSONString = "";
+        int genesNum = 0;
+        for (Genes gene : genes.keySet()) {
+            JSONString += "\t\t{\"gene\":\"" + gene.name() + "\",\"allele\":\"" + getAllele(gene).name() + "\"}";
+            if (genesNum < (genes.keySet().size() - 1)) {
+                JSONString += ",\n";
+            } else {
+                JSONString += "\n";
+            }
+            genesNum++;
+        }
+        return JSONString;
+    }
+
+    /**
      * This method prints in console a plain version of the chromosome showing
      * the value of every gene.
      *

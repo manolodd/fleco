@@ -458,4 +458,66 @@ public class StrategicConstraints {
             System.out.println("\tExpected outcome constraint: " + gene.name() + " " + this.geneConstraints.get(gene).getComparisonOperator().name() + " " + this.geneConstraints.get(gene).getThreshold());
         }
     }
+
+    /**
+     * This method returns the strategic constraints as JSON strings to be
+     * treated automatically whenever needed.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the strategic constraints as JSON strings
+     */
+    public String getConstraintsAsJSONString() {
+        String JSONString = "";
+        int totalConstraints = categoryConstraints.size() + functionConstraints.size() + geneConstraints.size();
+        if (this.assetConstraint != null) {
+            totalConstraints++;
+        }
+        int constraintsNum = 0;
+        if (constraintsNum < totalConstraints) {
+            if (assetConstraint != null) {
+                JSONString+="\t\t{\"asset\":\"ASSET\",\"operator\":\""+assetConstraint.getComparisonOperator()+"\",\"value\":" + assetConstraint.getThreshold() + "}";
+                if (constraintsNum < (totalConstraints - 1)) {
+                    JSONString+=",\n";
+                } else {
+                    JSONString+="\n";
+                }
+                constraintsNum++;
+            }
+        }
+        for (Categories category : categoryConstraints.keySet()) {
+            if (constraintsNum < totalConstraints) {
+                JSONString += "\t\t{\"category\":\""+category+"\",\"operator\":\""+categoryConstraints.get(category).getComparisonOperator()+"\",\"value\":" + categoryConstraints.get(category).getThreshold() + "}";
+                if (constraintsNum < (totalConstraints - 1)) {
+                    JSONString+=",\n";
+                } else {
+                    JSONString+="\n";
+                }
+                constraintsNum++;
+            }
+        }
+        for (Functions function : functionConstraints.keySet()) {
+            if (constraintsNum < totalConstraints) {
+                JSONString += "\t\t{\"function\":\""+function+"\",\"operator\":\""+functionConstraints.get(function).getComparisonOperator()+"\",\"value\":" + functionConstraints.get(function).getThreshold() + "}";
+                if (constraintsNum < (totalConstraints - 1)) {
+                    JSONString+=",\n";
+                } else {
+                    JSONString+="\n";
+                }
+                constraintsNum++;
+            }
+        }
+        for (Genes gene : geneConstraints.keySet()) {
+            if (constraintsNum < totalConstraints) {
+                JSONString += "\t\t{\"gene\":\""+gene+"\",\"operator\":\""+geneConstraints.get(gene).getComparisonOperator()+"\",\"value\":"+ geneConstraints.get(gene).getThreshold() + "}";
+                if (constraintsNum < (totalConstraints - 1)) {
+                    JSONString+=",\n";
+                } else {
+                    JSONString+="\n";
+                }
+                constraintsNum++;
+            }
+        }
+        return JSONString;
+    }
+
 }

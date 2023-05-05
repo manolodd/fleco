@@ -213,13 +213,15 @@ public class Chromosome {
         String JSONString = "";
         int genesNum = 0;
         for (Genes gene : genes.keySet()) {
-            JSONString += "\t\t{\"gene\":\"" + gene.name() + "\",\"allele\":\"" + getAllele(gene).name() + "\"}";
-            if (genesNum < (genes.keySet().size() - 1)) {
-                JSONString += ",\n";
-            } else {
-                JSONString += "\n";
+            if (gene.appliesToIG(implementationGroup)) {
+                JSONString += "\t\t{\"gene\":\"" + gene.name() + "\",\"allele\":\"" + getAllele(gene).name() + "\"}";
+                if (genesNum < (Genes.getGenesFor(implementationGroup).size() - 1)) {
+                    JSONString += ",\n";
+                } else {
+                    JSONString += "\n";
+                }
+                genesNum++;
             }
-            genesNum++;
         }
         return JSONString;
     }

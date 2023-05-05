@@ -1,0 +1,1370 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "$id": "https://fleco.manolodominguez.com/schemas/casedefinition/v1",
+    "description": "JSON Schema (version 1) used to import/export cases in FLECO",
+    "title": "FLECO JSON Schema for cases (version 1)",    
+    "definitions": {
+        "implementationGroupsEnum": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 3,
+            "enum": [
+                "IG1",
+                "IG2",
+                "IG3"
+            ]
+        },
+        "booleanType": {
+            "type": "boolean"
+        },
+        "normalizedFloatValue": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+        },
+        "allelesEnum": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 7,
+            "enum": [
+                "DLI_0",
+                "DLI_33",
+                "DLI_67",
+                "DLI_100"
+            ]
+        },
+        "operatorsEnum": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 16,
+            "enum": [
+                "LESS",
+                "LESS_OR_EQUAL",
+                "EQUAL",
+                "GREATER",
+                "GREATER_OR_EQUAL"]
+        },
+        "assetEnum": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 5,
+            "enum": [
+                "ASSET"
+            ]
+        },
+        "functionsIG1Enum": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 8,            
+            "enum": [
+                "IDENTIFY",
+                "PROTECT",
+                "DETECT",
+                "RESPOND"
+            ]
+        },
+        "functionsIG2Enum": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 8,            
+            "enum": [
+                "IDENTIFY",
+                "PROTECT",
+                "DETECT",
+                "RESPOND"
+            ]
+        },
+        "functionsIG3Enum": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 8,            
+            "enum": [
+                "IDENTIFY",
+                "PROTECT",
+                "DETECT",
+                "RESPOND",
+                "RECOVER"
+            ]
+        },
+        "categoriesIG1Enum": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 5,
+            "enum": [
+                "ID_AM",
+                "ID_GV",
+                "ID_RA",
+                "ID_SC",
+                "PR_AC",
+                "PR_AT",
+                "PR_DS",
+                "PR_IP",
+                "PR_MA",
+                "PR_PT",
+                "DE_AE",
+                "DE_CM",
+                "DE_DP",
+                "RS_CO",
+                "RS_MI"
+            ]
+        },
+        "categoriesIG2Enum": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 5,
+            "enum": [
+                "ID_AM",
+                "ID_BE",
+                "ID_GV",
+                "ID_RA",
+                "ID_RM",
+                "ID_SC",
+                "PR_AC",
+                "PR_AT",
+                "PR_DS",
+                "PR_IP",
+                "PR_MA",
+                "PR_PT",
+                "DE_AE",
+                "DE_CM",
+                "DE_DP",
+                "RS_AN",
+                "RS_CO",
+                "RS_IM",
+                "RS_MI",
+                "RS_RP"
+            ]
+        },
+        "categoriesIG3Enum": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 5,
+            "enum": [
+                "ID_AM",
+                "ID_BE",
+                "ID_GV",
+                "ID_RA",
+                "ID_RM",
+                "ID_SC",
+                "PR_AC",
+                "PR_AT",
+                "PR_DS",
+                "PR_IP",
+                "PR_MA",
+                "PR_PT",
+                "DE_AE",
+                "DE_CM",
+                "DE_DP",
+                "RS_AN",
+                "RS_CO",
+                "RS_IM",
+                "RS_MI",
+                "RS_RP",
+                "RC_CO",
+                "RC_IM",
+                "RC_RP"
+            ]
+        },
+        "genesIG1Enum": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 15,
+            "enum": [
+                "ID_AM_CSC_1_1",
+                "ID_AM_CSC_14_1",
+                "ID_AM_CSC_2_2",
+                "ID_AM_CSC_3_1",
+                "ID_AM_CSC_3_2",
+                "ID_AM_CSC_3_6",
+                "ID_AM_ID_AM_1",
+                "ID_AM_ID_AM_2",
+                "ID_GV_ID_GV_1",
+                "ID_RA_ID_RA_1",
+                "ID_SC_ID_SC_2",
+                "ID_SC_ID_SC_5",
+                "PR_AC_CSC_4_7",
+                "PR_AC_CSC_5_2",
+                "PR_AC_PR_AC_1",
+                "PR_AC_PR_AC_3",
+                "PR_AC_PR_AC_4",
+                "PR_AC_PR_AC_5",
+                "PR_AC_PR_AC_7",
+                "PR_AT_PR_AT_1",
+                "PR_DS_CSC_3_4",
+                "PR_DS_PR_DS_3",
+                "PR_IP_9D_9",
+                "PR_IP_CSC_11_1",
+                "PR_IP_CSC_4_3",
+                "PR_IP_PR_IP_1",
+                "PR_IP_PR_IP_11",
+                "PR_IP_PR_IP_4",
+                "PR_IP_PR_IP_6",
+                "PR_IP_PR_IP_9",
+                "PR_MA_CSC_12_1",
+                "PR_MA_CSC_4_2",
+                "PR_MA_CSC_4_6",
+                "PR_MA_CSC_7_3",
+                "PR_MA_CSC_8_1",
+                "PR_MA_CSC_8_3",
+                "PR_PT_CSC_4_4",
+                "PR_PT_CSC_4_5",
+                "PR_PT_PR_PT_1",
+                "PR_PT_PR_PT_2",
+                "PR_PT_PR_PT_5",
+                "DE_AE_DE_AE_3",
+                "DE_CM_DE_CM_4",
+                "DE_CM_DE_CM_7",
+                "DE_DP_CSC_17_1",
+                "RS_CO_CSC_17_4",
+                "RS_MI_CSC_1_2"
+            ]
+        },
+        "genesIG2Enum": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 15,
+            "enum": [
+                "ID_AM_CSC_1_1",
+                "ID_AM_CSC_12_4",
+                "ID_AM_CSC_14_1",
+                "ID_AM_CSC_2_2",
+                "ID_AM_CSC_3_1",
+                "ID_AM_CSC_3_2",
+                "ID_AM_CSC_3_6",
+                "ID_AM_CSC_3_7",
+                "ID_AM_ID_AM_1",
+                "ID_AM_ID_AM_2",
+                "ID_AM_ID_AM_3",
+                "ID_BE_9D_1",
+                "ID_GV_CSC_17_4",
+                "ID_GV_ID_GV_1",
+                "ID_GV_ID_GV_2",
+                "ID_RA_9D_1",
+                "ID_RA_CSC_18_2",
+                "ID_RA_CSC_3_7",
+                "ID_RA_ID_RA_1",
+                "ID_RM_9D_8",
+                "ID_SC_ID_SC_1",
+                "ID_SC_ID_SC_2",
+                "ID_SC_ID_SC_3",
+                "ID_SC_ID_SC_5",
+                "PR_AC_CSC_12_5",
+                "PR_AC_CSC_12_6",
+                "PR_AC_CSC_13_4",
+                "PR_AC_CSC_4_7",
+                "PR_AC_CSC_5_2",
+                "PR_AC_CSC_5_6",
+                "PR_AC_PR_AC_1",
+                "PR_AC_PR_AC_3",
+                "PR_AC_PR_AC_4",
+                "PR_AC_PR_AC_5",
+                "PR_AC_PR_AC_7",
+                "PR_AT_CSC_14_9",
+                "PR_AT_CSC_15_4",
+                "PR_AT_PR_AT_1",
+                "PR_AT_PR_AT_2",
+                "PR_DS_CSC_3_4",
+                "PR_DS_PR_DS_1",
+                "PR_DS_PR_DS_2",
+                "PR_DS_PR_DS_3",
+                "PR_DS_PR_DS_6",
+                "PR_DS_PR_DS_7",
+                "PR_IP_9D_3",
+                "PR_IP_9D_5",
+                "PR_IP_9D_8",
+                "PR_IP_9D_9",
+                "PR_IP_CSC_11_1",
+                "PR_IP_CSC_16_1",
+                "PR_IP_CSC_2_5",
+                "PR_IP_CSC_2_6",
+                "PR_IP_CSC_4_3",
+                "PR_IP_PR_IP_1",
+                "PR_IP_PR_IP_10",
+                "PR_IP_PR_IP_11",
+                "PR_IP_PR_IP_12",
+                "PR_IP_PR_IP_2",
+                "PR_IP_PR_IP_4",
+                "PR_IP_PR_IP_6",
+                "PR_IP_PR_IP_7",
+                "PR_IP_PR_IP_9",
+                "PR_MA_9D_5",
+                "PR_MA_9D_9",
+                "PR_MA_CSC_12_1",
+                "PR_MA_CSC_12_3",
+                "PR_MA_CSC_13_5",
+                "PR_MA_CSC_18_3",
+                "PR_MA_CSC_4_2",
+                "PR_MA_CSC_4_6",
+                "PR_MA_CSC_4_8",
+                "PR_MA_CSC_4_9",
+                "PR_MA_CSC_7_3",
+                "PR_MA_CSC_8_1",
+                "PR_MA_CSC_8_10",
+                "PR_MA_CSC_8_3",
+                "PR_MA_CSC_8_9",
+                "PR_PT_9D_4",
+                "PR_PT_CSC_4_4",
+                "PR_PT_CSC_4_5",
+                "PR_PT_CSC_9_5",
+                "PR_PT_PR_PT_1",
+                "PR_PT_PR_PT_2",
+                "PR_PT_PR_PT_5",
+                "DE_AE_DE_AE_1",
+                "DE_AE_DE_AE_2",
+                "DE_AE_DE_AE_3",
+                "DE_CM_CSC_13_1",
+                "DE_CM_CSC_13_5",
+                "DE_CM_DE_CM_1",
+                "DE_CM_DE_CM_4",
+                "DE_CM_DE_CM_7",
+                "DE_CM_DE_CM_8",
+                "DE_DP_CSC_17_1",
+                "DE_DP_CSC_17_4",
+                "DE_DP_CSC_17_5",
+                "RS_AN_RS_AN_1",
+                "RS_AN_RS_AN_5",
+                "RS_CO_CSC_17_4",
+                "RS_CO_CSC_17_5",
+                "RS_IM_RS_IM_1",
+                "RS_IM_RS_IM_2",
+                "RS_MI_CSC_1_2",
+                "RS_MI_CSC_4_10",
+                "RS_MI_CSC_7_7",
+                "RS_RP_CSC_17_6"
+            ]
+        },
+        "genesIG3Enum": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 15,
+            "enum": [
+                "ID_AM_CSC_1_1",
+                "ID_AM_CSC_12_4",
+                "ID_AM_CSC_14_1",
+                "ID_AM_CSC_2_2",
+                "ID_AM_CSC_3_1",
+                "ID_AM_CSC_3_2",
+                "ID_AM_CSC_3_6",
+                "ID_AM_CSC_3_7",
+                "ID_AM_ID_AM_1",
+                "ID_AM_ID_AM_2",
+                "ID_AM_ID_AM_3",
+                "ID_BE_9D_1",
+                "ID_BE_ID_BE_1",
+                "ID_BE_ID_BE_2",
+                "ID_BE_ID_BE_3",
+                "ID_BE_ID_BE_4",
+                "ID_BE_ID_BE_5",
+                "ID_GV_CSC_17_4",
+                "ID_GV_ID_GV_1",
+                "ID_GV_ID_GV_2",
+                "ID_GV_ID_GV_3",
+                "ID_GV_ID_GV_4",
+                "ID_RA_9D_1",
+                "ID_RA_CSC_18_2",
+                "ID_RA_CSC_18_5",
+                "ID_RA_CSC_3_7",
+                "ID_RA_ID_RA_1",
+                "ID_RA_ID_RA_2",
+                "ID_RA_ID_RA_3",
+                "ID_RA_ID_RA_4",
+                "ID_RA_ID_RA_6",
+                "ID_RM_9D_8",
+                "ID_RM_ID_RM_1",
+                "ID_RM_ID_RM_2",
+                "ID_RM_ID_RM_3",
+                "ID_SC_ID_SC_1",
+                "ID_SC_ID_SC_2",
+                "ID_SC_ID_SC_3",
+                "ID_SC_ID_SC_4",
+                "ID_SC_ID_SC_5",
+                "PR_AC_CSC_12_5",
+                "PR_AC_CSC_12_6",
+                "PR_AC_CSC_13_4",
+                "PR_AC_CSC_4_7",
+                "PR_AC_CSC_5_2",
+                "PR_AC_CSC_5_6",
+                "PR_AC_CSC_6_8",
+                "PR_AC_PR_AC_1",
+                "PR_AC_PR_AC_2",
+                "PR_AC_PR_AC_3",
+                "PR_AC_PR_AC_4",
+                "PR_AC_PR_AC_5",
+                "PR_AC_PR_AC_6",
+                "PR_AC_PR_AC_7",
+                "PR_AT_CSC_14_9",
+                "PR_AT_CSC_15_4",
+                "PR_AT_PR_AT_1",
+                "PR_AT_PR_AT_2",
+                "PR_DS_9D_6",
+                "PR_DS_CSC_3_4",
+                "PR_DS_PR_DS_1",
+                "PR_DS_PR_DS_2",
+                "PR_DS_PR_DS_3",
+                "PR_DS_PR_DS_4",
+                "PR_DS_PR_DS_5",
+                "PR_DS_PR_DS_6",
+                "PR_DS_PR_DS_7",
+                "PR_DS_PR_DS_8",
+                "PR_IP_9D_3",
+                "PR_IP_9D_5",
+                "PR_IP_9D_8",
+                "PR_IP_9D_9",
+                "PR_IP_CSC_11_1",
+                "PR_IP_CSC_16_1",
+                "PR_IP_CSC_16_14",
+                "PR_IP_CSC_18_4",
+                "PR_IP_CSC_2_5",
+                "PR_IP_CSC_2_6",
+                "PR_IP_CSC_2_7",
+                "PR_IP_CSC_4_3",
+                "PR_IP_PR_IP_1",
+                "PR_IP_PR_IP_10",
+                "PR_IP_PR_IP_11",
+                "PR_IP_PR_IP_12",
+                "PR_IP_PR_IP_2",
+                "PR_IP_PR_IP_3",
+                "PR_IP_PR_IP_4",
+                "PR_IP_PR_IP_5",
+                "PR_IP_PR_IP_6",
+                "PR_IP_PR_IP_7",
+                "PR_IP_PR_IP_8",
+                "PR_IP_PR_IP_9",
+                "PR_MA_9D_5",
+                "PR_MA_9D_9",
+                "PR_MA_CSC_12_1",
+                "PR_MA_CSC_12_3",
+                "PR_MA_CSC_13_5",
+                "PR_MA_CSC_16_13",
+                "PR_MA_CSC_18_3",
+                "PR_MA_CSC_4_2",
+                "PR_MA_CSC_4_6",
+                "PR_MA_CSC_4_8",
+                "PR_MA_CSC_4_9",
+                "PR_MA_CSC_7_3",
+                "PR_MA_CSC_8_1",
+                "PR_MA_CSC_8_10",
+                "PR_MA_CSC_8_3",
+                "PR_MA_CSC_8_9",
+                "PR_MA_PR_MA_1",
+                "PR_PT_9D_4",
+                "PR_PT_9D_7",
+                "PR_PT_CSC_4_12",
+                "PR_PT_CSC_4_4",
+                "PR_PT_CSC_4_5",
+                "PR_PT_CSC_9_5",
+                "PR_PT_PR_PT_1",
+                "PR_PT_PR_PT_2",
+                "PR_PT_PR_PT_3",
+                "PR_PT_PR_PT_4",
+                "PR_PT_PR_PT_5",
+                "DE_AE_CSC_8_12",
+                "DE_AE_DE_AE_1",
+                "DE_AE_DE_AE_2",
+                "DE_AE_DE_AE_3",
+                "DE_AE_DE_AE_4",
+                "DE_AE_DE_AE_5",
+                "DE_CM_CSC_13_1",
+                "DE_CM_CSC_13_5",
+                "DE_CM_CSC_3_14",
+                "DE_CM_DE_CM_1",
+                "DE_CM_DE_CM_2",
+                "DE_CM_DE_CM_3",
+                "DE_CM_DE_CM_4",
+                "DE_CM_DE_CM_5",
+                "DE_CM_DE_CM_6",
+                "DE_CM_DE_CM_7",
+                "DE_CM_DE_CM_8",
+                "DE_DP_CSC_17_1",
+                "DE_DP_CSC_17_4",
+                "DE_DP_CSC_17_5",
+                "DE_DP_DE_DP_2",
+                "DE_DP_DE_DP_3",
+                "DE_DP_DE_DP_5",
+                "RS_AN_CSC_17_9",
+                "RS_AN_RS_AN_1",
+                "RS_AN_RS_AN_2",
+                "RS_AN_RS_AN_3",
+                "RS_AN_RS_AN_5",
+                "RS_CO_CSC_17_4",
+                "RS_CO_CSC_17_5",
+                "RS_CO_RS_CO_5",
+                "RS_IM_RS_IM_1",
+                "RS_IM_RS_IM_2",
+                "RS_MI_CSC_1_2",
+                "RS_MI_CSC_4_10",
+                "RS_MI_CSC_7_7",
+                "RS_MI_RS_MI_1",
+                "RS_MI_RS_MI_2",
+                "RS_MI_RS_MI_3",
+                "RS_RP_CSC_17_6",
+                "RS_RP_RS_RP_1",
+                "RC_CO_RC_CO_1",
+                "RC_CO_RC_CO_2",
+                "RC_CO_RC_CO_3",
+                "RC_IM_RC_IM_1",
+                "RC_IM_RC_IM_2",
+                "RC_RP_RC_RP_1"
+            ]
+        }
+    },
+    "type": "object",
+    "required": [
+        "caseIG",
+        "hasTargetStatus",
+        "initialStatus",
+        "strategicConstraints",
+        "targetStatus"
+    ],
+    "properties": {
+        "caseIG": {
+            "minItems": 1,
+            "maxItems": 1,
+            "item": false,
+            "description": "Implementation group of this case.",
+            "$ref": "#/definitions/implementationGroupsEnum"
+        },
+        "hasTargetStatus": {
+            "item": false,
+            "description": "Whether the file contains a target status.",
+            "$ref": "#/definitions/booleanType"
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "caseIG": {
+                        "const": "IG1"
+                    }
+                }
+            },
+            "then": {
+                "if": {
+                    "properties": {
+                        "hasTargetStatus": {
+                            "const": true
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "targetStatus": {
+                            "description": "Genes and alleles for the target status (IG1)",
+                            "minItems": 47,
+                            "maxItems": 47,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG1Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "initialStatus": {
+                            "description": "Genes and alleles for the initial status (IG1)",
+                            "minItems": 47,
+                            "maxItems": 47,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG1Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "strategicConstraints": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 0,
+                            "maxItems": 67,
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "gene",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "gene": {
+                                                "$ref": "#/definitions/genesIG1Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "category",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "category": {
+                                                "$ref": "#/definitions/categoriesIG1Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "function",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "function": {
+                                                "$ref": "#/definitions/functionsIG1Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "asset",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "asset": {
+                                                "$ref": "#/definitions/assetEnum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "targetStatus": {
+                            "description": "Genes and alleles for the target status (IG1)",
+                            "minItems": 0,
+                            "maxItems": 0,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG1Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "initialStatus": {
+                            "description": "Genes and alleles for the initial status (IG1)",
+                            "minItems": 47,
+                            "maxItems": 47,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG1Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "strategicConstraints": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 0,
+                            "maxItems": 67,
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "gene",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "gene": {
+                                                "$ref": "#/definitions/genesIG1Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "category",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "category": {
+                                                "$ref": "#/definitions/categoriesIG1Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "function",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "function": {
+                                                "$ref": "#/definitions/functionsIG1Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "asset",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "asset": {
+                                                "$ref": "#/definitions/assetEnum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "caseIG": {
+                        "const": "IG2"
+                    }
+                }
+            },
+            "then": {
+                "if": {
+                    "properties": {
+                        "hasTargetStatus": {
+                            "const": true
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "targetStatus": {
+                            "description": "Genes and alleles for the target status (IG2)",
+                            "minItems": 107,
+                            "maxItems": 107,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG2Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "initialStatus": {
+                            "description": "Genes and alleles for the initial status (IG2)",
+                            "minItems": 107,
+                            "maxItems": 107,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG2Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "strategicConstraints": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 0,
+                            "maxItems": 132,
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "gene",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "gene": {
+                                                "$ref": "#/definitions/genesIG2Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "category",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "category": {
+                                                "$ref": "#/definitions/categoriesIG2Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "function",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "function": {
+                                                "$ref": "#/definitions/functionsIG2Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "asset",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "asset": {
+                                                "$ref": "#/definitions/assetEnum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "targetStatus": {
+                            "description": "Genes and alleles for the target status (IG2)",
+                            "minItems": 0,
+                            "maxItems": 0,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG2Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "initialStatus": {
+                            "description": "Genes and alleles for the initial status (IG2)",
+                            "minItems": 107,
+                            "maxItems": 107,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG2Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "strategicConstraints": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 0,
+                            "maxItems": 132,
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "gene",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "gene": {
+                                                "$ref": "#/definitions/genesIG2Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "category",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "category": {
+                                                "$ref": "#/definitions/categoriesIG2Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "function",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "function": {
+                                                "$ref": "#/definitions/functionsIG2Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "asset",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "asset": {
+                                                "$ref": "#/definitions/assetEnum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "caseIG": {
+                        "const": "IG3"
+                    }
+                }
+            },
+            "then": {
+                "if": {
+                    "properties": {
+                        "hasTargetStatus": {
+                            "const": true
+                        }
+                    }
+                },
+                "then": {
+                    "properties": {
+                        "targetStatus": {
+                            "description": "Genes and alleles for the target status (IG3)",
+                            "minItems": 167,
+                            "maxItems": 167,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG3Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "initialStatus": {
+                            "description": "Genes and alleles for the initial status (IG3)",
+                            "minItems": 167,
+                            "maxItems": 167,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG3Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "strategicConstraints": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 0,
+                            "maxItems": 196,
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "gene",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "gene": {
+                                                "$ref": "#/definitions/genesIG3Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "category",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "category": {
+                                                "$ref": "#/definitions/categoriesIG3Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "function",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "function": {
+                                                "$ref": "#/definitions/functionsIG3Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "asset",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "asset": {
+                                                "$ref": "#/definitions/assetEnum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "else": {
+                    "properties": {
+                        "targetStatus": {
+                            "description": "Genes and alleles for the target status (IG3)",
+                            "minItems": 0,
+                            "maxItems": 0,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG3Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "initialStatus": {
+                            "description": "Genes and alleles for the initial status (IG3)",
+                            "minItems": 167,
+                            "maxItems": 167,
+                            "uniqueItems": true,
+                            "type": "array",
+                            "items": {
+                                "additionalProperties": false,
+                                "type": "object",
+                                "required": ["gene", "allele"],
+                                "properties": {
+                                    "gene": {
+                                        "$ref": "#/definitions/genesIG3Enum"
+                                    },
+                                    "allele": {
+                                        "$ref": "#/definitions/allelesEnum"
+                                    }
+                                }
+                            }
+                        },
+                        "strategicConstraints": {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "minItems": 0,
+                            "maxItems": 196,
+                            "items": {
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "gene",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "gene": {
+                                                "$ref": "#/definitions/genesIG3Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "category",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "category": {
+                                                "$ref": "#/definitions/categoriesIG3Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "function",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "function": {
+                                                "$ref": "#/definitions/functionsIG3Enum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    {
+                                        "required": [
+                                            "asset",
+                                            "operator",
+                                            "value"
+                                        ],
+                                        "properties": {
+                                            "asset": {
+                                                "$ref": "#/definitions/assetEnum"
+                                            },
+                                            "operator": {
+                                                "$ref": "#/definitions/operatorsEnum"
+                                            },
+                                            "value": {
+                                                "$ref": "#/definitions/normalizedFloatValue"
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+

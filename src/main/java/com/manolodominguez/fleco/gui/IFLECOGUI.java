@@ -42,7 +42,7 @@ public interface IFLECOGUI extends EventListener {
 
     /**
      * This method, once implemented, will be called by a FLECO instance to
-     * advertise its current progress in the execution.
+     * advertise its current progress during its execution.
      *
      * @author Manuel Domínguez Dorado
      */

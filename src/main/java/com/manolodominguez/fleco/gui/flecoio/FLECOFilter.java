@@ -42,7 +42,7 @@ import javax.swing.filechooser.FileFilter;
 public class FLECOFilter extends FileFilter {
 
     /**
-     * This is the constructor of the class. It creates a new fiel filter and
+     * This is the constructor of the class. It creates a new file filter and
      * sets its initial values.
      *
      * @author Manuel Domínguez-Dorado

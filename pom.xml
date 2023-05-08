@@ -2,6 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <properties>
         <!--- Dependency versions -->
+        <treetable.version>0.0.2</treetable.version>
+        <miglayout-swing.version>11.1</miglayout-swing.version>
+        <everit-json-schema.version>1.14.2</everit-json-schema.version>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -109,13 +112,12 @@
                 <version>${maven.jar.plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/*.png</exclude>
                         <exclude>**/*.jpg</exclude>
                         <exclude>**/*.xcf</exclude>
                     </excludes>
                     <archive>
                         <manifest>
-                            <mainClass>com.manolodominguez.fleco.main.FlecoGUI</mainClass>
+                            <mainClass>com.manolodominguez.fleco.main.FLECOStudio</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -133,7 +135,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.manolodominguez.fleco.main.FlecoGUI</mainClass>
+                                    <mainClass>com.manolodominguez.fleco.main.FLECOStudio</mainClass>
                                 </transformer>
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -142,7 +144,6 @@
                                 <filter>
                                     <excludes>
                                         <exclude>*.jpg</exclude>
-                                        <exclude>*.png</exclude>
                                         <exclude>*.xce</exclude>
                                     </excludes>
                                 </filter>
@@ -212,18 +213,17 @@
         </resources>    
  
     </build>
-
     <dependencies>
-        <dependency>
-            <groupId>de.javagl</groupId>
-            <artifactId>treetable</artifactId>
-            <version>0.0.2</version>
-        </dependency>
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-swing</artifactId>
-            <version>11.1</version>
+            <version>${miglayout-swing.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.erosb</groupId>
+            <artifactId>everit-json-schema</artifactId>
+            <version>${everit-json-schema.version}</version>
+        </dependency>    
     </dependencies>
     <reporting>
         <plugins>

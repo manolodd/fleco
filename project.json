@@ -7,10 +7,17 @@
     },
     "componentbindings": [
         {
-            "component": "own-fleco-code",
-            "version": "1.1",
-            "license": "LGPL_3_0_OR_LATER",
+            "component": "miglayout",
+            "version": "11.1",
+            "license": "BSD_3_CLAUSE",
             "weight": "HIGH",
+            "link": "DYNAMIC"
+        },
+        {
+            "component": "everit-json-schema",
+            "version": "1.14.2",
+            "license": "APACHE_2_0",
+            "weight": "NEAR_HIGH",
             "link": "DYNAMIC"
         }
     ]

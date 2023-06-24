@@ -28,7 +28,7 @@
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  *******************************************************************************
  */
-package com.manolodominguez.experiments.techscience_iasc.definitions.statuses;
+package com.manolodominguez.experiments.definitions.statuses;
 
 import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.genetics.Chromosome;

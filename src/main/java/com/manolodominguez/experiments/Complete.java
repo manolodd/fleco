@@ -28,15 +28,15 @@
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  *******************************************************************************
  */
-package com.manolodominguez.experiments.techscience_iasc;
+package com.manolodominguez.experiments;
 
-import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCEOLevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFCLevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.AFLevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.definitions.constraints.ALevelStrategicConstraints;
-import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG1;
-import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG2;
-import com.manolodominguez.experiments.techscience_iasc.definitions.statuses.InitialStatusForIG3;
+import com.manolodominguez.experiments.definitions.constraints.AFCEOLevelStrategicConstraints;
+import com.manolodominguez.experiments.definitions.constraints.AFCLevelStrategicConstraints;
+import com.manolodominguez.experiments.definitions.constraints.AFLevelStrategicConstraints;
+import com.manolodominguez.experiments.definitions.constraints.ALevelStrategicConstraints;
+import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG1;
+import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG2;
+import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;

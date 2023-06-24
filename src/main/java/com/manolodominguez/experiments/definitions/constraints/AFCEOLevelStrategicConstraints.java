@@ -28,7 +28,7 @@
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  *******************************************************************************
  */
-package com.manolodominguez.experiments.techscience_iasc.definitions.constraints;
+package com.manolodominguez.experiments.definitions.constraints;
 
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;

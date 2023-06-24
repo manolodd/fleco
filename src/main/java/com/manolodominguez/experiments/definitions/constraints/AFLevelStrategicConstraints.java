@@ -28,44 +28,40 @@
  * https://www.gnu.org/licenses/lgpl-3.0.en.html.
  *******************************************************************************
  */
-package com.manolodominguez.experiments.techscience_iasc.definitions.constraints;
+package com.manolodominguez.experiments.definitions.constraints;
 
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
-import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**
  * This class implement a predefined set of strategic cybersecurity constraints
- * that are of complex to solve because it contains a constraint related to the
- * overall asset's cybersecurity status, to the cybersecurity functions and also
- * to the cybersecurity categories. It is intended only to ease the experiments.
+ * that are of medium complexity to solve because it contains a constraint
+ * related to the overall asset's cybersecurity status and also constraints
+ * related to the cybersecurity functions. It is intended only to ease the
+ * experiments.
  *
  * @author Manuel Domínguez-Dorado
  */
-public class AFCLevelStrategicConstraints extends StrategicConstraints {
+public class AFLevelStrategicConstraints extends StrategicConstraints {
 
     /**
      * This is the constuctor of the class. It creates a new instance and adds
      * constraints for the overall asset's cybersecurity status and also for
-     * cybersecurity functions and cybersecurity categories.
+     * cybersecurity functions.
      *
      * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation groups that applies to the
      * asset being considered.
      */
-    public AFCLevelStrategicConstraints(ImplementationGroups implementationGroup) {
+    public AFLevelStrategicConstraints(ImplementationGroups implementationGroup) {
         super(implementationGroup);
         // Asset constraint
         addConstraint(new Constraint(ComparisonOperators.GREATER, 0.65f));
         // Functions constraints
         addConstraint(Functions.IDENTIFY, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.6f));
-        // Category constraints
-        addConstraint(Categories.RC_CO, new Constraint(ComparisonOperators.LESS, 0.8f));
-        addConstraint(Categories.PR_AC, new Constraint(ComparisonOperators.GREATER, 0.6f));
-        addConstraint(Categories.ID_SC, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.5f));
     }
 
 }

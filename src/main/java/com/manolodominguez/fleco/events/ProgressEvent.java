@@ -88,7 +88,7 @@ public class ProgressEvent extends FLECOEvent {
      * be received by the listener.
      */
     public float getProgressPercentage() {
-        if (totalTime != 0) {
+        if (totalTime != ZERO) {
             return (float) currentTime / (float) totalTime;
         }
         return 1.0f;
@@ -132,7 +132,7 @@ public class ProgressEvent extends FLECOEvent {
      * @author Manuel Domínguez Dorado
      */
     public void print() {
-        if ((currentGeneration % 100) == 0) {
+        if ((currentGeneration % 100) == ZERO) {
             System.out.println("Time: " + currentTime + "/" + totalTime + "(" + (float) currentTime / totalTime + "%) Generation: " + currentGeneration + " Current best solution: " + currentBestChromosome.getFitness());
         }
     }

@@ -48,7 +48,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FitnessEvaluatorFactory {
 
     private static final int NUMBER_OF_OBJECTIVES = 2;
-
+    private static final int IG1_LENGTH = 47;
+    private static final int IG2_LENGTH = 107;
+    private static final int IG3_LENGTH = 167;
+    
     private static FitnessEvaluatorFactory instance = null;
     private float[] fitnessValues;
 
@@ -101,13 +104,13 @@ public class FitnessEvaluatorFactory {
         // Detects the implementation group from the lenght of intChromosome
         ImplementationGroups implementationGroup;
         switch (intChromosome.length) {
-            case 47:
+            case IG1_LENGTH:
                 implementationGroup = ImplementationGroups.IG1;
                 break;
-            case 107:
+            case IG2_LENGTH:
                 implementationGroup = ImplementationGroups.IG2;
                 break;
-            case 167:
+            case IG3_LENGTH:
                 implementationGroup = ImplementationGroups.IG3;
                 break;
             default:

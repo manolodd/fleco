@@ -36,7 +36,7 @@ package com.manolodominguez.fleco.events;
  *
  * @author Manuel Domínguez-Dorado
  */
-public class DefaultProgressEventListener implements IProgressEventListener {
+public class DefaultProgressEventListener implements IFLECOProgressEventListener {
 
     /**
      * This methods receive a progress event from a FLECO instance and print the

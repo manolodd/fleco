@@ -30,7 +30,6 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
-import com.manolodominguez.fleco.events.IProgressEventListener;
 import com.manolodominguez.fleco.events.ProgressEvent;
 import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
@@ -41,6 +40,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
+import com.manolodominguez.fleco.events.IFLECOProgressEventListener;
 
 /**
  * The present class implements the FLECO (Fast, Lightweight, and Efficient
@@ -69,7 +69,7 @@ public class FLECO {
     private Chromosome initialStatus;
     private float usedTime;
     private int usedGenerations;
-    private IProgressEventListener progressEventListener;
+    private IFLECOProgressEventListener progressEventListener;
     private RotaryIDGenerator rotaryIDGenerator;
 
     private static final float STAGNATION_THRESHOLD_PERCENTAGE = 0.025f;
@@ -121,7 +121,7 @@ public class FLECO {
      * @author Manuel Domínguez-Dorado
      * @param progressEventListener the progress event listener.
      */
-    public void setProgressEventListener(IProgressEventListener progressEventListener) {
+    public void setProgressEventListener(IFLECOProgressEventListener progressEventListener) {
         if (this.progressEventListener != null) {
             throw new IllegalArgumentException("FLECO already has a progress event listener. Only one is allowed.");
         }

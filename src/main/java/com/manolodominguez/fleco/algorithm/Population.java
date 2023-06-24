@@ -307,11 +307,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         if (!isEmpty()) {
             if (get(BEST_CHROMOSOME_INDEX).getFitnessConstraintsCoverage() >= 1.0f) {
                 hasGoodEnoughBestIndividual = true;
-                if (get(BEST_CHROMOSOME_INDEX).getFitnessSimilarityToCurrentState() >= 0.80f) {
-                    hasHighQualityBestIndividual = true;
-                } else {
-                    hasHighQualityBestIndividual = false;
-                }
+                hasHighQualityBestIndividual = get(BEST_CHROMOSOME_INDEX).getFitnessSimilarityToCurrentState() >= 0.80f;
             } else {
                 hasGoodEnoughBestIndividual = false;
             }

@@ -31,9 +31,6 @@
 package com.manolodominguez.experiments;
 
 import com.manolodominguez.experiments.definitions.constraints.AFCEOLevelStrategicConstraints;
-import com.manolodominguez.experiments.definitions.constraints.AFCLevelStrategicConstraints;
-import com.manolodominguez.experiments.definitions.constraints.AFLevelStrategicConstraints;
-import com.manolodominguez.experiments.definitions.constraints.ALevelStrategicConstraints;
 import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG1;
 import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG2;
 import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG3;

@@ -34,13 +34,9 @@ import com.manolodominguez.experiments.definitions.constraints.AFCEOLevelStrateg
 import com.manolodominguez.experiments.definitions.constraints.AFCLevelStrategicConstraints;
 import com.manolodominguez.experiments.definitions.constraints.AFLevelStrategicConstraints;
 import com.manolodominguez.experiments.definitions.constraints.ALevelStrategicConstraints;
-import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG1;
-import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG2;
-import com.manolodominguez.experiments.definitions.statuses.InitialStatusForIG3;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
-import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 
 /**

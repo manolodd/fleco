@@ -1,0 +1,945 @@
+/* 
+ *******************************************************************************
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Adaptive, 
+ * Constrained, and Multi-objective Genetic Algorithm is a genetic algorithm  
+ * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
+ * decisions during the application of CyberTOMP(1), aimed at managing 
+ * comprehensive cybersecurity at both tactical and operational levels.
+ *
+ * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
+ * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
+ * manage asset-focused cybersecurity from tactical and operational levels. IEEE
+ * Access, 10, 122454-122485.
+ *******************************************************************************
+ * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under 
+ * the terms of the GNU Lesser General Public License as published by the Free 
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT 
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this program. If not, see 
+ * https://www.gnu.org/licenses/lgpl-3.0.en.html.
+ *******************************************************************************
+ */
+package com.manolodominguez.fleco.gui;
+
+import com.manolodominguez.fleco.genetics.Alleles;
+import com.manolodominguez.fleco.genetics.Chromosome;
+import com.manolodominguez.fleco.genetics.Genes;
+import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
+import com.manolodominguez.fleco.strategicconstraints.Constraint;
+import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
+import com.manolodominguez.fleco.uleo.Categories;
+import com.manolodominguez.fleco.uleo.Functions;
+import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.util.EnumMap;
+import javax.swing.table.AbstractTableModel;
+
+/**
+ *
+ * @author Manuel Domínguez-Dorado
+ */
+@SuppressWarnings("serial")
+public class FLECOTableModel extends AbstractTableModel {
+
+    private static final int CYBERTOMP_METRIC = 0;
+    private static final int INITIAL_STATUS = 1;
+    private static final int CONSTRAINT_OPERATOR = 2;
+    private static final int CONSTRAINT_VALUE = 3;
+    private static final int TARGET_STATUS = 4;
+    private static final int MAX_COLUMNS = 5;
+    private static final int ASSET_ROW = 0;
+    private static final String NO_CONSTRAINT = "N/A";
+
+    private StrategicConstraints strategicConstraints;
+    private ImplementationGroups implementationGroup;
+    private String[] metricsNames;
+
+    private Chromosome initialStatus;
+    EnumMap<Genes, Float> genesValuesInitialStatus;
+    EnumMap<Categories, Float> categoriesValuesInitialStatus;
+    EnumMap<Functions, Float> functionsValuesInitialStatus;
+    Float assetValueInitialStatus;
+
+    private Chromosome targetStatus;
+    EnumMap<Genes, Float> genesValuesTargetStatus;
+    EnumMap<Categories, Float> categoriesValuesTargetStatus;
+    EnumMap<Functions, Float> functionsValuesTargetStatus;
+    Float assetValueTargetStatus;
+
+    private IFLECOTableModelChangeListener changeEventListener;
+
+    public FLECOTableModel(Chromosome initialStatus, StrategicConstraints strategicConstraints) {
+        this.initialStatus = initialStatus;
+        this.strategicConstraints = strategicConstraints;
+        this.implementationGroup = initialStatus.getImplementationGroup();
+        this.targetStatus = null;
+        this.changeEventListener = null;
+        int rowCount = 0;
+        rowCount++; // +1 For the "Asset" row
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            rowCount++; //+1 for each applicable Function
+            for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
+                rowCount++; //+1 for each applicable Category
+                for (Genes gene : Genes.getGenesFor(category, implementationGroup)) {
+                    rowCount++; //+1 for each applicable gene/expected outcome
+                }
+            }
+        }
+        this.metricsNames = new String[rowCount];
+        int count = 0;
+        metricsNames[count] = "Asset";
+        count++;
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            metricsNames[count] = function.name();
+            count++;
+            for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
+                metricsNames[count] = category.name();
+                count++;
+                for (Genes gene : Genes.getGenesFor(category, implementationGroup)) {
+                    metricsNames[count] = gene.name();
+                    count++;
+                }
+            }
+        }
+        computeValuesForInitialStatus();
+    }
+
+    public void setChangeEventListener(IFLECOTableModelChangeListener changeEventListener) {
+        if (this.changeEventListener != null) {
+            throw new IllegalArgumentException("A listener has already been defined for this FLECOTableModel. Only one is allowed.");
+        }
+        this.changeEventListener = changeEventListener;
+    }
+
+    public void setTargetStatus(Chromosome targetStatus) {
+        this.targetStatus = targetStatus;
+        computeValuesForTargetStatus();
+        for (int j = 0; j < metricsNames.length; j++) {
+            fireTableCellUpdated(j, TARGET_STATUS);
+        }
+        if (changeEventListener != null) {
+            changeEventListener.onFLECOTableModelChanged();
+        }
+    }
+
+    public Chromosome getTargetStatus() {
+        return targetStatus;
+    }
+
+    public void setStrategicConstraints(StrategicConstraints strategicConstraints) {
+        this.strategicConstraints = strategicConstraints;
+        for (int j = 0; j < metricsNames.length; j++) {
+            fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
+            fireTableCellUpdated(j, CONSTRAINT_VALUE);
+        }
+        if (changeEventListener != null) {
+            changeEventListener.onFLECOTableModelChanged();
+        }
+    }
+
+    public void setInitialStatus(Chromosome initialStatus) {
+        this.initialStatus = initialStatus;
+        int rowCount = 0;
+        rowCount++; // +1 For the "Asset" row
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            rowCount++; //+1 for each applicable Function
+            for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
+                rowCount++; //+1 for each applicable Category
+                for (Genes gene : Genes.getGenesFor(category, implementationGroup)) {
+                    rowCount++; //+1 for each applicable gene/expected outcome
+                }
+            }
+        }
+        this.metricsNames = new String[rowCount];
+        int count = 0;
+        metricsNames[count] = "Asset";
+        count++;
+        for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
+            metricsNames[count] = function.name();
+            count++;
+            for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
+                metricsNames[count] = category.name();
+                count++;
+                for (Genes gene : Genes.getGenesFor(category, implementationGroup)) {
+                    metricsNames[count] = gene.name();
+                    count++;
+                }
+            }
+        }
+        computeValuesForInitialStatus();
+        for (int j = 0; j < metricsNames.length; j++) {
+            fireTableCellUpdated(j, INITIAL_STATUS);
+        }
+        if (changeEventListener != null) {
+            changeEventListener.onFLECOTableModelChanged();
+        }
+    }
+
+    public void removeTargetStatus() {
+        targetStatus = null;
+        computeValuesForTargetStatus();
+    }
+
+    public void removeStrategicConstraints() {
+        if (strategicConstraints != null) {
+            this.strategicConstraints.removeAll();
+        }
+    }
+
+    public void removeInitialStatus() {
+        targetStatus = null;
+        computeValuesForTargetStatus();
+    }
+
+    public ImplementationGroups getImplementation() {
+        return implementationGroup;
+    }
+
+    public StrategicConstraints getStrategicConstraints() {
+        return strategicConstraints;
+    }
+
+    public Chromosome getInitialStatus() {
+        return initialStatus;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return MAX_COLUMNS;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        switch (column) {
+            case CYBERTOMP_METRIC:
+                return "CyberTOMP metric";
+            case INITIAL_STATUS:
+                return "Current status";
+            case CONSTRAINT_OPERATOR:
+                return "Constraint operator";
+            case CONSTRAINT_VALUE:
+                return "Constraint value";
+            case TARGET_STATUS:
+            default:
+                return "Target status";
+        }
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column) {
+        switch (column) {
+            case CYBERTOMP_METRIC:
+                return String.class;
+            case INITIAL_STATUS:
+                return String.class;
+            case CONSTRAINT_OPERATOR:
+                return String.class;
+            case CONSTRAINT_VALUE:
+                return String.class;
+            case TARGET_STATUS:
+                return String.class;
+            default:
+                return String.class;
+        }
+    }
+
+    @Override
+    public int getRowCount() {
+        if (initialStatus != null) {
+            return metricsNames.length;
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        if (initialStatus != null) {
+            if ((column == CYBERTOMP_METRIC) || (column == TARGET_STATUS)) {
+                return false;
+            }
+            if (column == INITIAL_STATUS) {
+                for (Genes gene : Genes.getGenesFor(implementationGroup)) {
+                    if (gene.name().equals(metricsNames[row])) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Object getValueAt(int row, int column) {
+        if (initialStatus != null) {
+            switch (column) {
+                case CYBERTOMP_METRIC:
+                    return getCyberTOMPMetricAt(row);
+                case INITIAL_STATUS:
+                    return getInitialStatusAt(row);
+                case CONSTRAINT_OPERATOR:
+                    return getConstraintOperatorAt(row);
+                case CONSTRAINT_VALUE:
+                    return getConstraintValueAt(row);
+                case TARGET_STATUS:
+                    return getTargetStatusAt(row);
+                default:
+                    break;
+            }
+        }
+        return null;
+    }
+
+    private Object getCyberTOMPMetricAt(int row) {
+        if (initialStatus != null) {
+            return metricsNames[row];
+        }
+        return null;
+    }
+
+    private Object getInitialStatusAt(int row) {
+        if (initialStatus != null) {
+            computeValuesForInitialStatus();
+            try {
+                // Case it is an expected outcome
+                return genesValuesInitialStatus.get(Genes.valueOf((String) getValueAt(row, 0)));
+            }
+            catch (IllegalArgumentException e) {
+                try {
+                    // Case it is a category
+                    return categoriesValuesInitialStatus.get(Categories.valueOf((String) getValueAt(row, 0)));
+                }
+                catch (IllegalArgumentException e2) {
+                    try {
+                        // Case it is an asset
+                        return functionsValuesInitialStatus.get(Functions.valueOf((String) getValueAt(row, 0)));
+                    }
+                    catch (IllegalArgumentException e3) {
+                        // Case it is a function
+                        return assetValueInitialStatus;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private Object getTargetStatusAt(int row) {
+        if (targetStatus != null) {
+            computeValuesForTargetStatus();
+            try {
+                // Case it is an expected outcome
+                return genesValuesTargetStatus.get(Genes.valueOf((String) getValueAt(row, 0)));
+            }
+            catch (IllegalArgumentException e) {
+                try {
+                    // Case it is a category
+                    return categoriesValuesTargetStatus.get(Categories.valueOf((String) getValueAt(row, 0)));
+                }
+                catch (IllegalArgumentException e2) {
+                    try {
+                        // Case it is an asset
+                        return functionsValuesTargetStatus.get(Functions.valueOf((String) getValueAt(row, 0)));
+                    }
+                    catch (IllegalArgumentException e3) {
+                        // Case it is a function
+                        return assetValueTargetStatus;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private Object getConstraintOperatorAt(int row) {
+        if (initialStatus != null) {
+            try {
+                // Case it is an expected outcome
+                Genes gene = Genes.valueOf(metricsNames[row]);
+                if (gene.appliesToIG(implementationGroup)) {
+                    if (strategicConstraints.hasDefinedConstraint(gene)) {
+                        return strategicConstraints.getConstraint(gene).getComparisonOperator().name();
+                    }
+                }
+            }
+            catch (IllegalArgumentException e1) {
+                try {
+                    // Case it is a category
+                    Categories category = Categories.valueOf(metricsNames[row]);
+                    if (category.appliesToIG(implementationGroup)) {
+                        if (strategicConstraints.hasDefinedConstraint(category)) {
+                            return strategicConstraints.getConstraint(category).getComparisonOperator().name();
+                        }
+                    }
+                }
+                catch (IllegalArgumentException e2) {
+                    try {
+                        // Case it is a function
+                        Functions function = Functions.valueOf(metricsNames[row]);
+                        if (function.appliesToIG(implementationGroup)) {
+                            if (strategicConstraints.hasDefinedConstraint(function)) {
+                                return strategicConstraints.getConstraint(function).getComparisonOperator().name();
+                            }
+                        }
+                    }
+                    catch (IllegalArgumentException e3) {
+                        // Case it is an asset
+                        if (row == ASSET_ROW) {
+                            if (strategicConstraints.hasDefinedConstraint()) {
+                                return strategicConstraints.getConstraint().getComparisonOperator().name();
+                            }
+                        }
+                    }
+                }
+            }
+            return NO_CONSTRAINT;
+        }
+        return null;
+    }
+
+    public Object getConstraintValueAt(int row) {
+        if (initialStatus != null) {
+            try {
+                // Case it is an expected outcome
+                Genes gene = Genes.valueOf(metricsNames[row]);
+                if (gene.appliesToIG(implementationGroup)) {
+                    if (strategicConstraints.hasDefinedConstraint(gene)) {
+                        return (Float) strategicConstraints.getConstraint(gene).getThreshold();
+                    }
+                }
+            }
+            catch (IllegalArgumentException e1) {
+                try {
+                    // Case it is a category
+                    Categories category = Categories.valueOf(metricsNames[row]);
+                    if (category.appliesToIG(implementationGroup)) {
+                        if (strategicConstraints.hasDefinedConstraint(category)) {
+                            return (Float) strategicConstraints.getConstraint(category).getThreshold();
+                        }
+                    }
+                }
+                catch (IllegalArgumentException e2) {
+                    try {
+                        // Case it is a function
+                        Functions function = Functions.valueOf(metricsNames[row]);
+                        if (function.appliesToIG(implementationGroup)) {
+                            if (strategicConstraints.hasDefinedConstraint(function)) {
+                                return (Float) strategicConstraints.getConstraint(function).getThreshold();
+                            }
+                        }
+                    }
+                    catch (IllegalArgumentException e3) {
+                        // Case it is an asset
+                        if (row == ASSET_ROW) {
+                            if (strategicConstraints.hasDefinedConstraint()) {
+                                return (Float) strategicConstraints.getConstraint().getThreshold();
+                            }
+                        }
+                    }
+                }
+            }
+            return (Float) 0.0f;
+        }
+        return null;
+    }
+
+    @Override
+    public void setValueAt(Object value, int row, int column) {
+        if (initialStatus != null) {
+            switch (column) {
+                case CYBERTOMP_METRIC:
+                    setCyberTOMPMetricAt(value, row);
+                    break;
+                case INITIAL_STATUS:
+                    setInitialStatusAt(value, row);
+                    break;
+                case CONSTRAINT_OPERATOR:
+                    setConstraintOperatorAt(value, row);
+                    break;
+                case CONSTRAINT_VALUE:
+                    setConstraintValueAt(value, row);
+                    break;
+                default:
+                    break;
+            }
+            if (changeEventListener != null) {
+                changeEventListener.onFLECOTableModelChanged();
+            }
+        }
+    }
+
+    private void setCyberTOMPMetricAt(Object value, int row) {
+        // do nothing;
+    }
+
+    private void setInitialStatusAt(Object value, int row) {
+        if (initialStatus != null) {
+            try {
+                Alleles allele = Alleles.DLI_0;
+                Genes gene;
+                gene = Genes.valueOf(metricsNames[row]);
+                if (value instanceof Float) {
+                    float valueFloat = (float) value;
+                    if (valueFloat == Alleles.DLI_0.getDLI()) {
+                        allele = Alleles.DLI_0;
+                    } else if (valueFloat == Alleles.DLI_33.getDLI()) {
+                        allele = Alleles.DLI_33;
+                    } else if (valueFloat == Alleles.DLI_67.getDLI()) {
+                        allele = Alleles.DLI_67;
+                    } else if (valueFloat == Alleles.DLI_100.getDLI()) {
+                        allele = Alleles.DLI_100;
+                    }
+                    initialStatus.updateAllele(gene, allele);
+                    computeValuesForInitialStatus();
+                    for (int j = 0; row < metricsNames.length; row++) {
+                        fireTableCellUpdated(j, INITIAL_STATUS);
+                    }
+                }
+            }
+            catch (IllegalArgumentException e) {
+                System.out.println("ERROR en setInitialStatusAt");
+            }
+        }
+    }
+
+    private void setConstraintOperatorAt(Object value, int row) {
+        int GENE = 0;
+        int CATEGORY = 1;
+        int FUNCTION = 2;
+        int ASSET = 3;
+        int typeOfMetric = GENE;
+        if (initialStatus != null) {
+            try {
+                Genes.valueOf(metricsNames[row]);
+                typeOfMetric = GENE;
+            }
+            catch (IllegalArgumentException e11) {
+                try {
+                    Categories.valueOf(metricsNames[row]);
+                    typeOfMetric = CATEGORY;
+                }
+                catch (IllegalArgumentException e12) {
+                    try {
+                        Functions.valueOf(metricsNames[row]);
+                        typeOfMetric = FUNCTION;
+                    }
+                    catch (IllegalArgumentException e13) {
+                        typeOfMetric = ASSET;
+                    }
+                }
+            }
+            try {
+                ComparisonOperators comparisonOperator;
+                if (value instanceof String) {
+                    String valueString = (String) value;
+                    if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == GENE)) {
+                        strategicConstraints.removeConstraint(Genes.valueOf(metricsNames[row]));
+                    } else {
+                        comparisonOperator = ComparisonOperators.valueOf(valueString);
+                        Genes gene = Genes.valueOf(metricsNames[row]);
+                        Constraint updatedConstraint;
+                        if (strategicConstraints.hasDefinedConstraint(gene)) {
+                            updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint(gene).getThreshold());
+                            strategicConstraints.removeConstraint(gene);
+                            strategicConstraints.addConstraint(gene, updatedConstraint);
+                        } else {
+                            switch (comparisonOperator) {
+                                case LESS:
+                                case LESS_OR_EQUAL:
+                                case EQUAL:
+                                    updatedConstraint = new Constraint(comparisonOperator, 1.0f);
+                                    strategicConstraints.addConstraint(gene, updatedConstraint);
+                                    break;
+                                case GREATER:
+                                case GREATER_OR_EQUAL:
+                                    updatedConstraint = new Constraint(comparisonOperator, 0.0f);
+                                    strategicConstraints.addConstraint(gene, updatedConstraint);
+                                    break;
+                            }
+                        }
+                    }
+                    for (int j = 0; j < metricsNames.length; j++) {
+                        fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
+                        fireTableCellUpdated(j, CONSTRAINT_VALUE);
+                    }
+                }
+            }
+            catch (IllegalArgumentException e2) {
+                try {
+                    ComparisonOperators comparisonOperator;
+                    if (value instanceof String) {
+                        String valueString = (String) value;
+                        if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == CATEGORY)) {
+                            strategicConstraints.removeConstraint(Categories.valueOf(metricsNames[row]));
+                        } else {
+                            comparisonOperator = ComparisonOperators.valueOf(valueString);
+                            Constraint updatedConstraint;
+                            Categories category = Categories.valueOf(metricsNames[row]);
+                            if (strategicConstraints.hasDefinedConstraint(category)) {
+                                updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint(category).getThreshold());
+                                strategicConstraints.removeConstraint(category);
+                                strategicConstraints.addConstraint(category, updatedConstraint);
+                            } else {
+                                switch (comparisonOperator) {
+                                    case LESS:
+                                    case LESS_OR_EQUAL:
+                                    case EQUAL:
+                                        updatedConstraint = new Constraint(comparisonOperator, 1.0f);
+                                        strategicConstraints.addConstraint(category, updatedConstraint);
+                                        break;
+                                    case GREATER:
+                                    case GREATER_OR_EQUAL:
+                                        updatedConstraint = new Constraint(comparisonOperator, 0.0f);
+                                        strategicConstraints.addConstraint(category, updatedConstraint);
+                                        break;
+                                }
+                            }
+                        }
+                        for (int j = 0; j < metricsNames.length; j++) {
+                            fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
+                            fireTableCellUpdated(j, CONSTRAINT_VALUE);
+                        }
+                    }
+                }
+                catch (IllegalArgumentException e3) {
+                    try {
+                        ComparisonOperators comparisonOperator;
+                        if (value instanceof String) {
+                            String valueString = (String) value;
+                            if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == FUNCTION)) {
+                                strategicConstraints.removeConstraint(Functions.valueOf(metricsNames[row]));
+                            } else {
+                                comparisonOperator = ComparisonOperators.valueOf(valueString);
+                                Constraint updatedConstraint;
+                                Functions function = Functions.valueOf(metricsNames[row]);
+                                if (strategicConstraints.hasDefinedConstraint(function)) {
+                                    updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint(function).getThreshold());
+                                    strategicConstraints.removeConstraint(function);
+                                    strategicConstraints.addConstraint(function, updatedConstraint);
+                                } else {
+                                    switch (comparisonOperator) {
+                                        case LESS:
+                                        case LESS_OR_EQUAL:
+                                        case EQUAL:
+                                            updatedConstraint = new Constraint(comparisonOperator, 1.0f);
+                                            strategicConstraints.addConstraint(function, updatedConstraint);
+                                            break;
+                                        case GREATER:
+                                        case GREATER_OR_EQUAL:
+                                            updatedConstraint = new Constraint(comparisonOperator, 0.0f);
+                                            strategicConstraints.addConstraint(function, updatedConstraint);
+                                            break;
+                                    }
+                                }
+                            }
+                            for (int j = 0; j < metricsNames.length; j++) {
+                                fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
+                                fireTableCellUpdated(j, CONSTRAINT_VALUE);
+
+                            }
+                        }
+                    }
+                    catch (IllegalArgumentException e4) {
+                        try {
+                            ComparisonOperators comparisonOperator;
+                            if (value instanceof String) {
+                                String valueString = (String) value;
+                                if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == ASSET)) {
+                                    strategicConstraints.removeConstraint();
+                                } else {
+                                    comparisonOperator = ComparisonOperators.valueOf(valueString);
+                                    Constraint updatedConstraint;
+                                    if (strategicConstraints.hasDefinedConstraint()) {
+                                        updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint().getThreshold());
+                                        strategicConstraints.removeConstraint();
+                                        strategicConstraints.addConstraint(updatedConstraint);
+                                    } else {
+                                        switch (comparisonOperator) {
+                                            case LESS:
+                                            case LESS_OR_EQUAL:
+                                            case EQUAL:
+                                                updatedConstraint = new Constraint(comparisonOperator, 1.0f);
+                                                strategicConstraints.addConstraint(updatedConstraint);
+                                                break;
+                                            case GREATER:
+                                            case GREATER_OR_EQUAL:
+                                                updatedConstraint = new Constraint(comparisonOperator, 0.0f);
+                                                strategicConstraints.addConstraint(updatedConstraint);
+                                                break;
+                                        }
+                                    }
+                                }
+                                for (int j = 0; j < metricsNames.length; j++) {
+                                    fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
+                                    fireTableCellUpdated(j, CONSTRAINT_VALUE);
+
+                                }
+                            }
+                        }
+                        catch (IllegalArgumentException e5) {
+                            System.out.println("ERROR en setConstraintOperatorAt");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void setConstraintValueAt(Object value, int row) {
+        int GENE = 0;
+        int CATEGORY = 1;
+        int FUNCTION = 2;
+        int ASSET = 3;
+        int typeOfMetric = GENE;
+        float threshold = 0.0f;
+        if (initialStatus != null) {
+            if (value instanceof Float) {
+                threshold = (float) value;
+                if (threshold < 0.0f) {
+                    threshold = 0.0f;
+                } else if (threshold > 1.0f) {
+                    threshold = 1.0f;
+                }
+            } else {
+                try {
+                    if (value instanceof String) {
+                        Float.parseFloat((String) value);
+                        threshold = Float.parseFloat((String) value);
+                        if (threshold < 0.0f) {
+                            threshold = 0.0f;
+                        } else if (threshold > 1.0f) {
+                            threshold = 1.0f;
+                        }
+                    }
+                }
+                catch (NumberFormatException ex) {
+                    System.out.println("Nuevo valor no es un float: " + ((String) value));
+                }
+            }
+            try {
+                Genes.valueOf(metricsNames[row]);
+                typeOfMetric = GENE;
+            }
+            catch (IllegalArgumentException e11) {
+                try {
+                    Categories.valueOf(metricsNames[row]);
+                    typeOfMetric = CATEGORY;
+                }
+                catch (IllegalArgumentException e12) {
+                    try {
+                        Functions.valueOf(metricsNames[row]);
+                        typeOfMetric = FUNCTION;
+                    }
+                    catch (IllegalArgumentException e13) {
+                        typeOfMetric = ASSET;
+                    }
+                }
+            }
+
+            try {
+                ComparisonOperators comparisonOperator;
+                if (value instanceof String) {
+                    String valueString = (String) value;
+                    if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == GENE)) {
+                        strategicConstraints.removeConstraint(Genes.valueOf(metricsNames[row]));
+                    } else {
+                        Genes gene = Genes.valueOf(metricsNames[row]);
+                        Constraint updatedConstraint;
+                        if (strategicConstraints.hasDefinedConstraint(gene)) {
+                            updatedConstraint = new Constraint(strategicConstraints.getConstraint(gene).getComparisonOperator(), threshold);
+                            strategicConstraints.removeConstraint(gene);
+                            strategicConstraints.addConstraint(gene, updatedConstraint);
+                        }
+                    }
+                    for (int j = 0; j < metricsNames.length; j++) {
+                        fireTableCellUpdated(j, CONSTRAINT_VALUE);
+                    }
+                }
+            }
+            catch (IllegalArgumentException e2) {
+                try {
+                    ComparisonOperators comparisonOperator;
+                    if (value instanceof String) {
+                        String valueString = (String) value;
+                        if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == CATEGORY)) {
+                            strategicConstraints.removeConstraint(Categories.valueOf(metricsNames[row]));
+                        } else {
+                            Constraint updatedConstraint;
+                            Categories category = Categories.valueOf(metricsNames[row]);
+                            if (strategicConstraints.hasDefinedConstraint(category)) {
+                                updatedConstraint = new Constraint(strategicConstraints.getConstraint(category).getComparisonOperator(), threshold);
+                                strategicConstraints.removeConstraint(category);
+                                strategicConstraints.addConstraint(category, updatedConstraint);
+                            }
+                        }
+                        for (int j = 0; j < metricsNames.length; j++) {
+                            fireTableCellUpdated(j, CONSTRAINT_VALUE);
+                        }
+                    }
+                }
+                catch (IllegalArgumentException e3) {
+                    try {
+                        ComparisonOperators comparisonOperator;
+                        if (value instanceof String) {
+                            String valueString = (String) value;
+                            if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == FUNCTION)) {
+                                strategicConstraints.removeConstraint(Functions.valueOf(metricsNames[row]));
+                            } else {
+                                Constraint updatedConstraint;
+                                Functions function = Functions.valueOf(metricsNames[row]);
+                                if (strategicConstraints.hasDefinedConstraint(function)) {
+                                    updatedConstraint = new Constraint(strategicConstraints.getConstraint(function).getComparisonOperator(), threshold);
+                                    strategicConstraints.removeConstraint(function);
+                                    strategicConstraints.addConstraint(function, updatedConstraint);
+                                }
+                            }
+                            for (int j = 0; j < metricsNames.length; j++) {
+                                fireTableCellUpdated(j, CONSTRAINT_VALUE);
+                            }
+                        }
+                    }
+                    catch (IllegalArgumentException e4) {
+                        try {
+                            ComparisonOperators comparisonOperator;
+                            if (value instanceof String) {
+                                String valueString = (String) value;
+                                if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == ASSET)) {
+                                    strategicConstraints.removeConstraint();
+                                } else {
+                                    Constraint updatedConstraint;
+                                    if (strategicConstraints.hasDefinedConstraint()) {
+                                        updatedConstraint = new Constraint(strategicConstraints.getConstraint().getComparisonOperator(), threshold);
+                                        strategicConstraints.removeConstraint();
+                                        strategicConstraints.addConstraint(updatedConstraint);
+                                    }
+                                }
+                                for (int j = 0; j < metricsNames.length; j++) {
+                                    fireTableCellUpdated(j, CONSTRAINT_VALUE);
+                                }
+                            }
+                        }
+                        catch (IllegalArgumentException e5) {
+                            System.out.println("ERROR en setConstraintValueAt");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void computeValuesForInitialStatus() {
+        genesValuesInitialStatus = new EnumMap<>(Genes.class);
+        categoriesValuesInitialStatus = new EnumMap<>(Categories.class);
+        functionsValuesInitialStatus = new EnumMap<>(Functions.class);
+        assetValueInitialStatus = 0.0f;
+        if (initialStatus != null) {
+            float auxFunctionFitness = 0.0f;
+            float auxCategoryFitness = 0.0f;
+            int num = 0;
+            for (Functions f : Functions.values()) {
+                if (f.appliesToIG(implementationGroup)) {
+                    auxFunctionFitness = 0.0f;
+
+                    for (Categories c : f.getCategories(implementationGroup)) {
+                        auxCategoryFitness = 0.0f;
+                        for (Genes g : c.getGenes(implementationGroup)) {
+                            // Gene raw value
+                            genesValuesInitialStatus.put(g, initialStatus.getAllele(g).getDLI());
+                            // To compute category fitness
+                            num++;
+                            auxCategoryFitness += initialStatus.getAllele(g).getDLI() * g.getWeight(implementationGroup);
+                        }
+                        // Category raw value
+                        if (auxCategoryFitness >= 1.00f) {
+                            auxCategoryFitness = 1.00f;
+                        }
+                        categoriesValuesInitialStatus.put(c, auxCategoryFitness);
+                        // To compute Function fitness
+                        auxCategoryFitness *= c.getWeight(implementationGroup);
+                        if (auxCategoryFitness > c.getWeight(implementationGroup)) {
+                            auxCategoryFitness = c.getWeight(implementationGroup);
+                        }
+                        auxFunctionFitness += auxCategoryFitness;
+                    }
+                    // Function raw value
+                    if (auxFunctionFitness >= 1.00f) {
+                        auxFunctionFitness = 1.00f;
+                    }
+                    functionsValuesInitialStatus.put(f, auxFunctionFitness);
+                    // To compute asset fitness
+                    auxFunctionFitness *= f.getWeight(implementationGroup);
+                    if (auxFunctionFitness > f.getWeight(implementationGroup)) {
+                        auxFunctionFitness = f.getWeight(implementationGroup);
+                    }
+                    assetValueInitialStatus += auxFunctionFitness;
+                    if (assetValueInitialStatus >= 1.00f) {
+                        assetValueInitialStatus = 1.00f;
+                    }
+                }
+            }
+        }
+    }
+
+    private void computeValuesForTargetStatus() {
+        genesValuesTargetStatus = new EnumMap<>(Genes.class);
+        categoriesValuesTargetStatus = new EnumMap<>(Categories.class);
+        functionsValuesTargetStatus = new EnumMap<>(Functions.class);
+        assetValueTargetStatus = 0.0f;
+        if (targetStatus != null) {
+            float auxFunctionFitness = 0.0f;
+            float auxCategoryFitness = 0.0f;
+            int num = 0;
+            for (Functions f : Functions.values()) {
+                if (f.appliesToIG(implementationGroup)) {
+                    auxFunctionFitness = 0.0f;
+
+                    for (Categories c : f.getCategories(implementationGroup)) {
+                        auxCategoryFitness = 0.0f;
+                        for (Genes g : c.getGenes(implementationGroup)) {
+                            // Gene raw value
+                            genesValuesTargetStatus.put(g, targetStatus.getAllele(g).getDLI());
+                            // To compute category fitness
+                            num++;
+                            auxCategoryFitness += targetStatus.getAllele(g).getDLI() * g.getWeight(implementationGroup);
+                        }
+                        // Category raw value
+                        if (auxCategoryFitness >= 1.00f) {
+                            auxCategoryFitness = 1.00f;
+                        }
+                        categoriesValuesTargetStatus.put(c, auxCategoryFitness);
+                        // To compute Function fitness
+                        auxCategoryFitness *= c.getWeight(implementationGroup);
+                        if (auxCategoryFitness > c.getWeight(implementationGroup)) {
+                            auxCategoryFitness = c.getWeight(implementationGroup);
+                        }
+                        auxFunctionFitness += auxCategoryFitness;
+                    }
+                    // Function raw value
+                    if (auxFunctionFitness >= 1.00f) {
+                        auxFunctionFitness = 1.00f;
+                    }
+                    functionsValuesTargetStatus.put(f, auxFunctionFitness);
+                    // To compute asset fitness
+                    auxFunctionFitness *= f.getWeight(implementationGroup);
+                    if (auxFunctionFitness > f.getWeight(implementationGroup)) {
+                        auxFunctionFitness = f.getWeight(implementationGroup);
+                    }
+                    assetValueTargetStatus += auxFunctionFitness;
+                    if (assetValueTargetStatus >= 1.00f) {
+                        assetValueTargetStatus = 1.00f;
+                    }
+                }
+            }
+        }
+    }
+
+}

@@ -16,6 +16,9 @@
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <jacoco.maven.plugin.version>0.8.7</jacoco.maven.plugin.version>
         <openlrae.maven.plugin>3.1</openlrae.maven.plugin>
+        <!--- Required by Sonarcloud -->
+        <sonar.organization>manolodd</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <!--- Build parameters -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>9</maven.compiler.release> 

@@ -46,13 +46,11 @@
             <organizationUrl>https://manolodominguez.com</organizationUrl>
         </developer>
     </developers>
-    <!--
     <scm>
-        <connection>scm:git:git://github.com/manolodd/openlrae.git</connection>
-        <developerConnection>scm:git:ssh://github.com:manolodd/openlrae.git</developerConnection>
-        <url>http://github.com/manolodd/openlrae/tree/master</url>
+        <connection>scm:git:git://github.com/manolodd/fleco.git</connection>
+        <developerConnection>scm:git:ssh://github.com:manolodd/fleco.git</developerConnection>
+        <url>http://github.com/manolodd/fleco/tree/master</url>
     </scm>    
-    -->
     <build>
         <finalName>fleco-${project.version}</finalName>
         <plugins>         

@@ -43,6 +43,7 @@ import java.util.EnumMap;
 import javax.swing.table.AbstractTableModel;
 
 /**
+ * This class implement a table model for FLECO Studio.
  *
  * @author Manuel Domínguez-Dorado
  */
@@ -63,19 +64,29 @@ public class FLECOTableModel extends AbstractTableModel {
     private String[] metricsNames;
 
     private Chromosome initialStatus;
-    EnumMap<Genes, Float> genesValuesInitialStatus;
-    EnumMap<Categories, Float> categoriesValuesInitialStatus;
-    EnumMap<Functions, Float> functionsValuesInitialStatus;
-    Float assetValueInitialStatus;
+    private EnumMap<Genes, Float> genesValuesInitialStatus;
+    private EnumMap<Categories, Float> categoriesValuesInitialStatus;
+    private EnumMap<Functions, Float> functionsValuesInitialStatus;
+    private Float assetValueInitialStatus;
 
     private Chromosome targetStatus;
-    EnumMap<Genes, Float> genesValuesTargetStatus;
-    EnumMap<Categories, Float> categoriesValuesTargetStatus;
-    EnumMap<Functions, Float> functionsValuesTargetStatus;
-    Float assetValueTargetStatus;
+    private EnumMap<Genes, Float> genesValuesTargetStatus;
+    private EnumMap<Categories, Float> categoriesValuesTargetStatus;
+    private EnumMap<Functions, Float> functionsValuesTargetStatus;
+    private Float assetValueTargetStatus;
 
     private IFLECOTableModelChangeListener changeEventListener;
 
+    /**
+     * This is the constructor of the class. It creates a new instance and
+     * initialize its attributes with their default values.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param initialStatus the initial status of the case being solved by
+     * FLECO.
+     * @param strategicConstraints The strategic constraints that FLECO must
+     * comply with.
+     */
     public FLECOTableModel(Chromosome initialStatus, StrategicConstraints strategicConstraints) {
         this.initialStatus = initialStatus;
         this.strategicConstraints = strategicConstraints;
@@ -112,6 +123,14 @@ public class FLECOTableModel extends AbstractTableModel {
         computeValuesForInitialStatus();
     }
 
+    /**
+     * This method sets the listener that is going to be called when any change
+     * in the table model happens, to update whatever needed.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param changeEventListener the listener that is going to be called when
+     * any change in the table model happens
+     */
     public void setChangeEventListener(IFLECOTableModelChangeListener changeEventListener) {
         if (this.changeEventListener != null) {
             throw new IllegalArgumentException("A listener has already been defined for this FLECOTableModel. Only one is allowed.");
@@ -119,6 +138,12 @@ public class FLECOTableModel extends AbstractTableModel {
         this.changeEventListener = changeEventListener;
     }
 
+    /**
+     * This method sets the target status of the case, computed by FLECO.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param targetStatus the target status of the case, computed by FLECO.
+     */
     public void setTargetStatus(Chromosome targetStatus) {
         this.targetStatus = targetStatus;
         computeValuesForTargetStatus();
@@ -130,10 +155,24 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method gets the target status of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the target status of the case.
+     */
     public Chromosome getTargetStatus() {
         return targetStatus;
     }
 
+    /**
+     * This method sets the strategic constraints that FLECO must apply to the
+     * case.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param strategicConstraints the strategic constraints that FLECO must
+     * apply to the case
+     */
     public void setStrategicConstraints(StrategicConstraints strategicConstraints) {
         this.strategicConstraints = strategicConstraints;
         for (int j = 0; j < metricsNames.length; j++) {
@@ -145,6 +184,13 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method sets the initial status of the case that FLECO must solve.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param initialStatus the initial status of the case that FLECO must
+     * solve.
+     */
     public void setInitialStatus(Chromosome initialStatus) {
         this.initialStatus = initialStatus;
         int rowCount = 0;
@@ -183,39 +229,86 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method removes the target status of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     public void removeTargetStatus() {
         targetStatus = null;
         computeValuesForTargetStatus();
     }
 
+    /**
+     * This method removes the strategic constraints of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     public void removeStrategicConstraints() {
         if (strategicConstraints != null) {
             this.strategicConstraints.removeAll();
         }
     }
 
+    /**
+     * This method removes the initial status of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     public void removeInitialStatus() {
         targetStatus = null;
         computeValuesForTargetStatus();
     }
 
-    public ImplementationGroups getImplementation() {
+    /**
+     * This method gets the implementation group of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the implementation group of the case.
+     */
+    public ImplementationGroups getImplementationGroup() {
         return implementationGroup;
     }
 
+    /**
+     * This method gets the strategic constraints of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the strategic constraints of the case.
+     */
     public StrategicConstraints getStrategicConstraints() {
         return strategicConstraints;
     }
 
+    /**
+     * This method gets the initial status of the case.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the initial status of the case.
+     */
     public Chromosome getInitialStatus() {
         return initialStatus;
     }
 
+    /**
+     * This method gets the number of columns in the table model.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the number of columns in the table model.
+     */
     @Override
     public int getColumnCount() {
         return MAX_COLUMNS;
     }
 
+    /**
+     * This method gets the name of the specified colum in the table to be use
+     * as header.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param column the column whose name are needed.
+     * @return the name of the specified colum in the table to be use as header.
+     */
     @Override
     public String getColumnName(int column) {
         switch (column) {
@@ -233,6 +326,13 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method gets the type of the specified colum in the table.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param column the column whose type is needed.
+     * @return the type of the specified colum in the table to be use as header.
+     */
     @Override
     public Class<?> getColumnClass(int column) {
         switch (column) {
@@ -251,6 +351,12 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method gets the number of rows in the table model.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the number of rows in the table model.
+     */
     @Override
     public int getRowCount() {
         if (initialStatus != null) {
@@ -259,6 +365,16 @@ public class FLECOTableModel extends AbstractTableModel {
         return 0;
     }
 
+    /**
+     * This method gets whether the specific cell determined by row and column
+     * is editable or not.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the row that determines the cell.
+     * @param column the column that determines the cell.
+     * @return TRUE if the cell determined by row and column is editable.
+     * Otherwise, FALSE.
+     */
     @Override
     public boolean isCellEditable(int row, int column) {
         if (initialStatus != null) {
@@ -278,6 +394,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return false;
     }
 
+    /**
+     * This method gets the value of the specific cell determined by row and
+     * column.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the row that determines the cell.
+     * @param column the column that determines the cell.
+     * @return the value of the specific cell determined by row and column.
+     */
     @Override
     public Object getValueAt(int row, int column) {
         if (initialStatus != null) {
@@ -299,6 +424,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method gets the CyberTOMP metric that is located in the row
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the CyberTOMP metric that is located in the row pecified as an
+     * argument.
+     */
     private Object getCyberTOMPMetricAt(int row) {
         if (initialStatus != null) {
             return metricsNames[row];
@@ -306,6 +440,29 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method sets the CyberTOMP metric that is located in the row
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @param value the CyberTOMP metric to be set for the specified row.
+     * @return the CyberTOMP metric that is located in the row pecified as an
+     * argument.
+     */
+    private void setCyberTOMPMetricAt(Object value, int row) {
+        // do nothing;
+    }
+
+    /**
+     * This method gets the initial status that is located in the row specified
+     * as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the initial status that is located in the row specified as an
+     * argument.
+     */
     private Object getInitialStatusAt(int row) {
         if (initialStatus != null) {
             computeValuesForInitialStatus();
@@ -333,6 +490,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method gets the target status that is located in the row specified
+     * as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the target status that is located in the row specified as an
+     * argument.
+     */
     private Object getTargetStatusAt(int row) {
         if (targetStatus != null) {
             computeValuesForTargetStatus();
@@ -360,6 +526,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method gets the constraint's operator that is located in the row
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the constraint's operator that is located in the row specified as
+     * an argument.
+     */
     private Object getConstraintOperatorAt(int row) {
         if (initialStatus != null) {
             try {
@@ -406,6 +581,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method gets the constraint's value that is located in the row
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the constraint's value that is located in the row specified as an
+     * argument.
+     */
     public Object getConstraintValueAt(int row) {
         if (initialStatus != null) {
             try {
@@ -452,6 +636,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method sets the value of the cell determined by the row and column
+     * specified as arguments.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value the value to be asigned to the cell.
+     * @param row the specified row.
+     * @param column the specified column.
+     */
     @Override
     public void setValueAt(Object value, int row, int column) {
         if (initialStatus != null) {
@@ -477,10 +670,14 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
-    private void setCyberTOMPMetricAt(Object value, int row) {
-        // do nothing;
-    }
-
+    /**
+     * This method sets the initial status that corresponds to the row specified
+     * as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value the value to be asigned to initial status column.
+     * @param row the specified row.
+     */
     private void setInitialStatusAt(Object value, int row) {
         if (initialStatus != null) {
             try {
@@ -511,6 +708,14 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method sets the constraint's operator that corresponds to the row
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value the value to be asigned to constraint's operator column.
+     * @param row the specified row.
+     */
     private void setConstraintOperatorAt(Object value, int row) {
         int GENE = 0;
         int CATEGORY = 1;
@@ -694,6 +899,14 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method sets the constraint's value that corresponds to the row
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param value the value to be asigned to constraint's value column.
+     * @param row the specified row.
+     */
     public void setConstraintValueAt(Object value, int row) {
         int GENE = 0;
         int CATEGORY = 1;
@@ -836,6 +1049,12 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method computes the initial status of categories and functions from
+     * the corresponding expected outcome's value.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     private void computeValuesForInitialStatus() {
         genesValuesInitialStatus = new EnumMap<>(Genes.class);
         categoriesValuesInitialStatus = new EnumMap<>(Categories.class);
@@ -889,6 +1108,12 @@ public class FLECOTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * This method computes the target status of categories and functions from
+     * the corresponding expected outcome's value.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     private void computeValuesForTargetStatus() {
         genesValuesTargetStatus = new EnumMap<>(Genes.class);
         categoriesValuesTargetStatus = new EnumMap<>(Categories.class);

@@ -1,3 +1,13 @@
+# PROJECT STATUS
+
+## Master branch:
+
+![Maven build master](https://github.com/manolodd/fleco/actions/workflows/maven-publish.yml/badge.svg?branch=master)
+
+## Development branch:
+
+![Maven build master](https://github.com/manolodd/fleco/actions/workflows/maven-publish.yml/badge.svg?branch=development)
+
 # THE PROJECT
 
 <b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, Constrained, and Multi-objective Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels.

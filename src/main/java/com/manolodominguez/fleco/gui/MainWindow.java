@@ -1,94 +1,1028 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+/* 
+ *******************************************************************************
+ * FLECO (Fast, Lightweight, and Efficient Cybersecurity Optimization) Adaptive, 
+ * Constrained, and Multi-objective Genetic Algorithm is a genetic algorithm  
+ * designed to assist the Asset's Cybersecurity Committee (ACC) in making 
+ * decisions during the application of CyberTOMP(1), aimed at managing 
+ * comprehensive cybersecurity at both tactical and operational levels.
+ *
+ * (1) Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and
+ * Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to
+ * manage asset-focused cybersecurity from tactical and operational levels. IEEE
+ * Access, 10, 122454-122485.
+ *******************************************************************************
+ * Copyright (C) Manuel Domínguez Dorado - ingeniero@ManoloDominguez.com.
+ * 
+ * This program is free software: you can redistribute it and/or modify it under 
+ * the terms of the GNU Lesser General Public License as published by the Free 
+ * Software Foundation, either version 3 of the License, or (at your option) any
+ * later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT 
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License 
+ * along with this program. If not, see 
+ * https://www.gnu.org/licenses/lgpl-3.0.en.html.
+ *******************************************************************************
  */
 package com.manolodominguez.fleco.gui;
 
-import de.javagl.treetable.JTreeTable;
-import de.javagl.treetable.TreeTableModel;
+import com.manolodominguez.fleco.algorithm.FLECO;
+import com.manolodominguez.fleco.genetics.Chromosome;
+import com.manolodominguez.fleco.genetics.Genes;
+import com.manolodominguez.fleco.gui.flecoio.FLECOFilter;
+import com.manolodominguez.fleco.gui.flecoio.FLECOLoader;
+import com.manolodominguez.fleco.gui.flecoio.FLECOSaver;
+import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
+import com.manolodominguez.fleco.strategicconstraints.Constraint;
+import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
+import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JTextArea;
 import javax.swing.JToolBar;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
-import javax.swing.tree.TreePath;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import net.miginfocom.swing.MigLayout;
 
 /**
+ * This is the constructor of the class, it creates a new instance and assigns
+ * the corresponding default values to its attributes.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
-public class MainWindow extends JFrame {
+@SuppressWarnings("serial")
+public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelChangeListener {
+
+    private static final int CYBERTOMP_METRIC = 0;
+    private static final int INITIAL_STATUS = 1;
+    private static final int CONSTRAINT_OPERATOR = 2;
+    private static final int CONSTRAINT_VALUE = 3;
+    private static final int TARGET_STATUS = 4;
+
+    private JMenuBar menuBar;
+    private JMenu menuCase;
+    private JMenuItem menuCaseItemNew;
+    private JMenuItem menuCaseItemLoad;
+    private JMenuItem menuCaseItemSave;
+    private JMenuItem menuCaseItemSaveAs;
+    private JMenuItem menuCaseItemRunFLECO;
+    private JMenuItem menuCaseItemExit;
+    private JMenu menuAbout;
+    private JMenuItem menuAboutItemAbout;
+    private JMenuItem menuAboutItemLicense;
+    private JToolBar toolBar;
+    private JLabel messageSpace;
+    private FLECOProgressBar progressBar;
+    private FLECOTableModel tableModel;
+    private JTable table;
+    private JComboBox<Float> comboBoxColumn1;
+    private JComboBox<String> comboBoxColumn2;
+    private JScrollPane scrollPane;
+
+    private IFLECOGUI gui;
+    private JButton runButton;
+    private JButton randomButton;
+    private JButton newButton;
+    private JButton loadButton;
+    private JButton saveButton;
+    private JButton saveAsButton;
+    private JButton generateConstraintsButton;
+
+    private Object[] igOptions = {ImplementationGroups.IG1, ImplementationGroups.IG2, ImplementationGroups.IG3};
+    private ImageBroker imageBroker = new ImageBroker();
+
+    private CaseConfig caseConfig;
 
     public MainWindow() throws HeadlessException {
         super();
+
+        caseConfig = new CaseConfig();
+
+        gui = this;
+
         getContentPane().setLayout(new MigLayout("fillx, filly"));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds(screenSize.width / 4, screenSize.height / 4, screenSize.width / 2, screenSize.height / 2);
+        setBounds(screenSize.width * 1 / 8, screenSize.height * 1 / 8, screenSize.width * 3 / 4, screenSize.height * 3 / 4);
         setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JMenuBar menuBar = new JMenuBar();
-        setJMenuBar(menuBar);
-        setTitle("FLECO GUI");
-        JMenu menu = new JMenu("Case");
-        menuBar.add(menu);
-        JMenuItem menuItem1 = new JMenuItem("Load");
-        JMenuItem menuItem2 = new JMenuItem("Save");
-        JMenuItem menuItem3 = new JMenuItem("Save as");
-        JMenuItem menuItem4 = new JMenuItem("Export");
-        JMenuItem menuItem5 = new JMenuItem("Exit");
-        menu.add(menuItem1);
-        menu.add(menuItem2);
-        menu.add(menuItem3);
-        menu.add(menuItem4);
-        menu.addSeparator();
-        menu.add(menuItem5);
-        JMenu menu2 = new JMenu("About");
-        menuBar.add(menu2);
-        JMenuItem menuItem2_1 = new JMenuItem("About FlecoGUI");
-        JMenuItem menuItem2_2 = new JMenuItem("FlecoGUI license");
-        menu2.add(menuItem2_1);
-        menu2.add(menuItem2_2);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        JToolBar toolBar = new JToolBar();
-        toolBar.add(new JButton("Botón 1"));
-        toolBar.add(new JButton("Botón 2"));
-        toolBar.add(new JButton("Botón 3"));
-        toolBar.add(new JButton("Botón 4"));
+        menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+        if (caseConfig.getFileName() != null) {
+            setTitle("FLECO Studio - " + caseConfig.getFileName());
+        } else {
+            setTitle("FLECO Studio - No case is active!");
+        }
+
+        menuCase = new JMenu("Case");
+        menuCase.setMnemonic('C');
+        menuBar.add(menuCase);
+        menuCaseItemNew = new JMenuItem("New");
+        menuCaseItemNew.setMnemonic('N');
+        KeyStroke ctrlN = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemNew.setAccelerator(ctrlN);
+        menuCaseItemNew.setIcon(imageBroker.getImageIcon16x16(AvailableImages.NEW));
+        menuCaseItemNew.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onNew();
+            }
+        });
+        menuCaseItemLoad = new JMenuItem("Load");
+        KeyStroke ctrlL = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemLoad.setAccelerator(ctrlL);
+        menuCaseItemLoad.setMnemonic('L');
+        menuCaseItemLoad.setIcon(imageBroker.getImageIcon16x16(AvailableImages.LOAD));
+        menuCaseItemLoad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onLoad();
+            }
+        });
+        menuCaseItemSave = new JMenuItem("Save");
+        KeyStroke ctrlS = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemSave.setAccelerator(ctrlS);
+        menuCaseItemSave.setMnemonic('S');
+        menuCaseItemSave.setIcon(imageBroker.getImageIcon16x16(AvailableImages.SAVE));
+        menuCaseItemSave.setEnabled(false);
+        menuCaseItemSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSave();
+            }
+        });
+        menuCaseItemSaveAs = new JMenuItem("Save as");
+        KeyStroke ctrlA = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemSaveAs.setAccelerator(ctrlA);
+        menuCaseItemSaveAs.setMnemonic('a');
+        menuCaseItemSaveAs.setIcon(imageBroker.getImageIcon16x16(AvailableImages.SAVE_AS));
+        menuCaseItemSaveAs.setEnabled(false);
+        menuCaseItemSaveAs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSaveAs();
+            }
+        });
+        menuCaseItemRunFLECO = new JMenuItem("Run FLECO");
+        KeyStroke ctrlR = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemRunFLECO.setAccelerator(ctrlR);
+        menuCaseItemRunFLECO.setMnemonic('R');
+        menuCaseItemRunFLECO.setIcon(imageBroker.getImageIcon16x16(AvailableImages.RUN));
+        menuCaseItemRunFLECO.setEnabled(false);
+        menuCaseItemRunFLECO.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onRunFLECO();
+            }
+        });
+        menuCaseItemExit = new JMenuItem("Exit");
+        KeyStroke ctrlX = KeyStroke.getKeyStroke(KeyEvent.VK_X, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemExit.setAccelerator(ctrlX);
+        menuCaseItemExit.setMnemonic('E');
+        menuCaseItemExit.setIcon(imageBroker.getImageIcon16x16(AvailableImages.EXIT));
+        menuCaseItemExit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onExit();
+            }
+        });
+        menuCase.add(menuCaseItemNew);
+        menuCase.add(menuCaseItemLoad);
+        menuCase.add(menuCaseItemSave);
+        menuCase.add(menuCaseItemSaveAs);
+        menuCase.add(menuCaseItemRunFLECO);
+        menuCase.addSeparator();
+        menuCase.add(menuCaseItemExit);
+
+        menuAbout = new JMenu("About");
+        menuAbout.setMnemonic('A');
+        menuBar.add(menuAbout);
+        menuAboutItemAbout = new JMenuItem("About FLECO");
+        KeyStroke F1 = KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0);
+        menuAboutItemAbout.setAccelerator(F1);
+        menuAboutItemAbout.setMnemonic('b');
+        menuAboutItemAbout.setIcon(imageBroker.getImageIcon16x16(AvailableImages.ABOUT));
+        menuAboutItemAbout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onAbout();
+            }
+        });
+        menuAboutItemLicense = new JMenuItem("FLECO license");
+        KeyStroke ctrlI = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK);
+        menuAboutItemLicense.setAccelerator(ctrlI);
+        menuAboutItemLicense.setMnemonic('F');
+        menuAboutItemLicense.setIcon(imageBroker.getImageIcon16x16(AvailableImages.LICENSE));
+        menuAboutItemLicense.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onFLECOLicense();
+            }
+        });
+        menuAbout.add(menuAboutItemAbout);
+        menuAbout.add(menuAboutItemLicense);
+
+        toolBar = new JToolBar();
+        toolBar.setLayout(new MigLayout("gapx 5px"));
+        runButton = new JButton();
+        runButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.RUN));
+        runButton.setFocusable(false);
+        runButton.setEnabled(false);
+        runButton.setToolTipText("Run FLECO to find a solution to discuss");
+        randomButton = new JButton();
+        randomButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.RANDOM));
+        randomButton.setFocusable(false);
+        newButton = new JButton();
+        newButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.NEW));
+        newButton.setFocusable(false);
+        newButton.setToolTipText("Create a new case");
+        loadButton = new JButton();
+        loadButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.LOAD));
+        loadButton.setFocusable(false);
+        loadButton.setToolTipText("Load a case previously saved");
+        saveButton = new JButton();
+        saveButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.SAVE));
+        saveButton.setFocusable(false);
+        saveButton.setEnabled(false);
+        saveButton.setToolTipText("Save the latest changes to the already saved case");
+        saveAsButton = new JButton();
+        saveAsButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.SAVE_AS));
+        saveAsButton.setFocusable(false);
+        saveAsButton.setEnabled(false);
+        saveAsButton.setToolTipText("Save the case choosing a name and location");
+        generateConstraintsButton = new JButton();
+        generateConstraintsButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.RULES));
+        generateConstraintsButton.setFocusable(false);
+        generateConstraintsButton.setEnabled(false);
+
+        messageSpace = new JLabel();
+        messageSpace.setBackground(Color.WHITE);
+        messageSpace.setOpaque(true);
+        messageSpace.setHorizontalAlignment(SwingConstants.CENTER);
+        messageSpace.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        messageSpace.setText("Load an existing case or create a new one");
+        toolBar.add(randomButton);
+        toolBar.add(newButton);
+        toolBar.add(loadButton);
+        toolBar.add(saveButton);
+        toolBar.add(saveAsButton);
+        toolBar.add(generateConstraintsButton);
+        toolBar.add(new JSeparator(SwingConstants.VERTICAL));
+        toolBar.add(runButton);
+        toolBar.add(new JSeparator(SwingConstants.VERTICAL));
+        toolBar.add(messageSpace, "width 100%");
         toolBar.setFloatable(false);
         toolBar.setOrientation(JToolBar.HORIZONTAL);
         getContentPane().add(toolBar, "span, north, width 100%, wrap");
-        /*        
-        JTextArea textArea = new JTextArea();
-        textArea.setOpaque(true);
-        textArea.setEditable(true);
-        textArea.setEnabled(true);
-        textArea.setText("ESTO ES UN TEXTO DE PRUEBA");
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        table = new JTable();
+        table.setEnabled(false);
+        scrollPane = new JScrollPane(table);
         getContentPane().add(scrollPane, "span, width 100%, height 100%, wrap");
-         */
-        TreeTableModel treeTableModel = ExampleTreeTableModels.createSimple();
-        JTreeTable treeTable = new JTreeTable(treeTableModel);
-        JScrollPane scrollPane = new JScrollPane(treeTable);
-        MyTreeCellRenderer treeCellRenderer = new MyTreeCellRenderer();
-        treeTable.getTree().setCellRenderer(treeCellRenderer);
-        getContentPane().add(scrollPane, "span, width 100%, height 100%, wrap");
-        //JTreeUtil.setTreeExpandedState(treeTable.getTree(), true);
-        for (int i = 0; i<treeTable.getTree().getRowCount();i++) {
-        treeTable.getTree().expandRow(i);
+        progressBar = new FLECOProgressBar();
+        getContentPane().add(progressBar, "span, width 100%, height 20, wrap");
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+
+        runButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onRunFLECO();
+            }
+        });
+
+        randomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onRandom();
+            }
+        });
+
+        saveAsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSaveAs();
+            }
+        });
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSave();
+            }
+        });
+
+        newButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onNew();
+            }
+        });
+
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onLoad();
+            }
+        });
+
+        generateConstraintsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onConstraints();
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                onExit();
+            }
+        });
     }
-        
-        JPanel panel = new JPanel();
-        getContentPane().add(panel, "span, width 100%, height 20, wrap");
+
+    private void onLoad() {
+        boolean load = false;
+        if (caseConfig.isInitialized()) {
+            if (caseConfig.isAlreadySaved()) {
+                if (caseConfig.isModified()) {
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before loading a new case?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (onSave()) {
+                            load = true;
+                        }
+                    } else {
+                        load = true;
+                    }
+                } else {
+                    load = true;
+                }
+            } else {
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the case before loading a new one?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                if (option == JOptionPane.OK_OPTION) {
+                    if (onSaveAs()) {
+                        load = true;
+                    }
+                } else {
+                    load = true;
+                }
+            }
+        } else {
+            load = true;
+        }
+        if (load) {
+            boolean openProcessFinished = false;
+            while (!openProcessFinished) {
+                JFileChooser loadDialog = new JFileChooser();
+                loadDialog.setFileFilter(new FLECOFilter());
+                loadDialog.setDialogType(JFileChooser.CUSTOM_DIALOG);
+                loadDialog.setApproveButtonMnemonic('O');
+                loadDialog.setApproveButtonText("Ok");
+                loadDialog.setDialogTitle("Load FLECO case");
+                loadDialog.setAcceptAllFileFilterUsed(false);
+                loadDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                int fileChoosingResult = loadDialog.showOpenDialog(this);
+                if (fileChoosingResult == JFileChooser.APPROVE_OPTION) {
+                    if (loadDialog.getSelectedFile().exists()) {
+                        if (loadDialog.getSelectedFile().canRead()) {
+                            FLECOLoader flecoLoader = new FLECOLoader();
+                            boolean isLoaded = flecoLoader.load(loadDialog.getSelectedFile());
+                            if (isLoaded) {
+                                caseConfig.reset();
+                                caseConfig.setCurrentIG(flecoLoader.getInitialStatus().getImplementationGroup());
+                                if (caseConfig.getCurrentIG() != null) {
+                                    caseConfig.setInitialStatus(flecoLoader.getInitialStatus());
+                                    caseConfig.setStrategicConstraints(flecoLoader.getStrategicConstraints());
+                                    caseConfig.setTargetStatus(flecoLoader.getTargetStatus());
+                                    tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
+                                    tableModel.setTargetStatus(caseConfig.getTargetStatus());
+                                    configureMainTable(tableModel);
+                                    caseConfig.setAlreadySaved(true);
+                                    caseConfig.setModified(false);
+                                    caseConfig.setPathAndFileName(loadDialog.getSelectedFile().getAbsolutePath());
+                                    //AFTER
+                                    randomButton.setEnabled(true);
+                                    newButton.setEnabled(true);
+                                    loadButton.setEnabled(true);
+                                    if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                                        saveButton.setEnabled(true);
+                                    } else {
+                                        saveButton.setEnabled(false);
+                                    }
+                                    saveAsButton.setEnabled(true);
+                                    runButton.setEnabled(true);
+                                    generateConstraintsButton.setEnabled(true);
+                                    menuCaseItemNew.setEnabled(true);
+                                    menuCaseItemLoad.setEnabled(true);
+                                    if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                                        menuCaseItemSave.setEnabled(true);
+                                    } else {
+                                        menuCaseItemSave.setEnabled(false);
+                                    }
+                                    menuCaseItemSaveAs.setEnabled(true);
+                                    menuCaseItemRunFLECO.setEnabled(true);
+                                    menuCaseItemExit.setEnabled(true);
+                                    menuAbout.setEnabled(true);
+                                    menuAboutItemAbout.setEnabled(true);
+                                    menuAboutItemLicense.setEnabled(true);
+                                    table.setEnabled(true);
+                                    menuBar.setEnabled(true);
+                                    menuCase.setEnabled(true);
+                                    menuAbout.setEnabled(true);
+                                    menuBar.setEnabled(true);
+                                    progressBar.setValue(0);
+                                    messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+                                    if (caseConfig.getFileName() != null) {
+                                        setTitle("FLECO Studio - " + caseConfig.getFileName());
+                                    } else {
+                                        setTitle("FLECO Studio - Current case is not saved!");
+                                    }
+                                    caseConfig.setInitialized(true);
+                                }
+                                openProcessFinished = true;
+                            } else {
+                                JOptionPane.showInternalMessageDialog(this.getContentPane(), "This file is not a FLECO case.\nTry again.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+                            }
+                        } else {
+                            JOptionPane.showInternalMessageDialog(this.getContentPane(), "The specified file cannot be read.\nTry again.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+                        }
+                    } else {
+                        JOptionPane.showInternalMessageDialog(this.getContentPane(), "The specified file does not exist.\nTry again.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+                    }
+                } else {
+                    openProcessFinished = true;
+                }
+            }
+        }
+    }
+
+    /**
+     * This method is called when a the Save option are chosen from the menú. It
+     * makes everything needed to save the file if it needs to be saved and
+     * update the GUI accordingly.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private boolean onSave() {
+        boolean saved = false;
+        if (caseConfig.isInitialized()) {
+            FLECOSaver flecoSaver = new FLECOSaver(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints(), caseConfig.getTargetStatus());
+            boolean savedCorrectly = flecoSaver.save(new File(caseConfig.getPathAndFileName()));
+            if (savedCorrectly) {
+                setTitle(caseConfig.getFileName());
+                caseConfig.setAlreadySaved(true);
+                caseConfig.setInitialized(true);
+                caseConfig.setModified(false);
+                saved = true;
+            } else {
+                JOptionPane.showInternalMessageDialog(this.getContentPane(), "There were errors when saving the case to disk." + "\nTry again choosing Save As to another place.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+            }
+            // AFTER
+            randomButton.setEnabled(true);
+            newButton.setEnabled(true);
+            loadButton.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                saveButton.setEnabled(true);
+            } else {
+                saveButton.setEnabled(false);
+            }
+            saveAsButton.setEnabled(true);
+            runButton.setEnabled(true);
+            generateConstraintsButton.setEnabled(true);
+            menuCaseItemNew.setEnabled(true);
+            menuCaseItemLoad.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                menuCaseItemSave.setEnabled(true);
+            } else {
+                menuCaseItemSave.setEnabled(false);
+            }
+            menuCaseItemSaveAs.setEnabled(true);
+            menuCaseItemRunFLECO.setEnabled(true);
+            menuCaseItemExit.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuAboutItemAbout.setEnabled(true);
+            menuAboutItemLicense.setEnabled(true);
+            table.setEnabled(true);
+            menuBar.setEnabled(true);
+            menuCase.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuBar.setEnabled(true);
+            messageSpace.setText("FLECO is running...");
+            progressBar.setValue(0);
+            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+            if (caseConfig.getFileName() != null) {
+                setTitle("FLECO Studio - " + caseConfig.getFileName());
+            } else {
+                setTitle("FLECO Studio - unnamed.fleco");
+            }
+        }
+        return saved;
+    }
+
+    /**
+     * This method is called when a the Save as option are chosen from the menú.
+     * It makes everything needed to save the file if it needs to be saved with
+     * a name and update the GUI accordingly.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private boolean onSaveAs() {
+        boolean saved = false;
+        if (caseConfig.isInitialized()) {
+            JFileChooser saveAsDialog = new JFileChooser();
+            saveAsDialog.setFileFilter(new FLECOFilter());
+            saveAsDialog.setDialogType(JFileChooser.CUSTOM_DIALOG);
+            saveAsDialog.setApproveButtonMnemonic('O');
+            saveAsDialog.setApproveButtonText("Ok");
+            saveAsDialog.setDialogTitle("Save current FLECO case");
+            saveAsDialog.setAcceptAllFileFilterUsed(false);
+            if (caseConfig.getFileName() != null) {
+                saveAsDialog.setSelectedFile(new File(caseConfig.getPathAndFileName()));
+            }
+            saveAsDialog.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            int result = saveAsDialog.showSaveDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                String extension = null;
+                caseConfig.setPathAndFileName(saveAsDialog.getSelectedFile().getPath());
+                int i = caseConfig.getPathAndFileName().lastIndexOf('.');
+                if (i > 0 && i < caseConfig.getPathAndFileName().length() - 1) {
+                    extension = caseConfig.getPathAndFileName().substring(i + 1).toLowerCase();
+                }
+                if (extension == null) {
+                    caseConfig.setPathAndFileName(caseConfig.getPathAndFileName() + ".fleco");
+                } else if (!extension.equals("fleco")) {
+                    caseConfig.setPathAndFileName(caseConfig.getPathAndFileName() + ".fleco");
+                }
+                saveAsDialog.setSelectedFile(new File(caseConfig.getPathAndFileName()));
+                FLECOSaver flecoSaver = new FLECOSaver(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints(), caseConfig.getTargetStatus());
+                boolean savedCorrectly = flecoSaver.save(new File(caseConfig.getPathAndFileName()));
+                if (savedCorrectly) {
+                    setTitle(caseConfig.getFileName());
+                    caseConfig.setAlreadySaved(true);
+                    caseConfig.setInitialized(true);
+                    caseConfig.setModified(false);
+                    saved = true;
+                } else {
+                    JOptionPane.showInternalMessageDialog(this.getContentPane(), "There were errors when saving the case to disk." + "\nTry again choosing another place.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+                }
+            }
+            // AFTER
+            randomButton.setEnabled(true);
+            newButton.setEnabled(true);
+            loadButton.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                saveButton.setEnabled(true);
+            } else {
+                saveButton.setEnabled(false);
+            }
+            saveAsButton.setEnabled(true);
+            runButton.setEnabled(true);
+            generateConstraintsButton.setEnabled(true);
+            menuCaseItemNew.setEnabled(true);
+            menuCaseItemLoad.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                menuCaseItemSave.setEnabled(true);
+            } else {
+                menuCaseItemSave.setEnabled(false);
+            }
+            menuCaseItemSaveAs.setEnabled(true);
+            menuCaseItemRunFLECO.setEnabled(true);
+            menuCaseItemExit.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuAboutItemAbout.setEnabled(true);
+            menuAboutItemLicense.setEnabled(true);
+            table.setEnabled(true);
+            menuBar.setEnabled(true);
+            menuCase.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuBar.setEnabled(true);
+            messageSpace.setText("FLECO is running...");
+            progressBar.setValue(0);
+            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+            if (caseConfig.getFileName() != null) {
+                setTitle("FLECO Studio - " + caseConfig.getFileName());
+            } else {
+                setTitle("FLECO Studio - unnamed.fleco");
+            }
+        }
+        return saved;
+    }
+
+    /**
+     * This method is called when a the Exit option are chosen from the menú or
+     * the main windows Close button is pressed. It makes everything needed to
+     * exit FLECO Studio safely.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onExit() {
+        if (caseConfig.isInitialized()) {
+            if (caseConfig.isAlreadySaved()) {
+                if (caseConfig.isModified()) {
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before exit?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    if (option == JOptionPane.OK_OPTION) {
+                        onSave();
+                        if (!caseConfig.isModified()) {
+                            dispose();
+                        }
+                    } else {
+                        dispose();
+                    }
+                } else {
+                    dispose();
+                }
+            } else {
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the current case before exit?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                if (option == JOptionPane.OK_OPTION) {
+                    onSaveAs();
+                    if (caseConfig.isAlreadySaved() && !caseConfig.isModified()) {
+                        dispose();
+                    }
+                } else {
+                    dispose();
+                }
+            }
+        } else {
+            dispose();
+        }
+    }
+
+    /**
+     * This method is called when a the About option are chosen from the menú.
+     * It opens in a web browser the URL of the project in Github.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onAbout() {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                URL url = new URL("https://github.com/manolodd/fleco");
+                Desktop.getDesktop().browse(url.toURI());
+            }
+            catch (IOException | URISyntaxException ex) {
+                JOptionPane.showInternalMessageDialog(this.getContentPane(), "It was not possible to access the home page of\nFLECO project.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+            }
+        } else {
+            JOptionPane.showInternalMessageDialog(this.getContentPane(), "It was not possible to access the home page of\nFLECO project.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+        }
+    }
+
+    /**
+     * This method is called when a the FLECO License option are chosen from the
+     * menú. It opens in a web browser the URL of the project's license.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onFLECOLicense() {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                URL url = new URL("https://www.gnu.org/licenses/lgpl-3.0.html");
+                Desktop.getDesktop().browse(url.toURI());
+            }
+            catch (IOException | URISyntaxException ex) {
+                JOptionPane.showInternalMessageDialog(this.getContentPane(), "It was not possible to access the home page of\nLGPL-3.0-or-later license.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+            }
+        } else {
+            JOptionPane.showInternalMessageDialog(this.getContentPane(), "It was not possible to access the home page of\nLGPL-3.0-or-later license.", null, JOptionPane.INFORMATION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.ABOUT));
+        }
+    }
+
+    /**
+     * This method is link the table in the GUI to its corresponding model,
+     * specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param tableModel the model to associate the GUI's table to.
+     */
+    private void configureMainTable(FLECOTableModel tableModel) {
+        table.setModel(tableModel);
+        tableModel.setChangeEventListener(this);
+        comboBoxColumn1 = new JComboBox<>();
+        comboBoxColumn1.addItem(0.0f);
+        comboBoxColumn1.addItem(0.33f);
+        comboBoxColumn1.addItem(0.67f);
+        comboBoxColumn1.addItem(1.00f);
+        table.getColumnModel().getColumn(INITIAL_STATUS).setCellEditor(new DefaultCellEditor(comboBoxColumn1));
+        comboBoxColumn2 = new JComboBox<>();
+        comboBoxColumn2.addItem("N/A");
+        comboBoxColumn2.addItem("LESS");
+        comboBoxColumn2.addItem("LESS_OR_EQUAL");
+        comboBoxColumn2.addItem("EQUAL");
+        comboBoxColumn2.addItem("GREATER_OR_EQUAL");
+        comboBoxColumn2.addItem("GREATER");
+        table.getColumnModel().getColumn(CONSTRAINT_OPERATOR).setCellEditor(new DefaultCellEditor(comboBoxColumn2));
+        table.getColumnModel().getColumn(TARGET_STATUS).setCellRenderer(new TargetStatusCellRenderer());
+    }
+
+    /**
+     * This method is called when a clic on Constraints icon is done in the
+     * toolbar. It creates automatically a constraint for every expected outcome
+     * as GREATER_OR_EQUAL and the current value of them.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onConstraints() {
+        caseConfig.getStrategicConstraints().removeAll();
+        for (Genes gene : Genes.getGenesFor(caseConfig.getInitialStatus().getImplementationGroup())) {
+            Constraint constraint = new Constraint(ComparisonOperators.GREATER_OR_EQUAL, caseConfig.getInitialStatus().getAllele(gene).getDLI());
+            caseConfig.getStrategicConstraints().addConstraint(gene, constraint);
+        }
+        tableModel.setStrategicConstraints(caseConfig.getStrategicConstraints());
+    }
+
+    /**
+     * This method is called when a clic on Random icon is done in the toolbar.
+     * It creates automatically an initial status with dummy values just to
+     * start plaing with FLECO Studio.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onRandom() {
+        caseConfig.reset();
+        caseConfig.setCurrentIG((ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1));
+        if (caseConfig.getCurrentIG() != null) {
+            caseConfig.setInitialized(true);
+            caseConfig.setInitialStatus(new Chromosome(caseConfig.getCurrentIG()));
+            caseConfig.getInitialStatus().randomizeGenes();
+            caseConfig.setStrategicConstraints(new StrategicConstraints(caseConfig.getCurrentIG()));
+            tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
+            configureMainTable(tableModel);
+            //AFTER
+            randomButton.setEnabled(true);
+            newButton.setEnabled(true);
+            loadButton.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                saveButton.setEnabled(true);
+            } else {
+                saveButton.setEnabled(false);
+            }
+            saveAsButton.setEnabled(true);
+            runButton.setEnabled(true);
+            generateConstraintsButton.setEnabled(true);
+            menuCaseItemNew.setEnabled(true);
+            menuCaseItemLoad.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                menuCaseItemSave.setEnabled(true);
+            } else {
+                menuCaseItemSave.setEnabled(false);
+            }
+            menuCaseItemSaveAs.setEnabled(true);
+            menuCaseItemRunFLECO.setEnabled(true);
+            menuCaseItemExit.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuAboutItemAbout.setEnabled(true);
+            menuAboutItemLicense.setEnabled(true);
+            table.setEnabled(true);
+            menuBar.setEnabled(true);
+            menuCase.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuBar.setEnabled(true);
+            messageSpace.setText("FLECO is running...");
+            progressBar.setValue(0);
+            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+            if (caseConfig.getFileName() != null) {
+                setTitle("FLECO Studio - " + caseConfig.getFileName());
+            } else {
+                setTitle("FLECO Studio - Current case is not saved!");
+            }
+            caseConfig.setInitialized(true);
+        }
+    }
+
+    /**
+     * This method is called when a clic on New icon is done in the toolbar or
+     * the same option is chosen from the menu. It creates a new case, taking
+     * care of the current one if there is such a current case.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onNew() {
+        caseConfig.reset();
+        caseConfig.setCurrentIG((ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1));
+        if (caseConfig.getCurrentIG() != null) {
+            caseConfig.setInitialized(true);
+            caseConfig.setInitialStatus(new Chromosome(caseConfig.getCurrentIG()));
+            caseConfig.setStrategicConstraints(new StrategicConstraints(caseConfig.getCurrentIG()));
+            tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
+            configureMainTable(tableModel);
+            //AFTER
+            randomButton.setEnabled(true);
+            newButton.setEnabled(true);
+            loadButton.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                saveButton.setEnabled(true);
+            } else {
+                saveButton.setEnabled(false);
+            }
+            saveAsButton.setEnabled(true);
+            runButton.setEnabled(true);
+            generateConstraintsButton.setEnabled(true);
+            menuCaseItemNew.setEnabled(true);
+            menuCaseItemLoad.setEnabled(true);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                menuCaseItemSave.setEnabled(true);
+            } else {
+                menuCaseItemSave.setEnabled(false);
+            }
+            menuCaseItemSaveAs.setEnabled(true);
+            menuCaseItemRunFLECO.setEnabled(true);
+            menuCaseItemExit.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuAboutItemAbout.setEnabled(true);
+            menuAboutItemLicense.setEnabled(true);
+            table.setEnabled(true);
+            menuBar.setEnabled(true);
+            menuCase.setEnabled(true);
+            menuAbout.setEnabled(true);
+            menuBar.setEnabled(true);
+            messageSpace.setText("FLECO is running...");
+            progressBar.setValue(0);
+            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+            if (caseConfig.getFileName() != null) {
+                setTitle("FLECO Studio - " + caseConfig.getFileName());
+            } else {
+                setTitle("FLECO Studio - Current case is not saved!");
+            }
+            caseConfig.setInitialized(true);
+        }
+    }
+
+    /**
+     * This method is called when a clic on Run FLECO icon is done in the
+     * toolbar or the same option is chosen from the menu. It start running
+     * FLECO to find a target status that fulfill the defined constraints. It
+     * also takes care of the current case as it is going to be modified.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void onRunFLECO() {
+        boolean run = false;
+        if (caseConfig.isInitialized()) {
+            if (caseConfig.isAlreadySaved()) {
+                if (caseConfig.isModified()) {
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "This action may change the target status.\nSave changes before proceeding?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (onSave()) {
+                            run = true;
+                        }
+                    } else {
+                        run = true;
+                    }
+                } else {
+                    run = true;
+                }
+            } else {
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "This action may change the target status.\nSave case before proceeding?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                if (option == JOptionPane.OK_OPTION) {
+                    if (onSaveAs()) {
+                        run = true;
+                    }
+                } else {
+                    run = true;
+                }
+            }
+        } else {
+            run = true;
+        }
+        if (run) {
+            //BEFORE
+            randomButton.setEnabled(false);
+            newButton.setEnabled(false);
+            loadButton.setEnabled(false);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                saveButton.setEnabled(true);
+            } else {
+                saveButton.setEnabled(false);
+            }
+            saveAsButton.setEnabled(false);
+            runButton.setEnabled(false);
+            generateConstraintsButton.setEnabled(false);
+            menuCaseItemNew.setEnabled(false);
+            menuCaseItemLoad.setEnabled(false);
+            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                menuCaseItemSave.setEnabled(true);
+            } else {
+                menuCaseItemSave.setEnabled(false);
+            }
+            menuCaseItemSaveAs.setEnabled(false);
+            menuCaseItemRunFLECO.setEnabled(false);
+            menuCaseItemExit.setEnabled(false);
+            menuAbout.setEnabled(false);
+            menuAboutItemAbout.setEnabled(false);
+            menuAboutItemLicense.setEnabled(false);
+            table.setEnabled(false);
+            menuBar.setEnabled(false);
+            menuCase.setEnabled(false);
+            menuAbout.setEnabled(false);
+            menuBar.setEnabled(false);
+            messageSpace.setText("FLECO is running...");
+            progressBar.setValue(0);
+            tableModel.removeTargetStatus();
+            //MAIN
+            int initialPopulation = 30;
+            int maxSeconds = 5 * 60;
+            float crossoverProbability = 0.90f;
+            caseConfig.setFleco(new FLECO(initialPopulation, maxSeconds, crossoverProbability, tableModel.getImplementationGroup(), tableModel.getInitialStatus(), tableModel.getStrategicConstraints()));
+            caseConfig.getFleco().setProgressEventListener(progressBar);
+            FLECOSwingWorker flecoSwingWorker = new FLECOSwingWorker(caseConfig.getFleco(), gui);
+            flecoSwingWorker.execute();
+            //afterOnRunFLECO(); <-- this is called automátically by FLECOSwingWorker.
+        }
+    }
+
+    /**
+     * This method is called automatically when a FLECO execution finishes,
+     * independently of its result. It updates the case and the GUI as needed.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    @Override
+    public void afterOnRunFLECO() {
+        randomButton.setEnabled(true);
+        newButton.setEnabled(true);
+        loadButton.setEnabled(true);
+        if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+            saveButton.setEnabled(true);
+        } else {
+            saveButton.setEnabled(false);
+        }
+        saveAsButton.setEnabled(true);
+        runButton.setEnabled(true);
+        generateConstraintsButton.setEnabled(true);
+        menuCaseItemNew.setEnabled(true);
+        menuCaseItemLoad.setEnabled(true);
+        if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+            menuCaseItemSave.setEnabled(true);
+        } else {
+            menuCaseItemSave.setEnabled(false);
+        }
+        menuCaseItemSaveAs.setEnabled(true);
+        menuCaseItemRunFLECO.setEnabled(true);
+        menuCaseItemExit.setEnabled(true);
+        menuAbout.setEnabled(true);
+        menuAboutItemAbout.setEnabled(true);
+        menuAboutItemLicense.setEnabled(true);
+        table.setEnabled(true);
+        progressBar.setValue(100);
+        menuBar.setEnabled(true);
+        menuCase.setEnabled(true);
+        menuAbout.setEnabled(true);
+        if (caseConfig.getFleco().hasConverged()) {
+            messageSpace.setText("FLECO execution has finished. A compliant combination was found!");
+        } else {
+            messageSpace.setText("FLECO execution has finished. No compliant combination was found! Could be the constraints too restrictive?");
+        }
+        caseConfig.setTargetStatus(caseConfig.getFleco().getBestChromosome());
+        tableModel.setTargetStatus(caseConfig.getTargetStatus());
+    }
+
+    /**
+     * This method is called automatically when a modification is done in the
+     * GUI's table. It prepares theFLECO Studio to know there are changes that
+     * has to be saved (or specifically discarded) in a future moment.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    @Override
+    public void onFLECOTableModelChanged() {
+        caseConfig.setModified(true);
+        if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+            saveButton.setEnabled(true);
+            menuCaseItemSave.setEnabled(true);
+            setTitle("FLECO Studio - " + caseConfig.getFileName() + "*");
+        } else {
+            saveButton.setEnabled(false);
+            menuCaseItemSave.setEnabled(false);
+        }
     }
 
 }

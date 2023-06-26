@@ -1,7 +1,7 @@
 {
     "projectinfo": {
         "name": "FLECO",
-        "version": "1.1",
+        "version": "1.2",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
     },

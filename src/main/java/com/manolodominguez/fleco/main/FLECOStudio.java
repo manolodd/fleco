@@ -36,17 +36,24 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
+ * This class creates and run FLECO Studio, a GUI to interact easily with FLECO
+ * algorithm.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
 public class FLECOStudio {
 
     /**
-     * @param args the command line arguments
+     * This method isthe entry point in FLECO Studio. It starts the graphics
+     * application when used as an standalone one instead of a library.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param args the command line arguments. This parameter is required but
+     * not used.
      */
     public static void main(String[] args) {
         // Enable text antialiasing
-        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("awt.useSystemAAFontSettings", "on");
         try {
             boolean nimbusSet = false;
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -60,7 +67,8 @@ public class FLECOStudio {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 System.out.println("Setting up System LaF");
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             // FIX: I189N required
             System.out.println("An error happened when starting OpenSimMPLS. Cannot set LaF.");
         }

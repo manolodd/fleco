@@ -12,12 +12,10 @@ on:
       - 'development'
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -27,23 +25,21 @@ jobs:
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
-
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
-
-    sonarcloud:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-          with:
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
-        - name: SonarCloud Scan
-          uses: sonarsource/sonarcloud-github-action@master
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+      # Disabling shallow clone is recommended for improving relevancy of reporting
+      fetch-depth: 0
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
             
             
 #    - name: Publish to GitHub Packages Apache Maven

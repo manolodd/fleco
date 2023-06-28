@@ -87,6 +87,27 @@ float crossoverProbability = 0.90f;
 ImplementationGroups implementationGroup = ImplementationGroups.IG3; 
 ```
 
+- Next, create and define your asset's current cybersecurity status according
+to CyberTOMP proposal. You must configure each chromosome's allele's value 
+individually to fit the real state of your asset's expected outcome. Thi should 
+be done through squential calls to updateAllele(gene, allele). For instance:
+
+```java
+Chromosome initialStatus = new Chromosome(implementationGroup);
+initialStatus.updateAllele(Genes.PR_AC_PR_AC_3, Alleles.DLI_67);
+initialStatus.updateAllele(Genes.PR_AC_PR_AC_4, Alleles.DLI_67);
+initialStatus.updateAllele(Genes.PR_AC_PR_AC_5, Alleles.DLI_0);
+initialStatus.updateAllele(Genes.PR_AC_PR_AC_7, Alleles.DLI_67);
+initialStatus.updateAllele(Genes.PR_AT_PR_AT_1, Alleles.DLI_0);
+initialStatus.updateAllele(Genes.PR_DS_CSC_3_4, Alleles.DLI_100);
+initialStatus.updateAllele(Genes.PR_DS_PR_DS_3, Alleles.DLI_67);
+initialStatus.updateAllele(Genes.PR_IP_9D_9, Alleles.DLI_0);
+initialStatus.updateAllele(Genes.PR_IP_CSC_11_1, Alleles.DLI_100);
+initialStatus.updateAllele(Genes.PR_IP_CSC_4_3, Alleles.DLI_100); 
+```
+
+and so on...
+
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

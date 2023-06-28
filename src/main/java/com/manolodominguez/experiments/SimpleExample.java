@@ -44,6 +44,7 @@ import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import com.manolodominguez.fleco.events.DefaultProgressEventListener;
+import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.genetics.Genes;
 
 /**
@@ -71,11 +72,32 @@ public class SimpleExample {
         int maxSeconds = 5 * 60;
         float crossoverProbability = 0.90f;
         ImplementationGroups implementationGroup = ImplementationGroups.IG3;
-        // Define current cybersecurity status according to CyberTOMP. While it
-        // is possible to create a custom status by configuring a Chromosome, 
-        // some preconfigured statuses are available for quick use. See 
-        // com.manolodominguez.fleco.examples.status 
-        Chromosome initialStatus;
+        // Create and define your asset's current cybersecurity status according
+        // to CyberTOMP proposal.
+        // 
+        // You must configure each chromosome's allele's value individually to 
+        // fit the real state of your asset's expected outcome. Thi should be 
+        // done through squential calls to updateAllele(gene, allele). For 
+        // instance:
+        //
+        // Chromosome initialStatus = new Chromosome(implementationGroup);
+        // initialStatus.updateAllele(Genes.PR_AC_PR_AC_3, Alleles.DLI_67);
+        // initialStatus.updateAllele(Genes.PR_AC_PR_AC_4, Alleles.DLI_67);
+        // initialStatus.updateAllele(Genes.PR_AC_PR_AC_5, Alleles.DLI_0);
+        // initialStatus.updateAllele(Genes.PR_AC_PR_AC_7, Alleles.DLI_67);
+        // initialStatus.updateAllele(Genes.PR_AT_PR_AT_1, Alleles.DLI_0);
+        // initialStatus.updateAllele(Genes.PR_DS_CSC_3_4, Alleles.DLI_100);
+        // initialStatus.updateAllele(Genes.PR_DS_PR_DS_3, Alleles.DLI_67);
+        // initialStatus.updateAllele(Genes.PR_IP_9D_9, Alleles.DLI_0);
+        // initialStatus.updateAllele(Genes.PR_IP_CSC_11_1, Alleles.DLI_100);
+        // initialStatus.updateAllele(Genes.PR_IP_CSC_4_3, Alleles.DLI_100); 
+        // and so on...
+        // 
+        // However, for this example we will use a random initial status.
+        // 
+        Chromosome initialStatus = new Chromosome(implementationGroup);
+        initialStatus.randomizeGenes();
+        
         switch (implementationGroup) {
             case IG1:
                 initialStatus = new InitialStatusForIG1();

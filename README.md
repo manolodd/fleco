@@ -179,6 +179,14 @@ java -jar fleco-{YourVersion}-with-dependencies.jar
 ``` 
 
 And FLECO Studio will start automatically. It is a quite easy user interface 
-that is contained in a single window.
+that is contained in a single window. To start a new case "New" option should
+be selected from the "Case" menu.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/new.png)
+
+And after choosing the desired implementation group, a new table with all the
+information is presented.
+
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/completed.png)
+
+

@@ -161,8 +161,12 @@ fleco.getBestChromosome().print();
 ```
 
 This best chromosome is the target status and their genes as well as their 
-corresponding values are the set of cybersecurity actions that must be 
-implemented in order to achieve the strategic cibersecurity goals/constraints.
+corresponding values are a high-quality set of cybersecurity actions that must 
+be implemented in order to achieve the strategic cibersecurity goals/constraints.
+Additional solutions could be found, if they exist, in subsequent executions of 
+FLECO using the same configuration.
+
+This example can be compiled an run in https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

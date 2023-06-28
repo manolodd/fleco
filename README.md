@@ -189,4 +189,16 @@ information is presented.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/complete.png)
 
+Data that can be modified, can be modified directly on the table bi clicking on
+the corresponding cell. For instance, the value of the initial status, 
+called current status, should be adjusted to fit the real status of each 
+cybersecurity action defined in CyberTOMP to represent the real assets 
+cybersecurity status. Also strategic constraints/goals can be defined using the
+columns "Constraint operator" and "Constraint value"; for instance, if for the 
+CyberTOMP metric "IDENTIFY" the current status is "0.4" and we choose a 
+constraint operator "GREATER" and constraint value "0.8", we are telling FLECO 
+that it must find a set of cybersecurity actions that makes, as a whole, that
+the CyberTOMP metric IDENTIFY is greater (strictly) than 0.8.
+
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/constraint.png)
 

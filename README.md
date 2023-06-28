@@ -182,3 +182,7 @@ Modifiable data can be directly edited within the table by clicking on the corre
 Once the current status of the asset has been comprehensively defined and the desired strategic goals and constraints have been configured within FLECO Studio, it is time to execute FLECO in order to obtain a solution. This can be achieved by selecting the "Run FLECO" option located in the "Case" menu or by clicking on the corresponding icon within the toolbar.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/run_fleco.png)
+
+FLECO will initiate the computation of a set of cybersecurity actions aimed at attaining the predefined cybersecurity goals. Throughout this process, a progress bar located at the bottom of the window will provide real-time updates on the progress. Upon completion of the computation and successful achievement of a solution, the progress bar will display 100%. FLECO Studio will then present the corresponding values associated with the target status, representing the state that, starting from the current state, enables the fulfillment of the strategic cybersecurity goals and constraints. In the "Target status" column, values requiring further attention or action will be highlighted in red. This indication corresponds to the Discrete Level of Implementation (DLI) defined within the CyberTOMP proposal.
+
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/solution.png)

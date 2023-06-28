@@ -144,14 +144,25 @@ FLECO fleco;
 fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
 ```
 
-And in ordert to see what is happening while FLECO is running, you define could 
-define a default progress event listener whose only mission is to print some
-information in the console.
+And in order to see what is happening while FLECO is running, you could define a 
+default progress event listener whose only mission is to print some information 
+in the console.
 
 ```java
 fleco.setProgressEventListener(new DefaultProgressEventListener());
 ```
+Finally, a call to a "evolve()" method will make FLECO work until a solution is
+found or the maxSeconds period is finished. Once finished, the best chromosome
+can be queried and their genes can be printed.
 
+```java
+fleco.evolve();
+fleco.getBestChromosome().print();
+```
+
+This best chromosome is the target status and their genes as well as their 
+corresponding values are the set of cybersecurity actions that must be 
+implemented in order to achieve the strategic cibersecurity goals/constraints.
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

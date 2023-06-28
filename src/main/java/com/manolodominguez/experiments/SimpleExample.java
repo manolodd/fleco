@@ -133,6 +133,6 @@ public class SimpleExample {
         fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
         fleco.setProgressEventListener(new DefaultProgressEventListener());
         fleco.evolve();
-        Chromosome bestChromosome = fleco.getBestChromosome();
+        fleco.getBestChromosome().printGenes();
     }
 }

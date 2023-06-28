@@ -156,7 +156,7 @@ fleco.getBestChromosome().print();
 
 The best chromosome obtained represents the target status, encompassing both its genes and their associated values. This set of cybersecurity actions exemplifies a high-quality collection that necessitates implementation to fulfill the strategic cybersecurity goals and constraints. In subsequent executions of FLECO with the same configuration, additional solutions, if they exist, may be discovered.
 
-This example can be found in [SimpleExample.java](https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java)
+This example can be found in [SimpleExample.java](src/main/java/com/manolodominguez/experiments/SimpleExample.java)
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

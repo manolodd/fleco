@@ -179,3 +179,6 @@ Modifiable data can be directly edited within the table by clicking on the corre
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/constraint.png)
 
+Once the current status of the asset has been comprehensively defined and the desired strategic goals and constraints have been configured within FLECO Studio, it is time to execute FLECO in order to obtain a solution. This can be achieved by selecting the "Run FLECO" option located in the "Case" menu or by clicking on the corresponding icon within the toolbar.
+
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/run_fleco.png)

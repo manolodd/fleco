@@ -106,7 +106,7 @@ initialStatus.updateAllele(Genes.PR_IP_CSC_11_1, Alleles.DLI_100);
 initialStatus.updateAllele(Genes.PR_IP_CSC_4_3, Alleles.DLI_100); 
 ```
 
-    and so on...
+>and so on...
 
 - The following step requires the creation and definition of the strategic 
 cybersecurity goals/constaints. FLECO will work to find a new cybersecurity 
@@ -133,7 +133,7 @@ strategicConstraints.addConstraint(Genes.DE_AE_DE_AE_5, new Constraint(Compariso
 strategicConstraints.addConstraint(Genes.PR_PT_9D_7, new Constraint(ComparisonOperators.LESS_OR_EQUAL, 0.6f));
 strategicConstraints.addConstraint(Genes.ID_BE_ID_BE_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.7f));
 ```
-    As can be shown, they can be defined at different levels in the CyberTOMP's
+>As can be shown, they can be defined at different levels in the CyberTOMP's
 tree of metrics.
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

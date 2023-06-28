@@ -166,8 +166,19 @@ be implemented in order to achieve the strategic cibersecurity goals/constraints
 Additional solutions could be found, if they exist, in subsequent executions of 
 FLECO using the same configuration.
 
-This example can be compiled an run in [SimpleExample.java](https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java)
+This example can be found in [SimpleExample.java](https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java)
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)
 
+Using FLECO Studio, the GUI version of FLECO, is still easier. After compiling
+you only will have to ejecute:
+
+```console
+java -jar fleco-{YourVersion}-with-dependencies.jar
+``` 
+
+And FLECO Studio will start automatically. It is a quite easy user interface 
+that is contained in a single window.
+
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/new.png)

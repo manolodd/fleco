@@ -72,14 +72,14 @@ FLECO is quite simple to use in library mode. Download and include the artifact 
 
 - Define the main algorithm's parameters:
 
-```console
+```java
 // Number of potential solutions
 int initialPopulation = 30;  
 
 // Seconds before stopping if no solutions are found
 int maxSeconds = 5 * 60;  
 
-// An standar crossover value [0.0f - 1.0f]
+// A standar crossover probability in the range [0.0f - 1.0f]
 float crossoverProbability = 0.90f;  
 
 // Select IG1, IG2, IG3 depending on whether the corresponding asset requires

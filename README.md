@@ -185,4 +185,10 @@ Once the current status of the asset has been comprehensively defined and the de
 
 FLECO will initiate the computation of a set of cybersecurity actions aimed at attaining the predefined cybersecurity goals. Throughout this process, a progress bar located at the bottom of the window will provide real-time updates on the progress. Upon completion of the computation and successful achievement of a solution, the progress bar will display 100%. FLECO Studio will then present the corresponding values associated with the target status, representing the state that, starting from the current state, enables the fulfillment of the strategic cybersecurity goals and constraints. In the "Target status" column, values requiring further attention or action will be highlighted in red. This indication corresponds to the Discrete Level of Implementation (DLI) defined within the CyberTOMP proposal.
 
+Each value in a cell within the "Target status" column signifies a specific cybersecurity action that must be undertaken by a designated functional area. The degree of implementation and level of detail required for each action varies based on the value in the cell. These cybersecurity actions are thoroughly documented as an integral part of the CyberTOMP framework, which can be accessed through the provided link.
+
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/solution.png)
+
+If alternative solutions exist, they can be obtained by re-running FLECO.
+
+Furthermore, FLECO Studio provides additional features. For instance, it allows the ability to save the case as a JSON file and load it from disk. This functionality facilitates the seamless collaboration of the cross-functional cybersecurity workforce, enabling them to effectively work on the cybersecurity aspects of the corresponding asset continuously.

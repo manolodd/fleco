@@ -37,28 +37,35 @@ It serves as a library that can be seamlessly incorporated into larger solutions
    
 # COMPILING FROM SOURCES
 
-The best option is to download latest compiled stable releases from the releases section of this repository. However, if you want to test new features (please, do it and give feedback), you will need to compile the project from sources. Follow these steps:
+The optimal course of action entails acquiring the most recent compiled stable releases from the releases section of this repository. Nevertheless, if one desires to assess novel functionalities, it becomes imperative to compile the project from its sources. The subsequent instructions outline the necessary steps to accomplish this task:
 
- - Clone the FLECO repo: 
+- Clone the FLECO repository: 
+
 ```console
 git clone https://github.com/manolodd/fleco.git
 ```
- - Compile the code and obtain a binary jar including all you need (you will need to install Maven before):
+
+- To obtain a binary JAR file containing all the necessary components, it is essential to compile the code. Prior to that, it is imperative to install Maven:
+
 ```console
 cd fleco
 mvn package
 ```
- - The jar file will be located in "target" directory.
+
+- The jar file will be located in "target" directory.
+
 ```console
 cd target
 ```
-- Now, run the simulator:
+- Now, run FLECO Studio:
+
 ```console
 java -jar fleco-{YourVersion}-with-dependencies.jar
+
 ```
 # THIRD-PARTY COMPONENTS
 
-OpenSimMPLS uses third-party components each one of them having its own OSS license. License compatibility has been taken into account to allow OpenSimMPLS be released under its current OSS licence. They are:
+FLECO utilizes several third-party components, each of which is governed by its own open-source software (OSS) license. In order to ensure compliance with these licenses, thorough consideration has been given to enable the release of FLECO under its existing OSS license. The components integrated within FLECO encompass the following:
 
 - miglayout-swing 11.1 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
 - miglayout-core 11.1 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
@@ -68,12 +75,12 @@ Thanks folks!
 
 # USING FLECO IN JAVA LIBRARY MODE
 
-FLECO is quite simple to use in library mode. Download and include the artifact in your project. Then:
+Utilizing FLECO in library mode is remarkably straightforward. Begin by downloading the artifact and incorporating it into your project. Subsequently, adhere to the following instructions:
 
-Define the main algorithm's parameters:
+Specify the parameters for the the algorithm.
 
 ```java
-// Number of potential solutions
+// Number of potential solutions in the population
 int initialPopulation = 30;  
 
 // Seconds before stopping if no solutions are found
@@ -87,10 +94,7 @@ float crossoverProbability = 0.90f;
 ImplementationGroups implementationGroup = ImplementationGroups.IG3; 
 ```
 
-Next, create and define your asset's current cybersecurity status according
-to CyberTOMP proposal. You must configure each chromosome's allele's value 
-individually to fit the real state of your asset's expected outcome. Thi should 
-be done through squential calls to updateAllele(gene, allele). For instance:
+Subsequently, proceed to generate and establish the current cybersecurity status of your asset based on the CyberTOMP proposal. It is essential to configure the value of each allele within the chromosomes individually to accurately reflect the anticipated outcome of your asset. This can be achieved by making sequential calls to the updateAllele(gene, allele) method. For example:
 
 ```java
 Chromosome initialStatus = new Chromosome(implementationGroup);
@@ -106,14 +110,9 @@ initialStatus.updateAllele(Genes.PR_IP_CSC_11_1, Alleles.DLI_100);
 initialStatus.updateAllele(Genes.PR_IP_CSC_4_3, Alleles.DLI_100); 
 ```
 
-and so on...
+And so on.
 
-The following step requires the creation and definition of the strategic 
-cybersecurity goals/constaints. FLECO will work to find a new cybersecurity 
-state called "target state" that fulfil all them, starting from the current 
-cybersecurity state "initial state" and identifying the set of new actions 
-that has to be carried out to achieve the target status. For example, a set of 
-strategic goals could be:
+Continuing with the process, the subsequent step involves creating and defining the strategic cybersecurity goals and constraints. FLECO will strive to identify a new cybersecurity state, referred to as the "target state," which satisfies all of these goals. This will be achieved by starting from the current cybersecurity state, known as the "initial state," and determining the set of actions required to reach the target state. For example, a set of strategic goals could include:
 
 ```java
 StrategicConstraints strategicConstraints = new StrategicConstraints(implementationGroup);
@@ -133,72 +132,50 @@ strategicConstraints.addConstraint(Genes.DE_AE_DE_AE_5, new Constraint(Compariso
 strategicConstraints.addConstraint(Genes.PR_PT_9D_7, new Constraint(ComparisonOperators.LESS_OR_EQUAL, 0.6f));
 strategicConstraints.addConstraint(Genes.ID_BE_ID_BE_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.7f));
 ```
-As can be shown, they can be defined at different levels in the CyberTOMP's
-tree of metrics.
+As demonstrated, these goals can be defined at various levels within the CyberTOMP's hierarchy of metrics.
 
-Now, create an instance of FLECO algorithm that must be initialized using the 
-previous definitions.
+Moving forward, instantiate the FLECO algorithm by initializing it with the aforementioned definitions.
         
 ```java
 FLECO fleco;
 fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
 ```
 
-And in order to see what is happening while FLECO is running, you could define a 
-default progress event listener whose only mission is to print some information 
-in the console.
+To facilitate the monitoring of FLECO's execution progress, it is advisable to establish a default progress event listener. This listener is designed with the sole purpose of printing relevant information in the console, enabling continuous visibility into the ongoing operations of the algorithm.
 
 ```java
 fleco.setProgressEventListener(new DefaultProgressEventListener());
 ```
-Finally, a call to a "evolve()" method will make FLECO work until a solution is
-found or the maxSeconds period is finished. Once finished, the best chromosome
-can be queried and their genes can be printed.
+
+Concludingly, invoking the "evolve()" method will initiate the operation of FLECO until a solution is discovered or the designated time period, specified as maxSeconds, elapses. Upon completion, the best chromosome can be retrieved, and its constituent genes can be printed for examination.
 
 ```java
 fleco.evolve();
 fleco.getBestChromosome().print();
 ```
 
-This best chromosome is the target status and their genes as well as their 
-corresponding values are a high-quality set of cybersecurity actions that must 
-be implemented in order to achieve the strategic cibersecurity goals/constraints.
-Additional solutions could be found, if they exist, in subsequent executions of 
-FLECO using the same configuration.
+The best chromosome obtained represents the target status, encompassing both its genes and their associated values. This set of cybersecurity actions exemplifies a high-quality collection that necessitates implementation to fulfill the strategic cybersecurity goals and constraints. In subsequent executions of FLECO with the same configuration, additional solutions, if they exist, may be discovered.
 
 This example can be found in [SimpleExample.java](https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java)
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)
 
-Using FLECO Studio, the GUI version of FLECO, is still easier. After compiling
-you only will have to ejecute:
+Utilizing FLECO Studio, the graphical user interface (GUI) version of FLECO, remains a more streamlined approach. Once the compilation process is complete, the subsequent step merely involves executing the following command:
 
 ```console
 java -jar fleco-{YourVersion}-with-dependencies.jar
 ``` 
 
-And FLECO Studio will start automatically. It is a quite easy user interface 
-that is contained in a single window. To start a new case "New" option should
-be selected from the "Case" menu.
+Upon execution, FLECO Studio will automatically launch, providing a user-friendly interface conveniently contained within a single window. To initiate a new case, simply navigate to the "Case" menu and select the "New" option.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/new.png)
 
-And after choosing the desired implementation group, a new table with all the
-information is presented.
+Following the selection of the desired implementation group, a comprehensive table containing all the pertinent information is presented.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/complete.png)
 
-Data that can be modified, can be modified directly on the table bi clicking on
-the corresponding cell. For instance, the value of the initial status, 
-called current status, should be adjusted to fit the real status of each 
-cybersecurity action defined in CyberTOMP to represent the real assets 
-cybersecurity status. Also strategic constraints/goals can be defined using the
-columns "Constraint operator" and "Constraint value"; for instance, if for the 
-CyberTOMP metric "IDENTIFY" the current status is "0.4" and we choose a 
-constraint operator "GREATER" and constraint value "0.8", we are telling FLECO 
-that it must find a set of cybersecurity actions that makes, as a whole, that
-the CyberTOMP metric IDENTIFY is greater (strictly) than 0.8.
+Modifiable data can be directly edited within the table by clicking on the corresponding cell. For instance, the initial status, referred to as the current status, should be adjusted to accurately reflect the actual cybersecurity status of each defined cybersecurity action in CyberTOMP, thereby representing the real status of the assets. Additionally, strategic constraints and goals can be defined using the "Constraint operator" and "Constraint value" columns. For example, consider the CyberTOMP metric "IDENTIFY" with a current status of "0.4." By selecting a constraint operator of "GREATER" and a constraint value of "0.8," FLECO is directed to seek a set of cybersecurity actions that collectively ensure the CyberTOMP metric "IDENTIFY" exceeds (strictly) 0.8.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/constraint.png)
 

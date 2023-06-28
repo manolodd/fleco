@@ -106,8 +106,33 @@ initialStatus.updateAllele(Genes.PR_IP_CSC_11_1, Alleles.DLI_100);
 initialStatus.updateAllele(Genes.PR_IP_CSC_4_3, Alleles.DLI_100); 
 ```
 
-and so on...
+  and so on...
 
+- The following step requires the creation and definition of the strategic 
+cybersecurity goals/constaints. FLECO will work to find a new cybersecurity 
+state called "target state" that fulfil all them, starting from the current 
+cybersecurity state "initial state" and identifying the set of new actions 
+that has to be carried out to achieve the target status. For example, a set of 
+strategic goals could be:
+
+```java
+StrategicConstraints strategicConstraints = new StrategicConstraints(implementationGroup);
+// Asset constraint
+strategicConstraints.addConstraint(new Constraint(ComparisonOperators.GREATER, 0.65f));
+// Functions constraints
+strategicConstraints.addConstraint(Functions.IDENTIFY, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.6f));
+// Category constraints
+strategicConstraints.addConstraint(Categories.RC_CO, new Constraint(ComparisonOperators.LESS, 0.8f));
+strategicConstraints.addConstraint(Categories.PR_AC, new Constraint(ComparisonOperators.GREATER, 0.6f));
+strategicConstraints.addConstraint(Categories.ID_SC, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.5f));
+// Expected outcomes constraints
+strategicConstraints.addConstraint(Genes.RC_CO_RC_CO_3, new Constraint(ComparisonOperators.GREATER, 0.6f));
+strategicConstraints.addConstraint(Genes.RS_MI_RS_MI_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.3f));
+strategicConstraints.addConstraint(Genes.DE_DP_DE_DP_5, new Constraint(ComparisonOperators.EQUAL, 0.67f));
+strategicConstraints.addConstraint(Genes.DE_AE_DE_AE_5, new Constraint(ComparisonOperators.LESS, 0.6f));
+strategicConstraints.addConstraint(Genes.PR_PT_9D_7, new Constraint(ComparisonOperators.LESS_OR_EQUAL, 0.6f));
+strategicConstraints.addConstraint(Genes.ID_BE_ID_BE_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.7f));
+```
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

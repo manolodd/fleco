@@ -166,7 +166,7 @@ be implemented in order to achieve the strategic cibersecurity goals/constraints
 Additional solutions could be found, if they exist, in subsequent executions of 
 FLECO using the same configuration.
 
-This example can be compiled an run in https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java
+This example can be compiled an run in [SimpleExample.java](https://github.com/manolodd/fleco/blob/development/src/main/java/com/manolodominguez/experiments/SimpleExample.java)
 
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)

@@ -66,3 +66,28 @@ OpenSimMPLS uses third-party components each one of them having its own OSS lice
 
 Thanks folks!
 
+# USING FLECO IN JAVA LIBRARY MODE
+
+FLECO is quite simple to use in library mode. Download and include the artifact in your project. Then:
+
+- Define the main algorithm's parameters:
+
+```console
+// Number of potential solutions
+int initialPopulation = 30;  
+
+// Seconds before stopping if no solutions are found
+int maxSeconds = 5 * 60;  
+
+// An standar crossover value [0.0f - 1.0f]
+float crossoverProbability = 0.90f;  
+
+// Select IG1, IG2, IG3 depending on whether the corresponding asset requires
+// LOW, MEDIUM or HIGH cybersecurity.
+ImplementationGroups implementationGroup = ImplementationGroups.IG3; 
+```
+
+
+
+# USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)
+

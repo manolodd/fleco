@@ -187,6 +187,6 @@ be selected from the "Case" menu.
 And after choosing the desired implementation group, a new table with all the
 information is presented.
 
-![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/completed.png)
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/complete.png)
 
 

@@ -126,57 +126,13 @@ public class SimpleExample {
         strategicConstraints.addConstraint(Genes.PR_PT_9D_7, new Constraint(ComparisonOperators.LESS_OR_EQUAL, 0.6f));
         strategicConstraints.addConstraint(Genes.ID_BE_ID_BE_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.7f));
 
+        // Now, create an instance of FLECO algorithm that must be initialized 
+        // using the previous definitions.
         
-        
-        // Prints FLECO parameters
-        System.out.println("######################################################################");
-        System.out.println("# FLECO adaptive, constrained, and multi-objective genetic algorithm #");
-        System.out.println("######################################################################");
-        System.out.println("Initial population..........: " + initialPopulation);
-        System.out.println("Maximum seconds.............: " + maxSeconds);
-        System.out.println("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));
-        System.out.println("Crossover probability.......: " + crossoverProbability);
-        System.out.println("Asset's implementation group: " + implementationGroup.name());
-        System.out.println("Current status..............:");
-        initialStatus.print();
-        System.out.println("Strategic constraints.............: " + strategicConstraints.numberOfConstraints());
-        strategicConstraints.print();
-        System.out.println();
-        System.out.println("Algorithm objetives.........: 3");
-        System.out.println("\tObjective 1) Maximize the coverage of all defined strategic cybersecurity constraints");
-        System.out.println("\tObjective 2) Maximize the similarity between the initial status and the solution");
-        System.out.println("\tObjective 3) Maximize overall cybersecurity level");
-        System.out.println("####################################################\n");
-        // FLECO is employed to identify a collection of anticipated outcomes 
-        // and their corresponding discrete implementation levels that meet the 
-        // necessary strategic cybersecurity constraints for the asset.
-        System.out.println("Evolving population to find a solution. FLECO will stop when one of the following happens:");
-        System.out.println("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
-        System.out.println("\t· The maximum number of seconds have elapsed.\n");
-
-        Chromosome bestChromosome;
         FLECO fleco;
         fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
         fleco.setProgressEventListener(new DefaultProgressEventListener());
         fleco.evolve();
-        bestChromosome = fleco.getBestChromosome();
-        if (fleco.hasConverged()) {
-            System.out.println("\nFLECO has converged. A solutions has been found.\n");
-        } else {
-            System.out.println("\nFLECO has not converged. No solution has been found that meet all criteria.\n");
-        }
-
-        // After the completion of FLECO, the optimal solution can be accessed.
-        System.out.println("####################################################");
-        System.out.println("                       SOLUTION");
-        System.out.println("####################################################\n");
-        System.out.println("Best solution's aggregated fitness: " + bestChromosome.getFitness());
-        System.out.println("\tObjective 1): " + bestChromosome.getFitnessConstraintsCoverage() + " (x0.94)");
-        System.out.println("\tObjective 2): " + bestChromosome.getFitnessSimilarityToCurrentState() + " (x0.05)");
-        System.out.println("\tObjective 3): " + bestChromosome.getFitnessGlobalCybersecurityState() + " (x0.01)");
-        System.out.println("Solution breakdown................: \n");
-        bestChromosome.print(initialStatus);
-        System.out.println("####################################################\n");
-        System.out.println("\nTime required: " + fleco.getUsedTime() + " seconds  (" + fleco.getUsedGenerations() + " generations)\n");
+        Chromosome bestChromosome = fleco.getBestChromosome();
     }
 }

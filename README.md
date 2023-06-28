@@ -70,7 +70,7 @@ Thanks folks!
 
 FLECO is quite simple to use in library mode. Download and include the artifact in your project. Then:
 
-- Define the main algorithm's parameters:
+Define the main algorithm's parameters:
 
 ```java
 // Number of potential solutions
@@ -87,7 +87,7 @@ float crossoverProbability = 0.90f;
 ImplementationGroups implementationGroup = ImplementationGroups.IG3; 
 ```
 
-- Next, create and define your asset's current cybersecurity status according
+Next, create and define your asset's current cybersecurity status according
 to CyberTOMP proposal. You must configure each chromosome's allele's value 
 individually to fit the real state of your asset's expected outcome. Thi should 
 be done through squential calls to updateAllele(gene, allele). For instance:
@@ -106,9 +106,9 @@ initialStatus.updateAllele(Genes.PR_IP_CSC_11_1, Alleles.DLI_100);
 initialStatus.updateAllele(Genes.PR_IP_CSC_4_3, Alleles.DLI_100); 
 ```
 
-   and so on...
+and so on...
 
-- The following step requires the creation and definition of the strategic 
+The following step requires the creation and definition of the strategic 
 cybersecurity goals/constaints. FLECO will work to find a new cybersecurity 
 state called "target state" that fulfil all them, starting from the current 
 cybersecurity state "initial state" and identifying the set of new actions 
@@ -133,8 +133,26 @@ strategicConstraints.addConstraint(Genes.DE_AE_DE_AE_5, new Constraint(Compariso
 strategicConstraints.addConstraint(Genes.PR_PT_9D_7, new Constraint(ComparisonOperators.LESS_OR_EQUAL, 0.6f));
 strategicConstraints.addConstraint(Genes.ID_BE_ID_BE_3, new Constraint(ComparisonOperators.GREATER_OR_EQUAL, 0.7f));
 ```
-    As can be shown, they can be defined at different levels in the CyberTOMP's
+As can be shown, they can be defined at different levels in the CyberTOMP's
 tree of metrics.
+
+Now, create an instance of FLECO algorithm that must be initialized using the 
+previous definitions.
+        
+```java
+FLECO fleco;
+fleco = new FLECO(initialPopulation, maxSeconds, crossoverProbability, implementationGroup, initialStatus, strategicConstraints);
+```
+
+And in ordert to see what is happening while FLECO is running, you define could 
+define a default progress event listener whose only mission is to print some
+information in the console.
+
+```java
+fleco.setProgressEventListener(new DefaultProgressEventListener());
+```
+
+
 
 # USING FLECO STUDIO (JAVA SWING STANDALONE APPLICATION MODE)
 

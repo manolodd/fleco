@@ -1,6 +1,6 @@
 # PROJECT STATUS
 
-[![Zenodo DOI](https://zenodo.org/badge/8092451.svg)](https://doi.org/10.5281/zenodo.8092451)
+[![DOI](https://zenodo.org/badge/655389700.svg)](https://zenodo.org/badge/latestdoi/655389700)
 
 ## Master branch:
 

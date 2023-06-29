@@ -1,5 +1,7 @@
 # PROJECT STATUS
 
+[![Zenodo DOI](https://zenodo.org/badge/8092451.svg)](https://doi.org/10.5281/zenodo.8092451)
+
 ## Master branch:
 
 ![Maven build master](https://github.com/manolodd/fleco/actions/workflows/maven-publish.yml/badge.svg?branch=master)

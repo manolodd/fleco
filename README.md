@@ -12,7 +12,7 @@
 
 # THE PROJECT
 
-<b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, Constrained, and Multi-objective Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels.
+<b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, and Constrained Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels.
 
 It serves as a library that can be seamlessly incorporated into larger solutions to facilitate testing. However, it is accompanied by FLECO Studio, a comprehensive GUI-based solution that is highly recommended for the committee responsible for selecting the necessary cybersecurity measures as defined in CyberTOMP. FLECO Studio enables this committee to conduct multiple simulations, preserve the current system state and the desired target state, load previously saved cases from storage, and seamlessly resume their work.
 
@@ -23,11 +23,12 @@ It serves as a library that can be seamlessly incorporated into larger solutions
 
 ## Latest snapshot version being developed:
 
-- <b>FLECO 1.3-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.4-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
 
 ## Binary releases:
  
-- <b>FLECO 1.2</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.3</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.2</b> LGPL-3.0-or-later.
 - <b>FLECO 1.1</b> LGPL-3.0-or-later.
 - <b>FLECO 1.0</b> LGPL-3.0-or-later.
 

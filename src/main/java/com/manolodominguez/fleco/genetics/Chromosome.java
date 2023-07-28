@@ -51,14 +51,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Chromosome {
 
-    private static final float FITNESS1_WEIGHT = 0.94f;
-    private static final float FITNESS2_WEIGHT = 0.05f;
-    private static final float FITNESS3_WEIGHT = 0.01f;
-
     private EnumMap<Genes, Alleles> genes;
-    private float fitness1;
-    private float fitness2;
-    private float fitness3;
+    private float fitness;
     private final ImplementationGroups implementationGroup;
 
     /**
@@ -77,9 +71,7 @@ public class Chromosome {
         for (Genes gene : Genes.values()) {
             genes.put(gene, Alleles.DLI_0);
         }
-        fitness1 = 0.0f;
-        fitness2 = 0.0f;
-        fitness3 = 0.0f;
+        fitness = 0.0f;
         this.implementationGroup = implementationGroup;
     }
 
@@ -379,20 +371,17 @@ public class Chromosome {
     }
 
     /**
-     * This method returns the global fitness as an aggregation of previously
-     * computed chromosome's fitnesses for each optimization objective.
+     * This method returns the fitness value.
      *
      * @author Manuel Domínguez-Dorado
-     * @return the previously computed chromosome's fitness.
+     * @return the chromosome's fitness.
      */
     public float getFitness() {
-        return ((fitness1 * FITNESS1_WEIGHT) + (fitness2 * FITNESS2_WEIGHT) + (fitness3 * FITNESS3_WEIGHT));
+        return fitness;
     }
 
     /**
-     * This method computes the chromosome's fitness. It is an aggregated
-     * fitness that, through a set of weigths, takes into account three
-     * optimization objetives.
+     * This method computes the chromosome's fitness.
      *
      * @author Manuel Domínguez-Dorado
      * @param initialStatus A chromosome representing an initial cybersecurity
@@ -401,9 +390,7 @@ public class Chromosome {
      * into consideration when optimizing the three optimization objectives.
      */
     public void computeFitness(Chromosome initialStatus, StrategicConstraints strategicConstraints) {
-        fitness1 = computeFitnessConstraintsCoverage(strategicConstraints);
-        fitness2 = computeFitnessSimilarityToCurrentState(initialStatus);
-        fitness3 = computeFitnessGlobalCybersecurityState();
+        fitness = computeFitnessConstraintsCoverage(strategicConstraints);
     }
 
     /**
@@ -415,7 +402,7 @@ public class Chromosome {
      * with the defined strategic constraints).
      */
     public float getFitnessConstraintsCoverage() {
-        return this.fitness1;
+        return this.fitness;
     }
 
     /**
@@ -689,114 +676,6 @@ public class Chromosome {
         } else {
             return (satisfiedConstraints / numberOfConstraints);
         }
-    }
-
-    /**
-     * This method returns the fitness related to the optimization objective 2
-     * (similarity between the current chromosome and the one supplied as the
-     * initial status).
-     *
-     * @author Manuel Domínguez-Dorado
-     * @return The fitness related to the optimization objective 2 (similarity
-     * between the current chromosome and the one supplied as the initial
-     * status).
-     */
-    public float getFitnessSimilarityToCurrentState() {
-        return this.fitness2;
-    }
-
-    /**
-     * This method returns the fitness related to the optimization objective 2
-     * (similarity between the current chromosome and the one supplied as the
-     * initial status). This method goes gene by gene comparing the current
-     * chromosome and the one supplied as initial status. If the corresponding
-     * couple of genes are equals this gene is assigned a value of 1.0.
-     * Otherwise, linear value between 0.0 and 1.0 is asigned depending on the
-     * degree of similarity between both genes. Finally a value representing the
-     * number of genes that are equal in relation to the total number of genes
-     * is returned as a normalized value between 0.0 and 1.0.
-     *
-     * @author Manuel Domínguez-Dorado
-     * @return the fitness related to the optimization objective 2 (similarity
-     * between the current chromosome and the one supplied as the initial
-     * status).
-     */
-    private float computeFitnessSimilarityToCurrentState(Chromosome referenceChromosome) {
-        float maxSimilarGenes = 0.0f;
-        float auxFitness = 0.0f;
-        CopyOnWriteArrayList<Genes> genes = new CopyOnWriteArrayList<>();
-        for (Genes gene : Genes.values()) {
-            if (gene.appliesToIG(implementationGroup)) {
-                genes.add(gene);
-                auxFitness += (1.0f - Math.abs(referenceChromosome.getAllele(gene).getDLI() - getAllele(gene).getDLI()));
-            }
-        }
-        maxSimilarGenes = genes.size();
-        if (maxSimilarGenes > 0.0f) {
-            if ((auxFitness / maxSimilarGenes) > 1.0f) {
-                return 1.0f;
-            }
-            return (auxFitness / maxSimilarGenes);
-        }
-        return 0.0f;
-    }
-
-    /**
-     * This method returns the fitness related to the optimization objective 3
-     * (enhance gobal cybersecurity status).
-     *
-     * @author Manuel Domínguez-Dorado
-     * @return the fitness related to the optimization objective 3 (enhance
-     * gobal cybersecurity status).
-     */
-    public float getFitnessGlobalCybersecurityState() {
-        return this.fitness3;
-    }
-
-    /**
-     * This method returns the fitness related to the optimization objective 3
-     * (enhance gobal asset's cybersecurity status). This method computes the
-     * complete set of metrics defined in CyberTOMP, following a bottom-up
-     * approach, from the expected outcomes level to the asset level, starting
-     * from evaluating the discrete level of implementation of each expected
-     * outcome (gene). Finally a value representing the asset's cybersecurity
-     * status is returned as a normalized value between 0.0 and 1.0.
-     *
-     * @author Manuel Domínguez-Dorado
-     * @return The fitness related to the optimization objective 3 (enhance
-     * gobal asset's cybersecurity status).
-     */
-    private float computeFitnessGlobalCybersecurityState() {
-        float assetFitness = 0.0f;
-        float functionFitness = 0.0f;
-        float categoryFitness = 0.0f;
-        int num = 0;
-        for (Functions f : Functions.values()) {
-            functionFitness = 0.0f;
-            for (Categories c : f.getCategories(implementationGroup)) {
-                categoryFitness = 0.0f;
-                for (Genes g : c.getGenes(implementationGroup)) {
-                    num++;
-                    categoryFitness += getAllele(g).getDLI() * g.getWeight(implementationGroup);
-                }
-                categoryFitness *= c.getWeight(implementationGroup);
-                if (categoryFitness > c.getWeight(implementationGroup)) {
-                    categoryFitness = c.getWeight(implementationGroup);
-                }
-                functionFitness += categoryFitness;
-            }
-            functionFitness *= f.getWeight(implementationGroup);
-            if (functionFitness > f.getWeight(implementationGroup)) {
-                functionFitness = f.getWeight(implementationGroup);
-            }
-            assetFitness += functionFitness;
-        }
-        // Because of roundness it could be 1.000000000000012, for instance. So 
-        // here we set it to 1.0f
-        if (assetFitness > 1.0f) {
-            assetFitness = 1.0f;
-        }
-        return assetFitness;
     }
 
 }

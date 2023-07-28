@@ -189,7 +189,7 @@ public class FLECO {
             if (progressEventListener != null) {
                 long totalTime = maxAvailableSeconds * 1000;
                 long currentTime = Instant.now().toEpochMilli() - Instant.from(begin).toEpochMilli();
-                ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(BEST_CHROMOSOME_INDEX), population.hasHighQualityBestIndividual());
+                ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(BEST_CHROMOSOME_INDEX), population.hasConverged());
                 progressEventListener.onProgressEventReceived(event);
             }
             // If the algorithm forecast it could be trapped in a local minimum,
@@ -200,7 +200,7 @@ public class FLECO {
             // individuals.
             if (seemsALocalMinimum) {
                 if (isDeeplyStagnated) {
-                    if (!population.hasGoodEnoughBestIndividual()) {
+                    if (!population.hasConverged()) {
                         population.softReset();
                         currentBestFitness = population.get(BEST_CHROMOSOME_INDEX).getFitness();
                         latestBestFitnessChange = Instant.now();
@@ -263,10 +263,10 @@ public class FLECO {
      */
     private boolean hasToFinish(Temporal begin, boolean isDeeplyStagnated) {
         Duration duration = Duration.between(begin, Instant.now());
-        if (population.hasHighQualityBestIndividual() || (duration.get(ChronoUnit.SECONDS) > maxAvailableSeconds)) {
+        if (population.hasConverged() || (duration.get(ChronoUnit.SECONDS) > maxAvailableSeconds)) {
             return true;
         }
-        return isDeeplyStagnated && population.hasGoodEnoughBestIndividual();
+        return isDeeplyStagnated && population.hasConverged();
     }
 
     /**
@@ -278,7 +278,7 @@ public class FLECO {
      * Otherwise, return false.
      */
     public boolean hasConverged() {
-        return population.hasGoodEnoughBestIndividual();
+        return population.hasConverged();
     }
 
     /**

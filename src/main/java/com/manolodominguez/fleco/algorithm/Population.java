@@ -59,8 +59,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     private float fitnessAverage;
     private Chromosome initialStatus;
     private StrategicConstraints strategicConstraints;
-    private boolean hasHighQualityBestIndividual;
-    private boolean hasGoodEnoughBestIndividual;
+    private boolean converged;
 
     /**
      * This is the constructor of the class, which initializes the population
@@ -92,8 +91,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         addAll(strategicConstraints.generatePrecandidatesBasedOn(initialStatus));
         computeFitnessAndSort();
         fitnessAverage = 0.0f;
-        hasHighQualityBestIndividual = false;
-        hasGoodEnoughBestIndividual = false;
+        converged = false;
         // Complete the population with random chromosomes until the initial 
         // number of chromosomes are reached.
         populateRandomly();
@@ -301,7 +299,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * @author Manuel Domínguez-Dorado
      */
     private void computeFitnessAndSort() {
-        hasHighQualityBestIndividual = false;
         fitnessAverage = 0.0f;
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
             chromosome.computeFitness(initialStatus, strategicConstraints);
@@ -310,12 +307,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         fitnessAverage /= size();
         sort(new ChromosomeComparator());
         if (!isEmpty()) {
-            if (get(BEST_CHROMOSOME_INDEX).getFitnessConstraintsCoverage() >= 1.0f) {
-                hasGoodEnoughBestIndividual = true;
-                hasHighQualityBestIndividual = get(BEST_CHROMOSOME_INDEX).getFitnessSimilarityToCurrentState() >= 0.80f;
-            } else {
-                hasGoodEnoughBestIndividual = false;
-            }
+            converged = get(BEST_CHROMOSOME_INDEX).getFitnessConstraintsCoverage() >= 1.0f;
         }
     }
 
@@ -328,8 +320,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      */
     public void softReset() {
         fitnessAverage = 0.0f;
-        hasHighQualityBestIndividual = false;
-        hasGoodEnoughBestIndividual = false;
+        converged = false;
         int oneThird = size() / 2;
         for (int i = 0; i < oneThird; i++) {
             if (!isEmpty()) {
@@ -342,18 +333,6 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     }
 
     /**
-     * This method returns whether the population contains a high quality
-     * individual as best one, or not.
-     *
-     * @author Manuel Domínguez-Dorado
-     * @return true, if the population contains a high quality individual as
-     * best one. Otherwise, false.
-     */
-    public boolean hasHighQualityBestIndividual() {
-        return hasHighQualityBestIndividual;
-    }
-
-    /**
      * This method returns whether the population contains a best individual
      * with enough quality, or not.
      *
@@ -361,8 +340,8 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      * @return true, if the population contains a best individual with enough
      * quality. Otherwise, false.
      */
-    public boolean hasGoodEnoughBestIndividual() {
-        return hasGoodEnoughBestIndividual;
+    public boolean hasConverged() {
+        return converged;
     }
 
     /**
@@ -406,7 +385,7 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
         int i = 0;
         System.out.println("Final population:");
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            System.out.println("\t" + i + "#" + chromosome.getFitness() + "#" + chromosome.getFitnessConstraintsCoverage() + "#" + chromosome.getFitnessSimilarityToCurrentState() + "#" + chromosome.getFitnessGlobalCybersecurityState());
+            System.out.println("\t" + i + "#" + chromosome.getFitness() + "#" + chromosome.getFitnessConstraintsCoverage());
             i++;
         }
     }

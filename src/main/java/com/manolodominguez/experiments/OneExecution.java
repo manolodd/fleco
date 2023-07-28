@@ -138,9 +138,6 @@ public class OneExecution {
         System.out.println("                       SOLUTION");
         System.out.println("####################################################\n");
         System.out.println("Best solution's aggregated fitness: " + bestChromosome.getFitness());
-        System.out.println("\tObjective 1): " + bestChromosome.getFitnessConstraintsCoverage() + " (x0.94)");
-        System.out.println("\tObjective 2): " + bestChromosome.getFitnessSimilarityToCurrentState() + " (x0.05)");
-        System.out.println("\tObjective 3): " + bestChromosome.getFitnessGlobalCybersecurityState() + " (x0.01)");
         System.out.println("Solution breakdown................: \n");
         bestChromosome.print(initialStatus);
         System.out.println("####################################################\n");

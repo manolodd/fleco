@@ -103,9 +103,9 @@ public class Complete {
                         fleco.evolve();
                         bestChromosome = fleco.getBestChromosome();
                         if (fleco.hasConverged()) {
-                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
                         } else {
-                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage() + "#" + bestChromosome.getFitnessSimilarityToCurrentState() + "#" + bestChromosome.getFitnessGlobalCybersecurityState());
+                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
                         }
                     }
                 }

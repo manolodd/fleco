@@ -187,7 +187,7 @@ public class FLECO {
             population.selectBestAdapted();
             // Spread progress event.
             if (progressEventListener != null) {
-                long totalTime = maxAvailableSeconds * 1000;
+                long totalTime = (long) maxAvailableSeconds * 1000;
                 long currentTime = Instant.now().toEpochMilli() - Instant.from(begin).toEpochMilli();
                 ProgressEvent event = new ProgressEvent(this, rotaryIDGenerator.getNextIdentifier(), totalTime, currentTime, currentGeneration, population.get(BEST_CHROMOSOME_INDEX), population.hasConverged());
                 progressEventListener.onProgressEventReceived(event);

@@ -954,7 +954,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             tableModel.removeTargetStatus();
             //MAIN
             int initialPopulation = 30;
-            int maxSeconds = 5 * 60;
+            int maxSeconds = 30;
             float crossoverProbability = 0.90f;
             caseConfig.setFleco(new FLECO(initialPopulation, maxSeconds, crossoverProbability, tableModel.getImplementationGroup(), tableModel.getInitialStatus(), tableModel.getStrategicConstraints()));
             caseConfig.getFleco().setProgressEventListener(progressBar);

@@ -66,7 +66,7 @@ public class Complete {
         // Define FLECO's parameters 
         // *************************
         int initialPopulation = 30;
-        int maxSeconds = 5 * 60;
+        int maxSeconds = 30;
         float crossoverProbability = 0.90f;
         ImplementationGroups implementationGroup = ImplementationGroups.IG3;
         // Define current cybersecurity status according to CyberTOMP. While it

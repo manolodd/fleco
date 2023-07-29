@@ -492,7 +492,7 @@ public class Chromosome {
                             satisfiedConstraints++;
                         } else if (genesValues.get(gene) > constraint.getThreshold()) {
                             satisfiedConstraints += (-1.0f / (1.0f - constraint.getThreshold())) * genesValues.get(gene) + (1.0f - (-1.0f / (1.0f - constraint.getThreshold())) * constraint.getThreshold());
-                        } else if (genesValues.get(gene) > constraint.getThreshold()) {
+                        } else {
                             satisfiedConstraints += ((genesValues.get(gene) / constraint.getThreshold()));
                         }
                         break;
@@ -546,7 +546,7 @@ public class Chromosome {
                             satisfiedConstraints++;
                         } else if (categoriesValues.get(category) > constraint.getThreshold()) {
                             satisfiedConstraints += (-1.0f / (1.0f - constraint.getThreshold())) * categoriesValues.get(category) + (1.0f - (-1.0f / (1.0f - constraint.getThreshold())) * constraint.getThreshold());
-                        } else if (categoriesValues.get(category) > constraint.getThreshold()) {
+                        } else {
                             satisfiedConstraints += ((categoriesValues.get(category) / constraint.getThreshold()));
                         }
                         break;
@@ -597,7 +597,7 @@ public class Chromosome {
                             satisfiedConstraints++;
                         } else if (functionsValues.get(function) > constraint.getThreshold()) {
                             satisfiedConstraints += (-1.0f / (1.0f - constraint.getThreshold())) * functionsValues.get(function) + (1.0f - (-1.0f / (1.0f - constraint.getThreshold())) * constraint.getThreshold());
-                        } else if (functionsValues.get(function) > constraint.getThreshold()) {
+                        } else {
                             satisfiedConstraints += ((functionsValues.get(function) / constraint.getThreshold()));
                         }
                         break;
@@ -647,7 +647,7 @@ public class Chromosome {
                         satisfiedConstraints++;
                     } else if (assetValue > condition.getThreshold()) {
                         satisfiedConstraints += (-1.0f / (1.0f - condition.getThreshold())) * assetValue + (1.0f - (-1.0f / (1.0f - condition.getThreshold())) * condition.getThreshold());
-                    } else if (assetValue > condition.getThreshold()) {
+                    } else {
                         satisfiedConstraints += ((assetValue / condition.getThreshold()));
                     }
                     break;

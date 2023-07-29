@@ -340,6 +340,7 @@ public class FLECOTableModel extends AbstractTableModel {
      */
     @Override
     public Class<?> getColumnClass(int column) {
+        /*
         switch (column) {
             case CYBERTOMP_METRIC:
                 return String.class;
@@ -354,6 +355,10 @@ public class FLECOTableModel extends AbstractTableModel {
             default:
                 return String.class;
         }
+        */
+        // While all values returns String.class it makes no sense
+        // implement a switch statement. So, return always String.class
+        return String.class;
     }
 
     /**

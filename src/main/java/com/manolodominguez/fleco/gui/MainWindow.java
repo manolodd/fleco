@@ -80,6 +80,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -90,12 +91,6 @@ import net.miginfocom.swing.MigLayout;
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelChangeListener {
-
-    private static final int CYBERTOMP_METRIC = 0;
-    private static final int INITIAL_STATUS = 1;
-    private static final int CONSTRAINT_OPERATOR = 2;
-    private static final int CONSTRAINT_VALUE = 3;
-    private static final int TARGET_STATUS = 4;
 
     private JMenuBar menuBar;
     private JMenu menuCase;
@@ -742,7 +737,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         comboBoxColumn1.addItem(0.33f);
         comboBoxColumn1.addItem(0.67f);
         comboBoxColumn1.addItem(1.00f);
-        table.getColumnModel().getColumn(INITIAL_STATUS).setCellEditor(new DefaultCellEditor(comboBoxColumn1));
+        table.getColumnModel().getColumn(FLECOTableModel.CURRENT_STATUS).setCellEditor(new DefaultCellEditor(comboBoxColumn1));
         comboBoxColumn2 = new JComboBox<>();
         comboBoxColumn2.addItem("N/A");
         comboBoxColumn2.addItem("LESS");
@@ -750,9 +745,13 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         comboBoxColumn2.addItem("EQUAL");
         comboBoxColumn2.addItem("GREATER_OR_EQUAL");
         comboBoxColumn2.addItem("GREATER");
-        table.getColumnModel().getColumn(CONSTRAINT_OPERATOR).setCellEditor(new DefaultCellEditor(comboBoxColumn2));
-        table.getColumnModel().getColumn(TARGET_STATUS).setCellRenderer(new TargetStatusCellRenderer());
+        table.getColumnModel().getColumn(FLECOTableModel.CONSTRAINT_OPERATOR).setCellEditor(new DefaultCellEditor(comboBoxColumn2));
+        table.getColumnModel().getColumn(FLECOTableModel.TARGET_STATUS).setCellRenderer(new TargetStatusCellRenderer());
         tableColumnAdjuster.adjustColumns();
+        // Remove the "CyberTOMP Metric Key" column from the view, but it 
+        // remains in teh model.
+        TableColumnModel tableColumnModel = table.getColumnModel();
+        tableColumnModel.removeColumn(tableColumnModel.getColumn(FLECOTableModel.CYBERTOMP_METRIC_KEY));
     }
 
     /**

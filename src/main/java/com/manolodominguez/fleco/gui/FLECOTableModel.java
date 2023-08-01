@@ -55,18 +55,22 @@ import javax.swing.table.AbstractTableModel;
 @SuppressWarnings("serial")
 public class FLECOTableModel extends AbstractTableModel {
 
-    private static final int CYBERTOMP_METRIC = 0;
-    private static final int INITIAL_STATUS = 1;
-    private static final int CONSTRAINT_OPERATOR = 2;
-    private static final int CONSTRAINT_VALUE = 3;
-    private static final int TARGET_STATUS = 4;
-    private static final int MAX_COLUMNS = 5;
+    public static final int CYBERTOMP_METRIC_KEY = 0;
+    public static final int CYBERTOMP_METRIC_ACRONYM = 1;
+    public static final int CYBERTOMP_METRIC_NAME = 2;
+    public static final int FUNCTIONAL_AREA = 3;
+    public static final int CURRENT_STATUS = 4;
+    public static final int CONSTRAINT_OPERATOR = 5;
+    public static final int CONSTRAINT_VALUE = 6;
+    public static final int TARGET_STATUS = 7;
+
+    private static final int MAX_COLUMNS = 8;
     private static final int ASSET_ROW = 0;
     private static final String NO_CONSTRAINT = "N/A";
 
     private StrategicConstraints strategicConstraints;
     private ImplementationGroups implementationGroup;
-    private String[] metricsNames;
+    private String[] metricsKeys;
 
     private Chromosome initialStatus;
     private EnumMap<Genes, Float> genesValuesInitialStatus;
@@ -109,18 +113,18 @@ public class FLECOTableModel extends AbstractTableModel {
                 }
             }
         }
-        this.metricsNames = new String[rowCount];
+        this.metricsKeys = new String[rowCount];
         int count = 0;
-        metricsNames[count] = "Asset";
+        metricsKeys[count] = "Asset";
         count++;
         for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            metricsNames[count] = function.name();
+            metricsKeys[count] = function.name();
             count++;
             for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
-                metricsNames[count] = category.name();
+                metricsKeys[count] = category.name();
                 count++;
                 for (Genes gene : Genes.getGenesFor(category, implementationGroup)) {
-                    metricsNames[count] = gene.name();
+                    metricsKeys[count] = gene.name();
                     count++;
                 }
             }
@@ -152,7 +156,7 @@ public class FLECOTableModel extends AbstractTableModel {
     public void setTargetStatus(Chromosome targetStatus) {
         this.targetStatus = targetStatus;
         computeValuesForTargetStatus();
-        for (int j = 0; j < metricsNames.length; j++) {
+        for (int j = 0; j < metricsKeys.length; j++) {
             fireTableCellUpdated(j, TARGET_STATUS);
         }
         if (changeEventListener != null) {
@@ -180,7 +184,7 @@ public class FLECOTableModel extends AbstractTableModel {
      */
     public void setStrategicConstraints(StrategicConstraints strategicConstraints) {
         this.strategicConstraints = strategicConstraints;
-        for (int j = 0; j < metricsNames.length; j++) {
+        for (int j = 0; j < metricsKeys.length; j++) {
             fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
             fireTableCellUpdated(j, CONSTRAINT_VALUE);
         }
@@ -209,25 +213,25 @@ public class FLECOTableModel extends AbstractTableModel {
                 }
             }
         }
-        this.metricsNames = new String[rowCount];
+        this.metricsKeys = new String[rowCount];
         int count = 0;
-        metricsNames[count] = "Asset";
+        metricsKeys[count] = "Asset";
         count++;
         for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            metricsNames[count] = function.name();
+            metricsKeys[count] = function.name();
             count++;
             for (Categories category : Categories.getCategoriesFor(function, implementationGroup)) {
-                metricsNames[count] = category.name();
+                metricsKeys[count] = category.name();
                 count++;
                 for (Genes gene : Genes.getGenesFor(category, implementationGroup)) {
-                    metricsNames[count] = gene.name();
+                    metricsKeys[count] = gene.name();
                     count++;
                 }
             }
         }
         computeValuesForInitialStatus();
-        for (int j = 0; j < metricsNames.length; j++) {
-            fireTableCellUpdated(j, INITIAL_STATUS);
+        for (int j = 0; j < metricsKeys.length; j++) {
+            fireTableCellUpdated(j, CURRENT_STATUS);
         }
         if (changeEventListener != null) {
             changeEventListener.onFLECOTableModelChanged();
@@ -316,18 +320,26 @@ public class FLECOTableModel extends AbstractTableModel {
      */
     @Override
     public String getColumnName(int column) {
+
         switch (column) {
-            case CYBERTOMP_METRIC:
+            case CYBERTOMP_METRIC_KEY:
+                return "CyberTOMP metric key";
+            case CYBERTOMP_METRIC_ACRONYM:
                 return "CyberTOMP metric";
-            case INITIAL_STATUS:
+            case CYBERTOMP_METRIC_NAME:
+                return "Descriptive name of CyberTOMP metric";
+            case FUNCTIONAL_AREA:
+                return "Functional area";
+            case CURRENT_STATUS:
                 return "Current status";
             case CONSTRAINT_OPERATOR:
                 return "Constraint operator";
             case CONSTRAINT_VALUE:
                 return "Constraint value";
             case TARGET_STATUS:
-            default:
                 return "Target status";
+            default:
+                return "Column name not defined";
         }
     }
 
@@ -342,9 +354,15 @@ public class FLECOTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int column) {
         /*
         switch (column) {
-            case CYBERTOMP_METRIC:
+            case CYBERTOMP_METRIC_KEY:
                 return String.class;
-            case INITIAL_STATUS:
+            case CYBERTOMP_METRIC_ACRONYM:
+                return String.class;
+            case CYBERTOMP_METRIC_NAME:
+                return String.class;
+            case FUNCTIONAL_AREA:
+                return String.class;
+            case CURRENT_STATUS:
                 return String.class;
             case CONSTRAINT_OPERATOR:
                 return String.class;
@@ -355,8 +373,8 @@ public class FLECOTableModel extends AbstractTableModel {
             default:
                 return String.class;
         }
-        */
-        // While all values returns String.class it makes no sense
+         */
+        // While all values returns String.class it makes no sense to
         // implement a switch statement. So, return always String.class
         return String.class;
     }
@@ -370,7 +388,7 @@ public class FLECOTableModel extends AbstractTableModel {
     @Override
     public int getRowCount() {
         if (initialStatus != null) {
-            return metricsNames.length;
+            return metricsKeys.length;
         }
         return 0;
     }
@@ -388,12 +406,12 @@ public class FLECOTableModel extends AbstractTableModel {
     @Override
     public boolean isCellEditable(int row, int column) {
         if (initialStatus != null) {
-            if ((column == CYBERTOMP_METRIC) || (column == TARGET_STATUS)) {
+            if ((column == CYBERTOMP_METRIC_KEY) || (column == CYBERTOMP_METRIC_ACRONYM) || (column == CYBERTOMP_METRIC_NAME) || (column == FUNCTIONAL_AREA) || (column == TARGET_STATUS)) {
                 return false;
             }
-            if (column == INITIAL_STATUS) {
+            if (column == CURRENT_STATUS) {
                 for (Genes gene : Genes.getGenesFor(implementationGroup)) {
-                    if (gene.name().equals(metricsNames[row])) {
+                    if (gene.name().equals(metricsKeys[row])) {
                         return true;
                     }
                 }
@@ -417,9 +435,15 @@ public class FLECOTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         if (initialStatus != null) {
             switch (column) {
-                case CYBERTOMP_METRIC:
-                    return getCyberTOMPMetricAt(row);
-                case INITIAL_STATUS:
+                case CYBERTOMP_METRIC_KEY:
+                    return getCyberTOMPMetricKeyAt(row);
+                case CYBERTOMP_METRIC_ACRONYM:
+                    return getCorrespondingMetricAcronymAt(row);
+                case CYBERTOMP_METRIC_NAME:
+                    return getCorrespondingMetricNameAt(row);
+                case FUNCTIONAL_AREA:
+                    return getCorrespondingAreaAt(row);
+                case CURRENT_STATUS:
                     return getInitialStatusAt(row);
                 case CONSTRAINT_OPERATOR:
                     return getConstraintOperatorAt(row);
@@ -434,6 +458,18 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    private Object getCorrespondingMetricAcronymAt(int row) {
+        return "Acronym";
+    }
+    
+    private Object getCorrespondingMetricNameAt(int row) {
+        return "A descriptive name of the corresponding CyberTOMP metric";
+    }
+    
+    private Object getCorrespondingAreaAt(int row) {
+        return "F12";
+    }
+
     /**
      * This method gets the CyberTOMP metric that is located in the row
      * specified as an argument.
@@ -443,9 +479,9 @@ public class FLECOTableModel extends AbstractTableModel {
      * @return the CyberTOMP metric that is located in the row pecified as an
      * argument.
      */
-    private Object getCyberTOMPMetricAt(int row) {
+    private Object getCyberTOMPMetricKeyAt(int row) {
         if (initialStatus != null) {
-            return metricsNames[row];
+            return metricsKeys[row];
         }
         return null;
     }
@@ -549,7 +585,7 @@ public class FLECOTableModel extends AbstractTableModel {
         if (initialStatus != null) {
             try {
                 // Case it is an expected outcome
-                Genes gene = Genes.valueOf(metricsNames[row]);
+                Genes gene = Genes.valueOf(metricsKeys[row]);
                 if (gene.appliesToIG(implementationGroup)) {
                     if (strategicConstraints.hasDefinedConstraint(gene)) {
                         return strategicConstraints.getConstraint(gene).getComparisonOperator().name();
@@ -559,7 +595,7 @@ public class FLECOTableModel extends AbstractTableModel {
             catch (IllegalArgumentException e1) {
                 try {
                     // Case it is a category
-                    Categories category = Categories.valueOf(metricsNames[row]);
+                    Categories category = Categories.valueOf(metricsKeys[row]);
                     if (category.appliesToIG(implementationGroup)) {
                         if (strategicConstraints.hasDefinedConstraint(category)) {
                             return strategicConstraints.getConstraint(category).getComparisonOperator().name();
@@ -569,7 +605,7 @@ public class FLECOTableModel extends AbstractTableModel {
                 catch (IllegalArgumentException e2) {
                     try {
                         // Case it is a function
-                        Functions function = Functions.valueOf(metricsNames[row]);
+                        Functions function = Functions.valueOf(metricsKeys[row]);
                         if (function.appliesToIG(implementationGroup)) {
                             if (strategicConstraints.hasDefinedConstraint(function)) {
                                 return strategicConstraints.getConstraint(function).getComparisonOperator().name();
@@ -604,7 +640,7 @@ public class FLECOTableModel extends AbstractTableModel {
         if (initialStatus != null) {
             try {
                 // Case it is an expected outcome
-                Genes gene = Genes.valueOf(metricsNames[row]);
+                Genes gene = Genes.valueOf(metricsKeys[row]);
                 if (gene.appliesToIG(implementationGroup)) {
                     if (strategicConstraints.hasDefinedConstraint(gene)) {
                         return (Float) strategicConstraints.getConstraint(gene).getThreshold();
@@ -614,7 +650,7 @@ public class FLECOTableModel extends AbstractTableModel {
             catch (IllegalArgumentException e1) {
                 try {
                     // Case it is a category
-                    Categories category = Categories.valueOf(metricsNames[row]);
+                    Categories category = Categories.valueOf(metricsKeys[row]);
                     if (category.appliesToIG(implementationGroup)) {
                         if (strategicConstraints.hasDefinedConstraint(category)) {
                             return (Float) strategicConstraints.getConstraint(category).getThreshold();
@@ -624,7 +660,7 @@ public class FLECOTableModel extends AbstractTableModel {
                 catch (IllegalArgumentException e2) {
                     try {
                         // Case it is a function
-                        Functions function = Functions.valueOf(metricsNames[row]);
+                        Functions function = Functions.valueOf(metricsKeys[row]);
                         if (function.appliesToIG(implementationGroup)) {
                             if (strategicConstraints.hasDefinedConstraint(function)) {
                                 return (Float) strategicConstraints.getConstraint(function).getThreshold();
@@ -659,10 +695,10 @@ public class FLECOTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int column) {
         if (initialStatus != null) {
             switch (column) {
-                case CYBERTOMP_METRIC:
+                case CYBERTOMP_METRIC_KEY:
                     setCyberTOMPMetricAt(value, row);
                     break;
-                case INITIAL_STATUS:
+                case CURRENT_STATUS:
                     setInitialStatusAt(value, row);
                     break;
                 case CONSTRAINT_OPERATOR:
@@ -693,7 +729,7 @@ public class FLECOTableModel extends AbstractTableModel {
             try {
                 Alleles allele = Alleles.DLI_0;
                 Genes gene;
-                gene = Genes.valueOf(metricsNames[row]);
+                gene = Genes.valueOf(metricsKeys[row]);
                 if (value instanceof Float) {
                     float valueFloat = (float) value;
                     if (valueFloat == Alleles.DLI_0.getDLI()) {
@@ -707,8 +743,8 @@ public class FLECOTableModel extends AbstractTableModel {
                     }
                     initialStatus.updateAllele(gene, allele);
                     computeValuesForInitialStatus();
-                    for (int j = 0; row < metricsNames.length; row++) {
-                        fireTableCellUpdated(j, INITIAL_STATUS);
+                    for (int j = 0; row < metricsKeys.length; row++) {
+                        fireTableCellUpdated(j, CURRENT_STATUS);
                     }
                 }
             }
@@ -734,17 +770,17 @@ public class FLECOTableModel extends AbstractTableModel {
         int typeOfMetric = GENE;
         if (initialStatus != null) {
             try {
-                Genes.valueOf(metricsNames[row]);
+                Genes.valueOf(metricsKeys[row]);
                 typeOfMetric = GENE;
             }
             catch (IllegalArgumentException e11) {
                 try {
-                    Categories.valueOf(metricsNames[row]);
+                    Categories.valueOf(metricsKeys[row]);
                     typeOfMetric = CATEGORY;
                 }
                 catch (IllegalArgumentException e12) {
                     try {
-                        Functions.valueOf(metricsNames[row]);
+                        Functions.valueOf(metricsKeys[row]);
                         typeOfMetric = FUNCTION;
                     }
                     catch (IllegalArgumentException e13) {
@@ -757,10 +793,10 @@ public class FLECOTableModel extends AbstractTableModel {
                 if (value instanceof String) {
                     String valueString = (String) value;
                     if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == GENE)) {
-                        strategicConstraints.removeConstraint(Genes.valueOf(metricsNames[row]));
+                        strategicConstraints.removeConstraint(Genes.valueOf(metricsKeys[row]));
                     } else {
                         comparisonOperator = ComparisonOperators.valueOf(valueString);
-                        Genes gene = Genes.valueOf(metricsNames[row]);
+                        Genes gene = Genes.valueOf(metricsKeys[row]);
                         Constraint updatedConstraint;
                         if (strategicConstraints.hasDefinedConstraint(gene)) {
                             updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint(gene).getThreshold());
@@ -782,7 +818,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             }
                         }
                     }
-                    for (int j = 0; j < metricsNames.length; j++) {
+                    for (int j = 0; j < metricsKeys.length; j++) {
                         fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
                         fireTableCellUpdated(j, CONSTRAINT_VALUE);
                     }
@@ -794,11 +830,11 @@ public class FLECOTableModel extends AbstractTableModel {
                     if (value instanceof String) {
                         String valueString = (String) value;
                         if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == CATEGORY)) {
-                            strategicConstraints.removeConstraint(Categories.valueOf(metricsNames[row]));
+                            strategicConstraints.removeConstraint(Categories.valueOf(metricsKeys[row]));
                         } else {
                             comparisonOperator = ComparisonOperators.valueOf(valueString);
                             Constraint updatedConstraint;
-                            Categories category = Categories.valueOf(metricsNames[row]);
+                            Categories category = Categories.valueOf(metricsKeys[row]);
                             if (strategicConstraints.hasDefinedConstraint(category)) {
                                 updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint(category).getThreshold());
                                 strategicConstraints.removeConstraint(category);
@@ -819,7 +855,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                 }
                             }
                         }
-                        for (int j = 0; j < metricsNames.length; j++) {
+                        for (int j = 0; j < metricsKeys.length; j++) {
                             fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
                             fireTableCellUpdated(j, CONSTRAINT_VALUE);
                         }
@@ -831,11 +867,11 @@ public class FLECOTableModel extends AbstractTableModel {
                         if (value instanceof String) {
                             String valueString = (String) value;
                             if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == FUNCTION)) {
-                                strategicConstraints.removeConstraint(Functions.valueOf(metricsNames[row]));
+                                strategicConstraints.removeConstraint(Functions.valueOf(metricsKeys[row]));
                             } else {
                                 comparisonOperator = ComparisonOperators.valueOf(valueString);
                                 Constraint updatedConstraint;
-                                Functions function = Functions.valueOf(metricsNames[row]);
+                                Functions function = Functions.valueOf(metricsKeys[row]);
                                 if (strategicConstraints.hasDefinedConstraint(function)) {
                                     updatedConstraint = new Constraint(comparisonOperator, strategicConstraints.getConstraint(function).getThreshold());
                                     strategicConstraints.removeConstraint(function);
@@ -856,7 +892,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                     }
                                 }
                             }
-                            for (int j = 0; j < metricsNames.length; j++) {
+                            for (int j = 0; j < metricsKeys.length; j++) {
                                 fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
                                 fireTableCellUpdated(j, CONSTRAINT_VALUE);
 
@@ -893,7 +929,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                         }
                                     }
                                 }
-                                for (int j = 0; j < metricsNames.length; j++) {
+                                for (int j = 0; j < metricsKeys.length; j++) {
                                     fireTableCellUpdated(j, CONSTRAINT_OPERATOR);
                                     fireTableCellUpdated(j, CONSTRAINT_VALUE);
 
@@ -949,17 +985,17 @@ public class FLECOTableModel extends AbstractTableModel {
                 }
             }
             try {
-                Genes.valueOf(metricsNames[row]);
+                Genes.valueOf(metricsKeys[row]);
                 typeOfMetric = GENE;
             }
             catch (IllegalArgumentException e11) {
                 try {
-                    Categories.valueOf(metricsNames[row]);
+                    Categories.valueOf(metricsKeys[row]);
                     typeOfMetric = CATEGORY;
                 }
                 catch (IllegalArgumentException e12) {
                     try {
-                        Functions.valueOf(metricsNames[row]);
+                        Functions.valueOf(metricsKeys[row]);
                         typeOfMetric = FUNCTION;
                     }
                     catch (IllegalArgumentException e13) {
@@ -973,9 +1009,9 @@ public class FLECOTableModel extends AbstractTableModel {
                 if (value instanceof String) {
                     String valueString = (String) value;
                     if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == GENE)) {
-                        strategicConstraints.removeConstraint(Genes.valueOf(metricsNames[row]));
+                        strategicConstraints.removeConstraint(Genes.valueOf(metricsKeys[row]));
                     } else {
-                        Genes gene = Genes.valueOf(metricsNames[row]);
+                        Genes gene = Genes.valueOf(metricsKeys[row]);
                         Constraint updatedConstraint;
                         if (strategicConstraints.hasDefinedConstraint(gene)) {
                             updatedConstraint = new Constraint(strategicConstraints.getConstraint(gene).getComparisonOperator(), threshold);
@@ -983,7 +1019,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             strategicConstraints.addConstraint(gene, updatedConstraint);
                         }
                     }
-                    for (int j = 0; j < metricsNames.length; j++) {
+                    for (int j = 0; j < metricsKeys.length; j++) {
                         fireTableCellUpdated(j, CONSTRAINT_VALUE);
                     }
                 }
@@ -994,17 +1030,17 @@ public class FLECOTableModel extends AbstractTableModel {
                     if (value instanceof String) {
                         String valueString = (String) value;
                         if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == CATEGORY)) {
-                            strategicConstraints.removeConstraint(Categories.valueOf(metricsNames[row]));
+                            strategicConstraints.removeConstraint(Categories.valueOf(metricsKeys[row]));
                         } else {
                             Constraint updatedConstraint;
-                            Categories category = Categories.valueOf(metricsNames[row]);
+                            Categories category = Categories.valueOf(metricsKeys[row]);
                             if (strategicConstraints.hasDefinedConstraint(category)) {
                                 updatedConstraint = new Constraint(strategicConstraints.getConstraint(category).getComparisonOperator(), threshold);
                                 strategicConstraints.removeConstraint(category);
                                 strategicConstraints.addConstraint(category, updatedConstraint);
                             }
                         }
-                        for (int j = 0; j < metricsNames.length; j++) {
+                        for (int j = 0; j < metricsKeys.length; j++) {
                             fireTableCellUpdated(j, CONSTRAINT_VALUE);
                         }
                     }
@@ -1015,17 +1051,17 @@ public class FLECOTableModel extends AbstractTableModel {
                         if (value instanceof String) {
                             String valueString = (String) value;
                             if (valueString.equals(NO_CONSTRAINT) && (typeOfMetric == FUNCTION)) {
-                                strategicConstraints.removeConstraint(Functions.valueOf(metricsNames[row]));
+                                strategicConstraints.removeConstraint(Functions.valueOf(metricsKeys[row]));
                             } else {
                                 Constraint updatedConstraint;
-                                Functions function = Functions.valueOf(metricsNames[row]);
+                                Functions function = Functions.valueOf(metricsKeys[row]);
                                 if (strategicConstraints.hasDefinedConstraint(function)) {
                                     updatedConstraint = new Constraint(strategicConstraints.getConstraint(function).getComparisonOperator(), threshold);
                                     strategicConstraints.removeConstraint(function);
                                     strategicConstraints.addConstraint(function, updatedConstraint);
                                 }
                             }
-                            for (int j = 0; j < metricsNames.length; j++) {
+                            for (int j = 0; j < metricsKeys.length; j++) {
                                 fireTableCellUpdated(j, CONSTRAINT_VALUE);
                             }
                         }
@@ -1045,7 +1081,7 @@ public class FLECOTableModel extends AbstractTableModel {
                                         strategicConstraints.addConstraint(updatedConstraint);
                                     }
                                 }
-                                for (int j = 0; j < metricsNames.length; j++) {
+                                for (int j = 0; j < metricsKeys.length; j++) {
                                     fireTableCellUpdated(j, CONSTRAINT_VALUE);
                                 }
                             }

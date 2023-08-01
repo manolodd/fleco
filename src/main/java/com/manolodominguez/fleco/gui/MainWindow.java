@@ -46,6 +46,7 @@ import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
@@ -77,6 +78,8 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -110,6 +113,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     private FLECOProgressBar progressBar;
     private FLECOTableModel tableModel;
     private JTable table;
+    private TableColumnAdjuster tableColumnAdjuster;
     private JComboBox<Float> comboBoxColumn1;
     private JComboBox<String> comboBoxColumn2;
     private JScrollPane scrollPane;
@@ -311,6 +315,8 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         getContentPane().add(toolBar, "span, north, width 100%, wrap");
         table = new JTable();
         table.setEnabled(false);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tableColumnAdjuster = new TableColumnAdjuster(table);
         scrollPane = new JScrollPane(table);
         getContentPane().add(scrollPane, "span, width 100%, height 100%, wrap");
         progressBar = new FLECOProgressBar();
@@ -746,6 +752,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         comboBoxColumn2.addItem("GREATER");
         table.getColumnModel().getColumn(CONSTRAINT_OPERATOR).setCellEditor(new DefaultCellEditor(comboBoxColumn2));
         table.getColumnModel().getColumn(TARGET_STATUS).setCellRenderer(new TargetStatusCellRenderer());
+        tableColumnAdjuster.adjustColumns();
     }
 
     /**

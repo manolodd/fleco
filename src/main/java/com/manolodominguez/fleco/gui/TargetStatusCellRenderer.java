@@ -50,7 +50,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class TargetStatusCellRenderer extends DefaultTableCellRenderer {
 
     private static final long serialVersionUID = 1L;
-    private static final int INITIAL_STATUS = 1;
 
     /**
      * This is the constructor of the class. It sets the initial values of all
@@ -84,7 +83,7 @@ public class TargetStatusCellRenderer extends DefaultTableCellRenderer {
         super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if (value != null) {
             String val = null;
-            Float initialValue = (Float) table.getModel().getValueAt(row, INITIAL_STATUS);
+            Float initialValue = (Float) table.getModel().getValueAt(row, FLECOTableModel.CURRENT_STATUS);
             Float targetValue = (Float) value;
             if (initialValue.floatValue() != targetValue.floatValue()) {
                 Font f = getFont();

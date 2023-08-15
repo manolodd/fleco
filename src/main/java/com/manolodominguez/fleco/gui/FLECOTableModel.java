@@ -459,6 +459,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return null;
     }
 
+    /**
+     * This method gets the acronym corresponding to the CyberTOMP metric that
+     * is located in the row specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the acronym corresponding to the CyberTOMP metric that is located
+     * in the row specified as an argument.
+     */
     private Object getCorrespondingMetricAcronymAt(int row) {
         if (initialStatus != null) {
             try {
@@ -488,6 +497,15 @@ public class FLECOTableModel extends AbstractTableModel {
         return "UNDEFINED";
     }
 
+    /**
+     * This method gets the purpose corresponding to the CyberTOMP metric that
+     * is located in the row specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the purpose corresponding to the CyberTOMP metric that is located
+     * in the row specified as an argument.
+     */
     private Object getCorrespondingPurposeAt(int row) {
         if (initialStatus != null) {
             try {
@@ -517,6 +535,17 @@ public class FLECOTableModel extends AbstractTableModel {
         return "UNDEFINED";
     }
 
+    /**
+     * This method gets the functional area that should lead the implementation
+     * of actions corresponding to the CyberTOMP metric that is located in the
+     * row specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param row the specified row.
+     * @return the functional area that should lead the implementation of
+     * actions corresponding to the CyberTOMP metric that is located in the row
+     * specified as an argument.
+     */
     private Object getCorrespondingLeadingFunctionalAreaAt(int row) {
         if (initialStatus != null) {
             try {

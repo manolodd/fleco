@@ -42,37 +42,40 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * This enum defines all cyebrsecurity categories and also its weights as
  * defined in CyberTOMP proposal, depending on whether implementation groups 1,
- * 2, or 3 applies.
+ * 2, or 3 applies. Additional descriptions and auxiliar data is provided for
+ * each.
  *
  * @author manuel Domínguez-Dorado
  */
 public enum Categories {
-    ID_AM((float) 8 / 12, (float) 11 / 24, (float) 11 / 40, Functions.IDENTIFY),
-    ID_BE((float) 0 / 12, (float) 1 / 24, (float) 6 / 40, Functions.IDENTIFY),
-    ID_GV((float) 1 / 12, (float) 3 / 24, (float) 5 / 40, Functions.IDENTIFY),
-    ID_RA((float) 1 / 12, (float) 4 / 24, (float) 9 / 40, Functions.IDENTIFY),
-    ID_RM((float) 0 / 12, (float) 1 / 24, (float) 4 / 40, Functions.IDENTIFY),
-    ID_SC((float) 2 / 12, (float) 4 / 24, (float) 5 / 40, Functions.IDENTIFY),
-    PR_AC((float) 7 / 29, (float) 11 / 61, (float) 14 / 80, Functions.PROTECT),
-    PR_AT((float) 1 / 29, (float) 4 / 61, (float) 4 / 80, Functions.PROTECT),
-    PR_DS((float) 2 / 29, (float) 6 / 61, (float) 10 / 80, Functions.PROTECT),
-    PR_IP((float) 8 / 29, (float) 18 / 61, (float) 24 / 80, Functions.PROTECT),
-    PR_MA((float) 6 / 29, (float) 15 / 61, (float) 17 / 80, Functions.PROTECT),
-    PR_PT((float) 5 / 29, (float) 7 / 61, (float) 11 / 80, Functions.PROTECT),
-    DE_AE((float) 1 / 4, (float) 3 / 12, (float) 6 / 23, Functions.DETECT),
-    DE_CM((float) 2 / 4, (float) 6 / 12, (float) 11 / 23, Functions.DETECT),
-    DE_DP((float) 1 / 4, (float) 3 / 12, (float) 6 / 23, Functions.DETECT),
-    RS_AN((float) 0 / 2, (float) 1 / 10, (float) 2 / 18, Functions.RESPOND),
-    RS_CO((float) 1 / 2, (float) 2 / 10, (float) 3 / 18, Functions.RESPOND),
-    RS_IM((float) 0 / 2, (float) 2 / 10, (float) 5 / 18, Functions.RESPOND),
-    RS_MI((float) 1 / 2, (float) 3 / 10, (float) 6 / 18, Functions.RESPOND),
-    RS_RP((float) 0 / 2, (float) 2 / 10, (float) 2 / 18, Functions.RESPOND),
-    RC_CO((float) 0.0f, (float) 0.0f, (float) 1 / 6, Functions.RECOVER),
-    RC_IM((float) 0.0f, (float) 0.0f, (float) 2 / 6, Functions.RECOVER),
-    RC_RP((float) 0.0f, (float) 0.0f, (float) 3 / 6, Functions.RECOVER);
+    ID_AM((float) 8 / 12, (float) 11 / 24, (float) 11 / 40, Functions.IDENTIFY, "ID.AM", "Asset management"),
+    ID_BE((float) 0 / 12, (float) 1 / 24, (float) 6 / 40, Functions.IDENTIFY, "ID.BE", "Business environment"),
+    ID_GV((float) 1 / 12, (float) 3 / 24, (float) 5 / 40, Functions.IDENTIFY, "ID.GV", "Governance"),
+    ID_RA((float) 1 / 12, (float) 4 / 24, (float) 9 / 40, Functions.IDENTIFY, "ID.RA", "Risk assessment"),
+    ID_RM((float) 0 / 12, (float) 1 / 24, (float) 4 / 40, Functions.IDENTIFY, "ID.RM", "Risk management strategy"),
+    ID_SC((float) 2 / 12, (float) 4 / 24, (float) 5 / 40, Functions.IDENTIFY, "ID.SC", "Supply chain risk management"),
+    PR_AC((float) 7 / 29, (float) 11 / 61, (float) 14 / 80, Functions.PROTECT, "PR.AC", "Identity management, authentication and access control"),
+    PR_AT((float) 1 / 29, (float) 4 / 61, (float) 4 / 80, Functions.PROTECT, "PR.AT", "Awareness and training"),
+    PR_DS((float) 2 / 29, (float) 6 / 61, (float) 10 / 80, Functions.PROTECT, "PR.DS", "Data security"),
+    PR_IP((float) 8 / 29, (float) 18 / 61, (float) 24 / 80, Functions.PROTECT, "PR.IP", "Information protection processes and procedures"),
+    PR_MA((float) 6 / 29, (float) 15 / 61, (float) 17 / 80, Functions.PROTECT, "PR.MA", "Maintenance"),
+    PR_PT((float) 5 / 29, (float) 7 / 61, (float) 11 / 80, Functions.PROTECT, "PR.PT", "Protective technology"),
+    DE_AE((float) 1 / 4, (float) 3 / 12, (float) 6 / 23, Functions.DETECT, "DE.AE", "Anomalies and events"),
+    DE_CM((float) 2 / 4, (float) 6 / 12, (float) 11 / 23, Functions.DETECT, "DE.CM", "Security continuous monitoring"),
+    DE_DP((float) 1 / 4, (float) 3 / 12, (float) 6 / 23, Functions.DETECT, "DE.DP", "Detection processes"),
+    RS_AN((float) 0 / 2, (float) 1 / 10, (float) 2 / 18, Functions.RESPOND, "RS.AN", "Analysis"),
+    RS_CO((float) 1 / 2, (float) 2 / 10, (float) 3 / 18, Functions.RESPOND, "RS.CO", "Communications"),
+    RS_IM((float) 0 / 2, (float) 2 / 10, (float) 5 / 18, Functions.RESPOND, "RS.IM", "Improvements"),
+    RS_MI((float) 1 / 2, (float) 3 / 10, (float) 6 / 18, Functions.RESPOND, "RS.MI", "Mitigation"),
+    RS_RP((float) 0 / 2, (float) 2 / 10, (float) 2 / 18, Functions.RESPOND, "RS.RP", "Response planning"),
+    RC_CO((float) 0.0f, (float) 0.0f, (float) 1 / 6, Functions.RECOVER, "RC.CO", "Communications"),
+    RC_IM((float) 0.0f, (float) 0.0f, (float) 2 / 6, Functions.RECOVER, "RC.IM", "Improvements"),
+    RC_RP((float) 0.0f, (float) 0.0f, (float) 3 / 6, Functions.RECOVER, "RC.RP", "Recovery planning");
 
     private final float weights[] = new float[3];
     private Functions function = Functions.DETECT;
+    private String acronym = "";
+    private String purpose = "";
 
     /**
      * This is the constructor of the class. it creates the enum and assigns the
@@ -89,17 +92,21 @@ public enum Categories {
      * cybersecurity category when applying implementation group 3. A number
      * between 0.0 and 1.0.
      * @param category The cybersecurity function the category belongs to.
+     * @param acronym the very short name of this category.
+     * @param purpose the main purpose of this of this category.
      */
-    private Categories(float weightIG1, float weightIG2, float weightIG3, Functions function) {
+    private Categories(float weightIG1, float weightIG2, float weightIG3, Functions function, String acronym, String purpose) {
         this.weights[ImplementationGroups.IG1.getImplementationGroupIndex()] = weightIG1;
         this.weights[ImplementationGroups.IG2.getImplementationGroupIndex()] = weightIG2;
         this.weights[ImplementationGroups.IG3.getImplementationGroupIndex()] = weightIG3;
         this.function = function;
+        this.acronym = acronym;
+        this.purpose = purpose;
     }
 
     /**
-     * Thies method returns the weight of this cybersecurity category taking
-     * into consideration the impleentation group that applies.
+     * This method returns the weight of this cybersecurity category taking into
+     * consideration the impleentation group that applies.
      *
      * @author Manuel Domínguez-Dorado
      * @param implementationGroup The implementation group that applies.
@@ -108,6 +115,26 @@ public enum Categories {
      */
     public float getWeight(ImplementationGroups implementationGroup) {
         return this.weights[implementationGroup.getImplementationGroupIndex()];
+    }
+
+    /**
+     * This method returns the very short name of this category.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the very short name of this category.
+     */
+    public String getAcronym() {
+        return this.acronym;
+    }
+
+    /**
+     * This method returns the main purpose of this of this category.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the main purpose of this of this category.
+     */
+    public String getPurpose() {
+        return this.purpose;
     }
 
     /**

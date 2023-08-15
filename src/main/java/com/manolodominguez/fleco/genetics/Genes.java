@@ -269,7 +269,7 @@ public enum Genes {
     }
 
     /**
-     * Thies method returns the weight of the gene/expected outcome taking into
+     * This method returns the weight of the gene/expected outcome taking into
      * consideration the impleentation group that applies.
      *
      * @author Manuel Domínguez-Dorado

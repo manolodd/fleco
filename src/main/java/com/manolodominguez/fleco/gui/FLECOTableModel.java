@@ -42,6 +42,7 @@ import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.Categories;
+import com.manolodominguez.fleco.uleo.FunctionalAreas;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
@@ -327,9 +328,9 @@ public class FLECOTableModel extends AbstractTableModel {
             case CYBERTOMP_METRIC_ACRONYM:
                 return "CyberTOMP metric";
             case CYBERTOMP_METRIC_NAME:
-                return "Descriptive name of CyberTOMP metric";
+                return "Purpose";
             case FUNCTIONAL_AREA:
-                return "Functional area";
+                return "Leading functional area";
             case CURRENT_STATUS:
                 return "Current status";
             case CONSTRAINT_OPERATOR:
@@ -440,9 +441,9 @@ public class FLECOTableModel extends AbstractTableModel {
                 case CYBERTOMP_METRIC_ACRONYM:
                     return getCorrespondingMetricAcronymAt(row);
                 case CYBERTOMP_METRIC_NAME:
-                    return getCorrespondingMetricNameAt(row);
+                    return getCorrespondingPurposeAt(row);
                 case FUNCTIONAL_AREA:
-                    return getCorrespondingAreaAt(row);
+                    return getCorrespondingLeadingFunctionalAreaAt(row);
                 case CURRENT_STATUS:
                     return getInitialStatusAt(row);
                 case CONSTRAINT_OPERATOR:
@@ -459,15 +460,76 @@ public class FLECOTableModel extends AbstractTableModel {
     }
 
     private Object getCorrespondingMetricAcronymAt(int row) {
-        return "Acronym";
+        if (initialStatus != null) {
+            try {
+                // Case it is an expected outcome
+                Genes gene = Genes.valueOf((String) getValueAt(row, 0));
+                return "            " + gene.getAcronym();
+            }
+            catch (IllegalArgumentException e) {
+                try {
+                    // Case it is a category
+                    Categories category = Categories.valueOf((String) getValueAt(row, 0));
+                    return "        " + category.getAcronym();
+                }
+                catch (IllegalArgumentException e2) {
+                    try {
+                        // Case it is a function
+                        Functions function = Functions.valueOf((String) getValueAt(row, 0));
+                        return "    " + function.getAcronym();
+                    }
+                    catch (IllegalArgumentException e3) {
+                        // Case it is a function
+                        return "BUSINESS ASSET";
+                    }
+                }
+            }
+        }
+        return "UNDEFINED";
     }
-    
-    private Object getCorrespondingMetricNameAt(int row) {
-        return "A descriptive name of the corresponding CyberTOMP metric";
+
+    private Object getCorrespondingPurposeAt(int row) {
+        if (initialStatus != null) {
+            try {
+                // Case it is an expected outcome
+                Genes gene = Genes.valueOf((String) getValueAt(row, 0));
+                return gene.getPurpose();
+            }
+            catch (IllegalArgumentException e) {
+                try {
+                    // Case it is a category
+                    Categories category = Categories.valueOf((String) getValueAt(row, 0));
+                    return category.getPurpose();
+                }
+                catch (IllegalArgumentException e2) {
+                    try {
+                        // Case it is a function
+                        Functions function = Functions.valueOf((String) getValueAt(row, 0));
+                        return function.getPurpose();
+                    }
+                    catch (IllegalArgumentException e3) {
+                        // Case it is a function
+                        return "---";
+                    }
+                }
+            }
+        }
+        return "UNDEFINED";
     }
-    
-    private Object getCorrespondingAreaAt(int row) {
-        return "F12";
+
+    private Object getCorrespondingLeadingFunctionalAreaAt(int row) {
+        if (initialStatus != null) {
+            try {
+                // Case it is an expected outcome
+                Genes gene = Genes.valueOf((String) getValueAt(row, 0));
+                return gene.getLeadingFunctionalArea().getAreaName();
+            }
+            catch (IllegalArgumentException e) {
+                // Case it is a category, function or asset
+                return FunctionalAreas.SEVERAL.getAreaName();
+            }
+        }
+        return "UNDEFINED";
     }
 
     /**

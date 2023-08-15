@@ -40,7 +40,7 @@ import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * This enum defines all cyebrsecurity categories and also its weights as
+ * This enum defines all cybersecurity categories and also its weights as
  * defined in CyberTOMP proposal, depending on whether implementation groups 1,
  * 2, or 3 applies. Additional descriptions and auxiliar data is provided for
  * each.
@@ -154,7 +154,7 @@ public enum Categories {
      *
      * @author Manuel Domínguez-Dorado
      * @param implementationGroup The applicable implementation group.
-     * @return true, if the cyebrsecurity category applies. Otherwise, false.
+     * @return true, if the cybersecurity category applies. Otherwise, false.
      */
     public boolean appliesToIG(ImplementationGroups implementationGroup) {
         return weights[implementationGroup.getImplementationGroupIndex()] > 0.0f;

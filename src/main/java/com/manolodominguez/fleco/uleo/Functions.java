@@ -38,7 +38,7 @@ package com.manolodominguez.fleco.uleo;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * This enum defines all cyebrsecurity functions and also its weights as defined
+ * This enum defines all cybersecurity functions and also its weights as defined
  * in CyberTOMP proposal, depending on whether implementation groups 1, 2, or 3
  * applies. Additional descriptions and auxiliar data is provided for each.
  *

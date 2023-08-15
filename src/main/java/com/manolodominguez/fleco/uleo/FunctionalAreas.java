@@ -36,8 +36,11 @@
 package com.manolodominguez.fleco.uleo;
 
 /**
+ * This enum defines the functional areas involved on cybersecurity as defined
+ * in CyberTOMP proposal. Additional descriptions and auxiliar data is provided
+ * for each.
  *
- * @author manolodd
+ * @author manuel Domínguez-Dorado
  */
 public enum FunctionalAreas {
     FA1("Physical security", "Security of Internet of Things (IoT) devices."),
@@ -57,11 +60,26 @@ public enum FunctionalAreas {
     private String mainReponsibilities = "";
     private String areaName = "";
 
+    /**
+     * This is the constructor of the class. it creates the enum and assigns the
+     * corresponding values.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param name the short name of the functional area.
+     * @param mainReponsibilities the main responsibilities the corresponding
+     * functional area must be in charge of.
+     */
     private FunctionalAreas(String name, String mainReponsibilities) {
         this.areaName = name;
         this.mainReponsibilities = mainReponsibilities;
     }
 
+    /**
+     * This method return the short name of the functional area.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the short name of the functional area.
+     */
     public String getAreaName() {
         if (name().equals("SEVERAL")) {
             return this.areaName;
@@ -69,6 +87,14 @@ public enum FunctionalAreas {
         return name() + " - " + this.areaName;
     }
 
+    /**
+     * This method return the main responsibilities the corresponding functional
+     * area must be in charge of.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @return the main responsibilities the corresponding functional area must
+     * be in charge of.
+     */
     public String getMainResponsibilities() {
         return this.mainReponsibilities;
     }

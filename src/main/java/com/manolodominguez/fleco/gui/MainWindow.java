@@ -46,7 +46,6 @@ import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
@@ -78,8 +77,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import net.miginfocom.swing.MigLayout;
 

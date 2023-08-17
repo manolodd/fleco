@@ -667,26 +667,26 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         if (caseConfig.isInitialized()) {
             if (caseConfig.isAlreadySaved()) {
                 if (caseConfig.isModified()) {
-                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before exit?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before exit?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
                     if (option == JOptionPane.OK_OPTION) {
                         onSave();
                         if (!caseConfig.isModified()) {
                             dispose();
                         }
-                    } else {
+                    } else if (option == JOptionPane.NO_OPTION) {
                         dispose();
                     }
                 } else {
                     dispose();
                 }
             } else {
-                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the current case before exit?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the current case before exit?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
                 if (option == JOptionPane.OK_OPTION) {
                     onSaveAs();
                     if (caseConfig.isAlreadySaved() && !caseConfig.isModified()) {
                         dispose();
                     }
-                } else {
+                } else if (option == JOptionPane.NO_OPTION) {
                     dispose();
                 }
             }

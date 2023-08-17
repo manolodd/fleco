@@ -50,10 +50,13 @@ import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -309,6 +312,15 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         table.setEnabled(false);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tableColumnAdjuster = new TableColumnAdjuster(table);
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table = (JTable) mouseEvent.getSource();
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 0) {
+                    onDoubleClicOnTable(table);
+                }
+            }
+        });
         scrollPane = new JScrollPane(table);
         getContentPane().add(scrollPane, "span, width 100%, height 100%, wrap");
         progressBar = new FLECOProgressBar();
@@ -371,6 +383,10 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 onExit();
             }
         });
+    }
+
+    private void onDoubleClicOnTable(JTable table) {
+        System.out.println("Doble clic en la fila: " + table.getSelectedRow() + " (" + tableModel.getValueAt(table.getSelectedRow(), table.getSelectedColumn()) + ")");
     }
 
     private void onLoad() {
@@ -834,53 +850,86 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * @author Manuel Domínguez-Dorado
      */
     private void onNew() {
-        caseConfig.reset();
-        caseConfig.setCurrentIG((ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1));
-        if (caseConfig.getCurrentIG() != null) {
-            caseConfig.setInitialized(true);
-            caseConfig.setInitialStatus(new Chromosome(caseConfig.getCurrentIG()));
-            caseConfig.setStrategicConstraints(new StrategicConstraints(caseConfig.getCurrentIG()));
-            tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
-            configureMainTable(tableModel);
-            //AFTER
-            randomButton.setEnabled(true);
-            newButton.setEnabled(true);
-            loadButton.setEnabled(true);
-            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
-                saveButton.setEnabled(true);
+
+        caseConfig.print();
+        boolean donew = false;
+        if (caseConfig.isInitialized()) {
+            if (caseConfig.isAlreadySaved()) {
+                if (caseConfig.isModified()) {
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before creating a new case?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (onSave()) {
+                            donew = true;
+                        }
+                    } else if (option == JOptionPane.NO_OPTION) {
+                        donew = true;
+                    }
+                } else {
+                    donew = true;
+                }
             } else {
-                saveButton.setEnabled(false);
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the case before creating a new one?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                if (option == JOptionPane.OK_OPTION) {
+                    if (onSaveAs()) {
+                        donew = true;
+                    }
+                } else if (option == JOptionPane.NO_OPTION) {
+                    donew = true;
+                }
             }
-            saveAsButton.setEnabled(true);
-            runButton.setEnabled(true);
-            generateConstraintsButton.setEnabled(true);
-            menuCaseItemNew.setEnabled(true);
-            menuCaseItemLoad.setEnabled(true);
-            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
-                menuCaseItemSave.setEnabled(true);
-            } else {
-                menuCaseItemSave.setEnabled(false);
+        } else {
+            donew = true;
+        }
+        if (donew) {
+            ImplementationGroups auxIG = (ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1);
+            if (auxIG != null) {
+                caseConfig.reset();
+                caseConfig.setCurrentIG(auxIG);
+                caseConfig.setInitialized(true);
+                caseConfig.setInitialStatus(new Chromosome(caseConfig.getCurrentIG()));
+                caseConfig.setStrategicConstraints(new StrategicConstraints(caseConfig.getCurrentIG()));
+                tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
+                configureMainTable(tableModel);
+                //AFTER
+                randomButton.setEnabled(true);
+                newButton.setEnabled(true);
+                loadButton.setEnabled(true);
+                if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                    saveButton.setEnabled(true);
+                } else {
+                    saveButton.setEnabled(false);
+                }
+                saveAsButton.setEnabled(true);
+                runButton.setEnabled(true);
+                generateConstraintsButton.setEnabled(true);
+                menuCaseItemNew.setEnabled(true);
+                menuCaseItemLoad.setEnabled(true);
+                if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                    menuCaseItemSave.setEnabled(true);
+                } else {
+                    menuCaseItemSave.setEnabled(false);
+                }
+                menuCaseItemSaveAs.setEnabled(true);
+                menuCaseItemRunFLECO.setEnabled(true);
+                menuCaseItemExit.setEnabled(true);
+                menuAbout.setEnabled(true);
+                menuAboutItemAbout.setEnabled(true);
+                menuAboutItemLicense.setEnabled(true);
+                table.setEnabled(true);
+                menuBar.setEnabled(true);
+                menuCase.setEnabled(true);
+                menuAbout.setEnabled(true);
+                menuBar.setEnabled(true);
+                messageSpace.setText("FLECO is running...");
+                progressBar.setValue(0);
+                messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+                if (caseConfig.getFileName() != null) {
+                    setTitle("FLECO Studio - " + caseConfig.getFileName());
+                } else {
+                    setTitle("FLECO Studio - Current case is not saved!");
+                }
+                caseConfig.setInitialized(true);
             }
-            menuCaseItemSaveAs.setEnabled(true);
-            menuCaseItemRunFLECO.setEnabled(true);
-            menuCaseItemExit.setEnabled(true);
-            menuAbout.setEnabled(true);
-            menuAboutItemAbout.setEnabled(true);
-            menuAboutItemLicense.setEnabled(true);
-            table.setEnabled(true);
-            menuBar.setEnabled(true);
-            menuCase.setEnabled(true);
-            menuAbout.setEnabled(true);
-            menuBar.setEnabled(true);
-            messageSpace.setText("FLECO is running...");
-            progressBar.setValue(0);
-            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
-            if (caseConfig.getFileName() != null) {
-                setTitle("FLECO Studio - " + caseConfig.getFileName());
-            } else {
-                setTitle("FLECO Studio - Current case is not saved!");
-            }
-            caseConfig.setInitialized(true);
         }
     }
 

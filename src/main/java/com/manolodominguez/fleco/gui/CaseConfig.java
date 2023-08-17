@@ -77,6 +77,24 @@ public class CaseConfig {
         currentIG = null;
     }
 
+    public void print() {
+        System.out.println("-------------------------------------------------------");
+        System.out.println("FLECO algorithm set: " + (fleco != null));
+        System.out.println("Initial status set: " + (initialStatus != null));
+        System.out.println("Strategic constraints set: " + (strategicConstraints != null));
+        System.out.println("Target status set: " + (targetStatus != null));
+        System.out.println("Path and filename: " + pathAndFileName);
+        System.out.println("Is initialized: " + initialized);
+        System.out.println("Is already saved: " + alreadySaved);
+        System.out.println("Is modified: " + modified);
+        if (currentIG == null) {
+            System.out.println("Current IG: UNDEFINED");
+        } else {
+            System.out.println("Current IG: " + currentIG.name());
+        }
+        System.out.println("-------------------------------------------------------");
+    }
+
     /**
      * This method reset all the attributes to their default values.
      *

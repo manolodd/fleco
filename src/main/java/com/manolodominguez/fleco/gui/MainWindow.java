@@ -791,54 +791,87 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * @author Manuel Domínguez-Dorado
      */
     private void onRandom() {
-        caseConfig.reset();
-        caseConfig.setCurrentIG((ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1));
-        if (caseConfig.getCurrentIG() != null) {
-            caseConfig.setInitialized(true);
-            caseConfig.setInitialStatus(new Chromosome(caseConfig.getCurrentIG()));
-            caseConfig.getInitialStatus().randomizeGenes();
-            caseConfig.setStrategicConstraints(new StrategicConstraints(caseConfig.getCurrentIG()));
-            tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
-            configureMainTable(tableModel);
-            //AFTER
-            randomButton.setEnabled(true);
-            newButton.setEnabled(true);
-            loadButton.setEnabled(true);
-            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
-                saveButton.setEnabled(true);
+
+        caseConfig.print();
+        boolean newRandom = false;
+        if (caseConfig.isInitialized()) {
+            if (caseConfig.isAlreadySaved()) {
+                if (caseConfig.isModified()) {
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before creating a new random case?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    if (option == JOptionPane.OK_OPTION) {
+                        if (onSave()) {
+                            newRandom = true;
+                        }
+                    } else if (option == JOptionPane.NO_OPTION) {
+                        newRandom = true;
+                    }
+                } else {
+                    newRandom = true;
+                }
             } else {
-                saveButton.setEnabled(false);
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the case before creating a new random one?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                if (option == JOptionPane.OK_OPTION) {
+                    if (onSaveAs()) {
+                        newRandom = true;
+                    }
+                } else if (option == JOptionPane.NO_OPTION) {
+                    newRandom = true;
+                }
             }
-            saveAsButton.setEnabled(true);
-            runButton.setEnabled(true);
-            generateConstraintsButton.setEnabled(true);
-            menuCaseItemNew.setEnabled(true);
-            menuCaseItemLoad.setEnabled(true);
-            if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
-                menuCaseItemSave.setEnabled(true);
-            } else {
-                menuCaseItemSave.setEnabled(false);
+        } else {
+            newRandom = true;
+        }
+        if (newRandom) {
+            ImplementationGroups auxIG = (ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group for the new random case", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1);
+            if (auxIG != null) {
+                caseConfig.reset();
+                caseConfig.setCurrentIG(auxIG);
+                caseConfig.setInitialized(true);
+                caseConfig.setInitialStatus(new Chromosome(caseConfig.getCurrentIG()));
+                caseConfig.getInitialStatus().randomizeGenes();
+                caseConfig.setStrategicConstraints(new StrategicConstraints(caseConfig.getCurrentIG()));
+                tableModel = new FLECOTableModel(caseConfig.getInitialStatus(), caseConfig.getStrategicConstraints());
+                configureMainTable(tableModel);
+                //AFTER
+                randomButton.setEnabled(true);
+                newButton.setEnabled(true);
+                loadButton.setEnabled(true);
+                if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                    saveButton.setEnabled(true);
+                } else {
+                    saveButton.setEnabled(false);
+                }
+                saveAsButton.setEnabled(true);
+                runButton.setEnabled(true);
+                generateConstraintsButton.setEnabled(true);
+                menuCaseItemNew.setEnabled(true);
+                menuCaseItemLoad.setEnabled(true);
+                if (caseConfig.isAlreadySaved() && caseConfig.isModified()) {
+                    menuCaseItemSave.setEnabled(true);
+                } else {
+                    menuCaseItemSave.setEnabled(false);
+                }
+                menuCaseItemSaveAs.setEnabled(true);
+                menuCaseItemRunFLECO.setEnabled(true);
+                menuCaseItemExit.setEnabled(true);
+                menuAbout.setEnabled(true);
+                menuAboutItemAbout.setEnabled(true);
+                menuAboutItemLicense.setEnabled(true);
+                table.setEnabled(true);
+                menuBar.setEnabled(true);
+                menuCase.setEnabled(true);
+                menuAbout.setEnabled(true);
+                menuBar.setEnabled(true);
+                messageSpace.setText("FLECO is running...");
+                progressBar.setValue(0);
+                messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+                if (caseConfig.getFileName() != null) {
+                    setTitle("FLECO Studio - " + caseConfig.getFileName());
+                } else {
+                    setTitle("FLECO Studio - Current case is not saved!");
+                }
+                caseConfig.setInitialized(true);
             }
-            menuCaseItemSaveAs.setEnabled(true);
-            menuCaseItemRunFLECO.setEnabled(true);
-            menuCaseItemExit.setEnabled(true);
-            menuAbout.setEnabled(true);
-            menuAboutItemAbout.setEnabled(true);
-            menuAboutItemLicense.setEnabled(true);
-            table.setEnabled(true);
-            menuBar.setEnabled(true);
-            menuCase.setEnabled(true);
-            menuAbout.setEnabled(true);
-            menuBar.setEnabled(true);
-            messageSpace.setText("FLECO is running...");
-            progressBar.setValue(0);
-            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
-            if (caseConfig.getFileName() != null) {
-                setTitle("FLECO Studio - " + caseConfig.getFileName());
-            } else {
-                setTitle("FLECO Studio - Current case is not saved!");
-            }
-            caseConfig.setInitialized(true);
         }
     }
 
@@ -850,7 +883,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * @author Manuel Domínguez-Dorado
      */
     private void onNew() {
-
         caseConfig.print();
         boolean donew = false;
         if (caseConfig.isInitialized()) {
@@ -881,7 +913,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             donew = true;
         }
         if (donew) {
-            ImplementationGroups auxIG = (ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1);
+            ImplementationGroups auxIG = (ImplementationGroups) JOptionPane.showInputDialog(this, "Choose the implementation group for the new case", null, JOptionPane.PLAIN_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.GENES), igOptions, ImplementationGroups.IG1);
             if (auxIG != null) {
                 caseConfig.reset();
                 caseConfig.setCurrentIG(auxIG);

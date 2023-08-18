@@ -980,24 +980,24 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         if (caseConfig.isInitialized()) {
             if (caseConfig.isAlreadySaved()) {
                 if (caseConfig.isModified()) {
-                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "This action may change the target status.\nSave changes before proceeding?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "This action may change the target status.\nSave changes before proceeding?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
                     if (option == JOptionPane.OK_OPTION) {
                         if (onSave()) {
                             run = true;
                         }
-                    } else {
+                    } else if (option == JOptionPane.NO_OPTION) {
                         run = true;
                     }
                 } else {
                     run = true;
                 }
             } else {
-                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "This action may change the target status.\nSave case before proceeding?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "This action may change the target status.\nSave case before proceeding?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
                 if (option == JOptionPane.OK_OPTION) {
                     if (onSaveAs()) {
                         run = true;
                     }
-                } else {
+                } else if (option == JOptionPane.NO_OPTION) {
                     run = true;
                 }
             }

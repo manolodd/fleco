@@ -481,7 +481,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                                     menuAbout.setEnabled(true);
                                     menuBar.setEnabled(true);
                                     progressBar.setValue(0);
-                                    messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
+                                    messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
                                     if (caseConfig.getFileName() != null) {
                                         setTitle("FLECO Studio - " + caseConfig.getFileName());
                                     } else {
@@ -559,7 +559,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             menuBar.setEnabled(true);
             messageSpace.setText("FLECO is running...");
             progressBar.setValue(0);
-            messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
+            messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
             if (caseConfig.getFileName() != null) {
                 setTitle("FLECO Studio - " + caseConfig.getFileName());
             } else {
@@ -648,7 +648,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             menuBar.setEnabled(true);
             messageSpace.setText("FLECO is running...");
             progressBar.setValue(0);
-            messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
+            messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
             if (caseConfig.getFileName() != null) {
                 setTitle("FLECO Studio - " + caseConfig.getFileName());
             } else {
@@ -866,7 +866,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 menuBar.setEnabled(true);
                 messageSpace.setText("FLECO is running...");
                 progressBar.setValue(0);
-                messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
+                messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
                 if (caseConfig.getFileName() != null) {
                     setTitle("FLECO Studio - " + caseConfig.getFileName());
                 } else {
@@ -956,7 +956,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 menuBar.setEnabled(true);
                 messageSpace.setText("FLECO is running...");
                 progressBar.setValue(0);
-                messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
+                messageSpace.setText("Set the values of current status, constraint operator, and contraint value and run FLECO");
                 if (caseConfig.getFileName() != null) {
                     setTitle("FLECO Studio - " + caseConfig.getFileName());
                 } else {

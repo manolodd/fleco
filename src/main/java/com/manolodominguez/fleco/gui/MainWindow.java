@@ -266,6 +266,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         randomButton = new JButton();
         randomButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.RANDOM));
         randomButton.setFocusable(false);
+        randomButton.setToolTipText("Generate a random current state to test and learn");
         newButton = new JButton();
         newButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.NEW));
         newButton.setFocusable(false);
@@ -288,6 +289,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         generateConstraintsButton.setIcon(imageBroker.getImageIcon32x32(AvailableImages.RULES));
         generateConstraintsButton.setFocusable(false);
         generateConstraintsButton.setEnabled(false);
+        generateConstraintsButton.setToolTipText("Set current cybersecurity status as minimum to compute target status");
 
         messageSpace = new JLabel();
         messageSpace.setBackground(Color.WHITE);
@@ -394,24 +396,24 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         if (caseConfig.isInitialized()) {
             if (caseConfig.isAlreadySaved()) {
                 if (caseConfig.isModified()) {
-                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before loading a new case?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                    int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save changes before loading a new case?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
                     if (option == JOptionPane.OK_OPTION) {
                         if (onSave()) {
                             load = true;
                         }
-                    } else {
+                    } else if (option == JOptionPane.NO_OPTION) {
                         load = true;
                     }
                 } else {
                     load = true;
                 }
             } else {
-                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the case before loading a new one?", null, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
+                int option = JOptionPane.showInternalConfirmDialog(this.getContentPane(), "Save the case before loading a new one?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, imageBroker.getImageIcon32x32(AvailableImages.QUESTION));
                 if (option == JOptionPane.OK_OPTION) {
                     if (onSaveAs()) {
                         load = true;
                     }
-                } else {
+                } else if (option == JOptionPane.NO_OPTION) {
                     load = true;
                 }
             }
@@ -479,7 +481,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                                     menuAbout.setEnabled(true);
                                     menuBar.setEnabled(true);
                                     progressBar.setValue(0);
-                                    messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+                                    messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
                                     if (caseConfig.getFileName() != null) {
                                         setTitle("FLECO Studio - " + caseConfig.getFileName());
                                     } else {
@@ -557,7 +559,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             menuBar.setEnabled(true);
             messageSpace.setText("FLECO is running...");
             progressBar.setValue(0);
-            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+            messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
             if (caseConfig.getFileName() != null) {
                 setTitle("FLECO Studio - " + caseConfig.getFileName());
             } else {
@@ -646,7 +648,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             menuBar.setEnabled(true);
             messageSpace.setText("FLECO is running...");
             progressBar.setValue(0);
-            messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+            messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
             if (caseConfig.getFileName() != null) {
                 setTitle("FLECO Studio - " + caseConfig.getFileName());
             } else {
@@ -864,7 +866,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 menuBar.setEnabled(true);
                 messageSpace.setText("FLECO is running...");
                 progressBar.setValue(0);
-                messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+                messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
                 if (caseConfig.getFileName() != null) {
                     setTitle("FLECO Studio - " + caseConfig.getFileName());
                 } else {
@@ -954,7 +956,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 menuBar.setEnabled(true);
                 messageSpace.setText("FLECO is running...");
                 progressBar.setValue(0);
-                messageSpace.setText("Set the values of initial status, constraint operator, and contraint value and ejecute FLECO");
+                messageSpace.setText("Set the values of current status, constraint operator, and contraint value and ejecute FLECO");
                 if (caseConfig.getFileName() != null) {
                     setTitle("FLECO Studio - " + caseConfig.getFileName());
                 } else {

@@ -794,7 +794,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      */
     private void onRandom() {
 
-        caseConfig.print();
         boolean newRandom = false;
         if (caseConfig.isInitialized()) {
             if (caseConfig.isAlreadySaved()) {
@@ -885,7 +884,6 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * @author Manuel Domínguez-Dorado
      */
     private void onNew() {
-        caseConfig.print();
         boolean donew = false;
         if (caseConfig.isInitialized()) {
             if (caseConfig.isAlreadySaved()) {

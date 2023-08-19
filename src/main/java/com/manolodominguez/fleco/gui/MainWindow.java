@@ -50,7 +50,6 @@ import java.awt.Desktop;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -82,6 +81,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableColumnModel;
 import net.miginfocom.swing.MigLayout;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is the constructor of the class, it creates a new instance and assigns
@@ -126,7 +127,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     private ImageBroker imageBroker = new ImageBroker();
 
     private CaseConfig caseConfig;
+    private final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 
+    
     public MainWindow() throws HeadlessException {
         super();
 
@@ -318,7 +321,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table = (JTable) mouseEvent.getSource();
-                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && table.getSelectedColumn() == 0) {
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && (table.getSelectedColumn() == 0 || table.getSelectedColumn() == 1 || table.getSelectedColumn() == 2) ) {
                     onDoubleClicOnTable(table);
                 }
             }
@@ -388,7 +391,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     }
 
     private void onDoubleClicOnTable(JTable table) {
-        System.out.println("Doble clic en la fila: " + table.getSelectedRow() + " (" + tableModel.getValueAt(table.getSelectedRow(), table.getSelectedColumn()) + ")");
+        logger.info("Doble clic en la fila: " + table.getSelectedRow() + " (" + tableModel.getValueAt(table.getSelectedRow(), 0) + ")");
     }
 
     private void onLoad() {

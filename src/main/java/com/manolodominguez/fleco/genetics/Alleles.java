@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.genetics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This enum define the Discrete Levels of Implementation of each expected
  * outcomes as defined in CyberTOMP proposal.
@@ -49,6 +52,8 @@ public enum Alleles {
 
     private final float DLI;
 
+    private static final Logger logger = LoggerFactory.getLogger(Alleles.class);
+    
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding value.

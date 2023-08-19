@@ -35,10 +35,13 @@
  */
 package com.manolodominguez.fleco.genetics;
 
+import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.FunctionalAreas;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This enum defines all cybersecurity expected outcomes, in the form of genes,
@@ -226,6 +229,8 @@ public enum Genes {
     private String references = "";
     private FunctionalAreas leadingFunctionalArea = FunctionalAreas.FA1;
 
+    private static final Logger logger = LoggerFactory.getLogger(Genes.class);
+    
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.
@@ -406,25 +411,25 @@ public enum Genes {
     }
 
     public static void print() {
-        System.out.println();
+        logger.info("");
         for (Genes gene : Genes.values()) {
-            System.out.print(gene.name());
+            logger.info(gene.name());
             if (gene.appliesToIG(ImplementationGroups.IG1)) {
-                System.out.print("#1");
+                logger.info("#1");
             } else {
-                System.out.print("#0");
+                logger.info("#0");
             }
             if (gene.appliesToIG(ImplementationGroups.IG2)) {
-                System.out.print("#1");
+                logger.info("#1");
             } else {
-                System.out.print("#0");
+                logger.info("#0");
             }
             if (gene.appliesToIG(ImplementationGroups.IG3)) {
-                System.out.print("#1");
+                logger.info("#1");
             } else {
-                System.out.print("#0");
+                logger.info("#0");
             }
-            System.out.println();
+            logger.info("");
         }
     }
 }

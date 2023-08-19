@@ -43,6 +43,8 @@ import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a chromosome, an individual within FLECO's population.
@@ -54,6 +56,8 @@ public class Chromosome {
     private EnumMap<Genes, Alleles> genes;
     private float fitness;
     private final ImplementationGroups implementationGroup;
+
+    private static final Logger logger = LoggerFactory.getLogger(Chromosome.class);
 
     /**
      * This is the constructor of the class. It creates a new chromosome and set
@@ -187,13 +191,13 @@ public class Chromosome {
                 assetValue += auxFunctionFitness;
             }
         }
-        System.out.println("\tAsset: " + assetValue);
+        logger.info("\tAsset: " + assetValue);
         for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            System.out.println("\t\t" + function.name() + ": " + functionsValues.get(function));
+            logger.info("\t\t" + function.name() + ": " + functionsValues.get(function));
             for (Categories category : function.getCategories(implementationGroup)) {
-                System.out.println("\t\t\t" + category.name() + ": " + categoriesValues.get(category));
+                logger.info("\t\t\t" + category.name() + ": " + categoriesValues.get(category));
                 for (Genes gene : category.getGenes(implementationGroup)) {
-                    System.out.println("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI());
+                    logger.info("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI());
                 }
             }
         }
@@ -279,7 +283,7 @@ public class Chromosome {
         for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
             for (Categories category : function.getCategories(implementationGroup)) {
                 for (Genes gene : category.getGenes(implementationGroup)) {
-                    System.out.println(gene.name() + "#" + getAllele(gene).getDLI());
+                    logger.info(gene.name() + "#" + getAllele(gene).getDLI());
                 }
             }
         }
@@ -341,13 +345,13 @@ public class Chromosome {
                 assetValue += auxFunctionFitness;
             }
         }
-        System.out.println("\tAsset: " + assetValue);
+        logger.info("\tAsset: " + assetValue);
         for (Functions function : Functions.getFunctionsFor(implementationGroup)) {
-            System.out.println("\t\t" + function.name() + ": " + functionsValues.get(function));
+            logger.info("\t\t" + function.name() + ": " + functionsValues.get(function));
             for (Categories category : function.getCategories(implementationGroup)) {
-                System.out.println("\t\t\t" + category.name() + ": " + categoriesValues.get(category));
+                logger.info("\t\t\t" + category.name() + ": " + categoriesValues.get(category));
                 for (Genes gene : category.getGenes(implementationGroup)) {
-                    System.out.println("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI() + getSimilarityText(initialStatus.getAllele(gene), getAllele(gene)));
+                    logger.info("\t\t\t\t" + gene.name().substring(6) + ": " + getAllele(gene).getDLI() + getSimilarityText(initialStatus.getAllele(gene), getAllele(gene)));
                 }
             }
         }

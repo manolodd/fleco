@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.strategicconstraints;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class implements a strategic constraint that consist of a comparison
  * operator and a thresshold value it refers to.
@@ -46,6 +49,8 @@ public class Constraint {
     private ComparisonOperators comparisonOperator;
     private float thresshold;
 
+    private final Logger logger = LoggerFactory.getLogger(Constraint.class);
+
     /**
      * This is the constructor of the class. It sets the initial values of all
      * attributes and create a new instance.
@@ -53,8 +58,8 @@ public class Constraint {
      * @author Manuel Domínguez-Dorado
      * @param operator A comparison operator.
      * @param thresshold A normalized float value, between 0.0 and 1.0, that
-     * represents a percentaje between 0% and 100% and is related to the
-     * defined operator.
+     * represents a percentaje between 0% and 100% and is related to the defined
+     * operator.
      */
     public Constraint(ComparisonOperators operator, float thresshold) {
         this.comparisonOperator = operator;

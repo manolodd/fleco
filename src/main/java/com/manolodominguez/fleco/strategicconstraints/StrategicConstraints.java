@@ -38,11 +38,14 @@ package com.manolodominguez.fleco.strategicconstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.genetics.Alleles;
+import com.manolodominguez.fleco.main.FLECOStudio;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a set of strategic cybersecurity constraints. They are
@@ -60,6 +63,9 @@ public class StrategicConstraints {
     private Constraint assetConstraint;
     private ImplementationGroups implementationGroup;
 
+    private final Logger logger = LoggerFactory.getLogger(StrategicConstraints.class);
+    
+    
     /**
      * This is the constructor of the class. It creates a new, empty instance.
      *
@@ -452,15 +458,15 @@ public class StrategicConstraints {
      * @author Manuel Domínguez-Dorado
      */
     public void print() {
-        System.out.println("\tAsset constraint...........: " + this.assetConstraint.getComparisonOperator().name() + " " + this.assetConstraint.getThreshold());
+        logger.info("\tAsset constraint...........: " + this.assetConstraint.getComparisonOperator().name() + " " + this.assetConstraint.getThreshold());
         for (Functions function : this.functionConstraints.keySet()) {
-            System.out.println("\tFunction constraint........: " + function.name() + " " + this.functionConstraints.get(function).getComparisonOperator().name() + " " + this.functionConstraints.get(function).getThreshold());
+            logger.info("\tFunction constraint........: " + function.name() + " " + this.functionConstraints.get(function).getComparisonOperator().name() + " " + this.functionConstraints.get(function).getThreshold());
         }
         for (Categories category : this.categoryConstraints.keySet()) {
-            System.out.println("\tCategory constraint........: " + category.name() + " " + this.categoryConstraints.get(category).getComparisonOperator().name() + " " + this.categoryConstraints.get(category).getThreshold());
+            logger.info("\tCategory constraint........: " + category.name() + " " + this.categoryConstraints.get(category).getComparisonOperator().name() + " " + this.categoryConstraints.get(category).getThreshold());
         }
         for (Genes gene : this.geneConstraints.keySet()) {
-            System.out.println("\tExpected outcome constraint: " + gene.name() + " " + this.geneConstraints.get(gene).getComparisonOperator().name() + " " + this.geneConstraints.get(gene).getThreshold());
+            logger.info("\tExpected outcome constraint: " + gene.name() + " " + this.geneConstraints.get(gene).getComparisonOperator().name() + " " + this.geneConstraints.get(gene).getThreshold());
         }
     }
 

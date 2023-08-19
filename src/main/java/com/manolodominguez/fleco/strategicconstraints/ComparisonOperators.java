@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.strategicconstraints;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This enum define the available comparison operators that are used when
  * defining strategic cybersecurity constraints.
@@ -47,4 +50,7 @@ public enum ComparisonOperators {
     EQUAL,
     GREATER,
     GREATER_OR_EQUAL;
+    
+    private final Logger logger = LoggerFactory.getLogger(ComparisonOperators.class);
+    
 }

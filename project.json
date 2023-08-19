@@ -14,6 +14,20 @@
             "link": "DYNAMIC"
         },
         {
+            "component": "slf4j-api",
+            "version": "2.0.0-alpha6",
+            "license": "MIT",
+            "weight": "NEAR_LOW",
+            "link": "DYNAMIC"
+        },
+        {
+            "component": "slf4j-simple",
+            "version": "2.0.0-alpha6",
+            "license": "MIT",
+            "weight": "NEAR_LOW",
+            "link": "DYNAMIC"
+        },
+        {
             "component": "everit-json-schema",
             "version": "1.14.2",
             "license": "APACHE_2_0",

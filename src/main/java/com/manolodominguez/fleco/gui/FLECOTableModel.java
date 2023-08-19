@@ -47,6 +47,8 @@ import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.EnumMap;
 import javax.swing.table.AbstractTableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implement a table model for FLECO Studio.
@@ -87,6 +89,8 @@ public class FLECOTableModel extends AbstractTableModel {
 
     private IFLECOTableModelChangeListener changeEventListener;
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOTableModel.class);
+    
     /**
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with their default values.
@@ -143,6 +147,7 @@ public class FLECOTableModel extends AbstractTableModel {
      */
     public void setChangeEventListener(IFLECOTableModelChangeListener changeEventListener) {
         if (this.changeEventListener != null) {
+            logger.error("A listener has already been defined for this FLECOTableModel. Only one is allowed.");
             throw new IllegalArgumentException("A listener has already been defined for this FLECOTableModel. Only one is allowed.");
         }
         this.changeEventListener = changeEventListener;
@@ -840,7 +845,7 @@ public class FLECOTableModel extends AbstractTableModel {
                 }
             }
             catch (IllegalArgumentException e) {
-                System.out.println("ERROR en setInitialStatusAt");
+                logger.error("ERROR en setInitialStatusAt");
             }
         }
     }
@@ -1028,7 +1033,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             }
                         }
                         catch (IllegalArgumentException e5) {
-                            System.out.println("ERROR en setConstraintOperatorAt");
+                            logger.error("ERROR en setConstraintOperatorAt");
                         }
                     }
                 }
@@ -1072,7 +1077,7 @@ public class FLECOTableModel extends AbstractTableModel {
                     }
                 }
                 catch (NumberFormatException ex) {
-                    System.out.println("Nuevo valor no es un float: " + ((String) value));
+                    logger.error("Nuevo valor no es un float: " + ((String) value));
                 }
             }
             try {
@@ -1178,7 +1183,7 @@ public class FLECOTableModel extends AbstractTableModel {
                             }
                         }
                         catch (IllegalArgumentException e5) {
-                            System.out.println("ERROR en setConstraintValueAt");
+                            logger.error("ERROR en setConstraintValueAt");
                         }
                     }
                 }

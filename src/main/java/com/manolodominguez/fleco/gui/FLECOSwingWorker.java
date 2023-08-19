@@ -37,6 +37,8 @@ package com.manolodominguez.fleco.gui;
 
 import com.manolodominguez.fleco.algorithm.FLECO;
 import javax.swing.SwingWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a worker that executes FLECO algorithm from a swing GUI
@@ -49,6 +51,8 @@ public class FLECOSwingWorker extends SwingWorker<FLECO, FLECO> {
     private FLECO fleco;
     private IFLECOGUI gui;
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOSwingWorker.class);
+    
     /**
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with their default values.

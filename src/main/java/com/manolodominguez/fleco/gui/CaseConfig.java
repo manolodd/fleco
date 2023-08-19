@@ -40,6 +40,8 @@ import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements the configuration of a case that is going to be managed
@@ -59,6 +61,8 @@ public class CaseConfig {
     private boolean modified;
     private ImplementationGroups currentIG;
 
+    private final Logger logger = LoggerFactory.getLogger(CaseConfig.class);
+    
     /**
      * This is the constructor of the class. It creates a new instance and
      * assigns the attributes their initial values.

@@ -35,6 +35,10 @@
  */
 package com.manolodominguez.fleco.gui;
 
+import com.manolodominguez.fleco.gui.flecoio.FLECOSaver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This is an enum implementation to identify all available images that can be
  * used in FLECO Studio.
@@ -58,6 +62,8 @@ public enum AvailableImages {
 
     private final String imageFileName;
 
+    private final Logger logger = LoggerFactory.getLogger(AvailableImages.class);
+    
     /**
      * This is the constructor of the enum. It creates a new enum item and
      * associates a filename to it.

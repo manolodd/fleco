@@ -38,6 +38,8 @@ package com.manolodominguez.fleco.gui;
 import com.manolodominguez.fleco.events.ProgressEvent;
 import javax.swing.JProgressBar;
 import com.manolodominguez.fleco.events.IFLECOProgressEventListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a progress bar that also is able to receive
@@ -49,6 +51,8 @@ public class FLECOProgressBar extends JProgressBar implements IFLECOProgressEven
 
     private static final long serialVersionUID = 1L;
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOProgressBar.class);
+    
     /**
      * This is the constructor of the class. it creates a new instance of
      * FLECOProgressBar and initialize its attributes.

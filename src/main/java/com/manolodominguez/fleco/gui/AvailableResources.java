@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.gui;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This is an enum implementation to identify all available resources that can
  * be used in FLECO.
@@ -46,6 +49,8 @@ public enum AvailableResources {
 
     private final String resourceFileName;
 
+    private final Logger logger = LoggerFactory.getLogger(AvailableResources.class);
+    
     /**
      * This is the constructor of the enum. It creates a new enum item and
      * associates a filename to it.

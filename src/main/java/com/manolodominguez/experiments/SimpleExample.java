@@ -71,7 +71,7 @@ public class SimpleExample {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
-        Logger logger = LoggerFactory.getLogger(Complete.class);
+        Logger logger = LoggerFactory.getLogger(SimpleExample.class);
         // *************************
         // Define FLECO's parameters 
         // *************************

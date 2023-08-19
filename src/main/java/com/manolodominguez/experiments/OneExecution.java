@@ -66,7 +66,7 @@ public class OneExecution {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
-        Logger logger = LoggerFactory.getLogger(Complete.class);
+        Logger logger = LoggerFactory.getLogger(OneExecution.class);
         // *************************
         // Define FLECO's parameters 
         // *************************

@@ -65,7 +65,7 @@ public class OneHundredExecution {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
-        Logger logger = LoggerFactory.getLogger(Complete.class);
+        Logger logger = LoggerFactory.getLogger(OneHundredExecution.class);
         // *************************
         // Define FLECO's parameters 
         // *************************

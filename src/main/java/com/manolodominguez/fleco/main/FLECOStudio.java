@@ -35,10 +35,13 @@
  */
 package com.manolodominguez.fleco.main;
 
+import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.gui.MainWindow;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class creates and run FLECO Studio, a GUI to interact easily with FLECO
@@ -57,6 +60,7 @@ public class FLECOStudio {
      * not used.
      */
     public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(FLECOStudio.class);
         // Enable text antialiasing
         System.setProperty("awt.useSystemAAFontSettings", "on");
         try {
@@ -70,12 +74,12 @@ public class FLECOStudio {
             }
             if (!nimbusSet) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                System.out.println("Setting up System LaF");
+                logger.info("Setting up System LaF");
             }
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             // FIX: I189N required
-            System.out.println("An error happened when starting OpenSimMPLS. Cannot set LaF.");
+            logger.error("An error happened when starting OpenSimMPLS. Cannot set LaF.");
         }
         MainWindow flecogui = new MainWindow();
         SwingUtilities.invokeLater(() -> {

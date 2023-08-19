@@ -44,6 +44,8 @@ import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class utilizes FLECO to optimize the cybersecurity status of a specific
@@ -63,6 +65,7 @@ public class OneHundredExecution {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(Complete.class);
         // *************************
         // Define FLECO's parameters 
         // *************************
@@ -93,31 +96,31 @@ public class OneHundredExecution {
         //StrategicConstraints strategicConstraints = new AFCLevelStrategicConstraints(implementationGroup);
         StrategicConstraints strategicConstraints = new AFCEOLevelStrategicConstraints(implementationGroup);
         //Prints FLECO parameters
-        System.out.println("###################################################################");
-        System.out.println("# FLECO adaptive, constrained, multi-objective, genetic algorithm #");
-        System.out.println("###################################################################");
-        System.out.println("Initial population..........: " + initialPopulation);
-        System.out.println("Maximum seconds.............: " + maxSeconds);
-        System.out.println("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));
-        System.out.println("Crossover probability.......: " + crossoverProbability);
-        System.out.println("Asset's implementation group: " + implementationGroup.name());
-        System.out.println("Current status..............:");
+        logger.info("###################################################################");
+        logger.info("# FLECO adaptive, constrained, multi-objective, genetic algorithm #");
+        logger.info("###################################################################");
+        logger.info("Initial population..........: " + initialPopulation);
+        logger.info("Maximum seconds.............: " + maxSeconds);
+        logger.info("Mutation probability........: " + 1.0f / (Genes.getGenesFor(implementationGroup).size()));
+        logger.info("Crossover probability.......: " + crossoverProbability);
+        logger.info("Asset's implementation group: " + implementationGroup.name());
+        logger.info("Current status..............:");
         initialStatus.print();
-        System.out.println("Strategic constraints.............: " + strategicConstraints.numberOfConstraints());
+        logger.info("Strategic constraints.............: " + strategicConstraints.numberOfConstraints());
         strategicConstraints.print();
-        System.out.println();
-        System.out.println("Algorithm objetives.........: 3");
-        System.out.println("\tObjective 1) Maximize the coverage of all defined strategic cybersecurity constraints");
-        System.out.println("\tObjective 2) Maximize the similarity between the initial status and the solution");
-        System.out.println("\tObjective 3) Maximize overall cybersecurity level");
-        System.out.println("####################################################\n");
+        logger.info("");
+        logger.info("Algorithm objetives.........: 3");
+        logger.info("\tObjective 1) Maximize the coverage of all defined strategic cybersecurity constraints");
+        logger.info("\tObjective 2) Maximize the similarity between the initial status and the solution");
+        logger.info("\tObjective 3) Maximize overall cybersecurity level");
+        logger.info("####################################################\n");
         // FLECO is employed to identify a collection of anticipated outcomes 
         // and their corresponding discrete implementation levels that meet the 
         // necessary strategic cybersecurity objectives for this asset.
-        System.out.println("Evolving population to find a solution. FLECO will stop when one of the following happens:");
-        System.out.println("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
-        System.out.println("\t  and also the fitness of objetive 2 for that individual is greater or equal than 0.85).");
-        System.out.println("\t· The maximum number of seconds have elapsed.\n");
+        logger.info("Evolving population to find a solution. FLECO will stop when one of the following happens:");
+        logger.info("\t· The population converges (at least an individual fulfill the Objective 1 at 100%");
+        logger.info("\t  and also the fitness of objetive 2 for that individual is greater or equal than 0.85).");
+        logger.info("\t· The maximum number of seconds have elapsed.\n");
         FLECO fleco;
         Chromosome bestChromosome;
         for (int i = 0; i < 100; i++) {
@@ -125,9 +128,9 @@ public class OneHundredExecution {
             fleco.evolve();
             bestChromosome = fleco.getBestChromosome();
             if (fleco.hasConverged()) {
-                System.out.println(i + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
+                logger.info(i + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
             } else {
-                System.out.println(i + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
+                logger.info(i + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
             }
         }
     }

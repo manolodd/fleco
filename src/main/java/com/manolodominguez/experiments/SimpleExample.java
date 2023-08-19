@@ -50,6 +50,8 @@ import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.Functions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class utilizes FLECO to optimize the cybersecurity status of a specific
@@ -69,6 +71,7 @@ public class SimpleExample {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(Complete.class);
         // *************************
         // Define FLECO's parameters 
         // *************************

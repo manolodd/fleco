@@ -43,6 +43,8 @@ import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class utilizes FLECO to optimize the cybersecurity status of a specific
@@ -62,6 +64,8 @@ public class Complete {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
+        Logger logger = LoggerFactory.getLogger(Complete.class);
+
         // *************************
         // Define FLECO's parameters 
         // *************************
@@ -103,13 +107,13 @@ public class Complete {
                         fleco.evolve();
                         bestChromosome = fleco.getBestChromosome();
                         if (fleco.hasConverged()) {
-                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
+                            logger.info(implementationGroup.name() + "#Constraints:" + constraints + "#Seed:" + seed + "#Execution:" + execution + "#CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
                         } else {
-                            System.out.println(implementationGroup.name() + "#Constraints:"+ constraints + "#Seed:" + seed + "#Execution:" + execution + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
+                            logger.info(implementationGroup.name() + "#Constraints:" + constraints + "#Seed:" + seed + "#Execution:" + execution + "#!CONVERGED#" + fleco.getUsedTime() + "#" + fleco.getUsedGenerations() + "#" + bestChromosome.getFitness() + "#" + bestChromosome.getFitnessConstraintsCoverage());
                         }
                     }
                 }
-                System.out.println();
+                logger.info("");
             }
         }
     }

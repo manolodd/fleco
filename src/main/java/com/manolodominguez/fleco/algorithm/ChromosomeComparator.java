@@ -35,8 +35,11 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
+import com.manolodominguez.experiments.Complete;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import java.util.Comparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a chromosome comparator used to sort chromosomes in
@@ -46,6 +49,7 @@ import java.util.Comparator;
  * @author Manuel Domínguez-Dorado
  */
 public class ChromosomeComparator implements Comparator<Chromosome> {
+    private final Logger logger = LoggerFactory.getLogger(ChromosomeComparator.class);
 
     /**
      * This methods compares two chromosomes in order to establish an order.

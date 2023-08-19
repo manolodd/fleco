@@ -35,6 +35,7 @@
  */
 package com.manolodominguez.fleco.algorithm;
 
+import com.manolodominguez.experiments.Complete;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
 import com.manolodominguez.fleco.genetics.Alleles;
 import com.manolodominguez.fleco.genetics.Chromosome;
@@ -42,6 +43,8 @@ import com.manolodominguez.fleco.genetics.Genes;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a population. A set of chromosomes and the
@@ -60,6 +63,8 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
     private Chromosome initialStatus;
     private StrategicConstraints strategicConstraints;
     private boolean converged;
+
+    private final Logger logger = LoggerFactory.getLogger(Population.class);
 
     /**
      * This is the constructor of the class, which initializes the population
@@ -383,9 +388,9 @@ public class Population extends CopyOnWriteArrayList<Chromosome> {
      */
     public void print() {
         int i = 0;
-        System.out.println("Final population:");
+        logger.info("Final population:");
         for (Chromosome chromosome : toArray(new Chromosome[0])) {
-            System.out.println("\t" + i + "#" + chromosome.getFitness() + "#" + chromosome.getFitnessConstraintsCoverage());
+            logger.info("\t" + i + "#" + chromosome.getFitness() + "#" + chromosome.getFitnessConstraintsCoverage());
             i++;
         }
     }

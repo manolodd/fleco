@@ -35,7 +35,10 @@
  */
 package com.manolodominguez.fleco.uleo;
 
+import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This enum defines all cybersecurity functions and also its weights as defined
@@ -55,6 +58,8 @@ public enum Functions {
     private String acronym = "";
     private String purpose = "";
 
+    private final Logger logger = LoggerFactory.getLogger(Functions.class);
+    
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.

@@ -38,6 +38,8 @@ package com.manolodominguez.fleco.uleo;
 import com.manolodominguez.fleco.genetics.Genes;
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This enum defines all cybersecurity categories and also its weights as
@@ -77,6 +79,8 @@ public enum Categories {
     private String acronym = "";
     private String purpose = "";
 
+    private final Logger logger = LoggerFactory.getLogger(Categories.class);
+    
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.

@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.uleo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This enum defines the functional areas involved on cybersecurity as defined
  * in CyberTOMP proposal. Additional descriptions and auxiliar data is provided
@@ -60,6 +63,8 @@ public enum FunctionalAreas {
     private String mainReponsibilities = "";
     private String areaName = "";
 
+    private final Logger logger = LoggerFactory.getLogger(FunctionalAreas.class);
+    
     /**
      * This is the constructor of the class. it creates the enum and assigns the
      * corresponding values.

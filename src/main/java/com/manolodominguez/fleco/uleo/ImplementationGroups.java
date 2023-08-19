@@ -35,6 +35,10 @@
  */
 package com.manolodominguez.fleco.uleo;
 
+import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This enum defines all implementation groups as defined in CyberTOMP proposal.
  *
@@ -46,6 +50,8 @@ public enum ImplementationGroups {
     IG3(2);
 
     private int implementationGroupIndex;
+
+    private final Logger logger = LoggerFactory.getLogger(ImplementationGroups.class);
 
     /**
      * This is the constructor of the class. it creates the enum and assigns the

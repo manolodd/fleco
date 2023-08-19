@@ -73,6 +73,8 @@ FLECO utilizes several third-party components, each of which is governed by its 
 - miglayout-swing 11.1 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
 - miglayout-core 11.1 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
 - everit-json-schema 1.14.2 - Apache-2.0 - https://github.com/everit-org/json-schema
+- slf4j-api 2.0.0-alpha6 - MIT - https://www.slf4j.org
+- slf4j-simple 2.0.0-alpha6 - MIT - https://www.slf4j.org
 - TableColumnAdjuster - Public-Domain - https://tips4java.wordpress.com/2008/11/10/table-column-adjuster/
 
 Thanks folks!

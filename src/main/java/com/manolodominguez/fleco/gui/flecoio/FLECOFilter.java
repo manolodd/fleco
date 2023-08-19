@@ -35,8 +35,11 @@
  */
 package com.manolodominguez.fleco.gui.flecoio;
 
+import com.manolodominguez.fleco.uleo.Categories;
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a filter that is used in load/save dialogs to only
@@ -46,6 +49,8 @@ import javax.swing.filechooser.FileFilter;
  */
 public class FLECOFilter extends FileFilter {
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOFilter.class);
+    
     /**
      * This is the constructor of the class. It creates a new file filter and
      * sets its initial values.

@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements FLECO file saver that can store a case from memory to a
@@ -56,6 +58,8 @@ public class FLECOSaver {
     private FileOutputStream outputStream;
     private PrintStream output;
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOSaver.class);
+
     /**
      * This is the constructor of the class.It creates a new FLECO loader and
      * sets its initial values.
@@ -68,6 +72,7 @@ public class FLECOSaver {
      */
     public FLECOSaver(Chromosome initialStatus, StrategicConstraints strategicConstraints, Chromosome targetStatus) {
         if (initialStatus == null) {
+            logger.error("initialStatus is null");
             throw new IllegalArgumentException("initialStatus is null");
         }
         this.initialStatus = initialStatus;
@@ -87,6 +92,7 @@ public class FLECOSaver {
      */
     public boolean save(File outputFile) {
         if (outputFile == null) {
+            logger.error("outputFile is null");
             throw new IllegalArgumentException("outputFile is null");
         }
         try {
@@ -118,7 +124,7 @@ public class FLECOSaver {
             output.close();
         }
         catch (IOException e) {
-            System.out.println("Error saving FLECO case to disk");
+            logger.error("Error saving FLECO case to disk");
             return false;
         }
         return true;

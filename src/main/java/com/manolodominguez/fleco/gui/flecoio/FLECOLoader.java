@@ -57,6 +57,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements FLECO file loader that can restore a case saved on disk
@@ -73,6 +75,8 @@ public class FLECOLoader {
     private BufferedReader input;
     private ImplementationGroups implementationGroup;
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOLoader.class);
+    
     /**
      * This is the constructor of the class. It creates a new FLECO loader and
      * sets its initial values.
@@ -101,6 +105,7 @@ public class FLECOLoader {
     public boolean load(File inputFile) {
         boolean loaded = false;
         if (inputFile == null) {
+            logger.error("inputFile is null");
             throw new IllegalArgumentException("inputFile is null");
         }
         JSONObject jsonFLECOCase;
@@ -137,6 +142,7 @@ public class FLECOLoader {
     private boolean initializeFromJSON(JSONObject validatedJSONFLECOCase) {
         boolean hasTargetStatus = false;
         if (validatedJSONFLECOCase == null) {
+            logger.error("validatedJSONFLECOCase cannot be null");
             throw new IllegalArgumentException("validatedJSONFLECOCase cannot be null");
         }
         try {
@@ -212,6 +218,7 @@ public class FLECOLoader {
      */
     private boolean isValidJSONFLECOCase(JSONObject jsonFLECOCase) {
         if (jsonFLECOCase == null) {
+            logger.error("Case cannot be null");
             throw new IllegalArgumentException("Case cannot be null");
         }
         try {

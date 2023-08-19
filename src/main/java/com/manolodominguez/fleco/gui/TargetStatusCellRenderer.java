@@ -40,6 +40,8 @@ import java.awt.Component;
 import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a specific trable cell renderer used for those cells
@@ -50,6 +52,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class TargetStatusCellRenderer extends DefaultTableCellRenderer {
 
     private static final long serialVersionUID = 1L;
+
+    private final Logger logger = LoggerFactory.getLogger(TargetStatusCellRenderer.class);
 
     /**
      * This is the constructor of the class. It sets the initial values of all

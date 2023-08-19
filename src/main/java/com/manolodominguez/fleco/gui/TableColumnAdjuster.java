@@ -60,6 +60,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a way to manage the widths of colunmns in a JTable.
@@ -93,6 +95,8 @@ public class TableColumnAdjuster implements PropertyChangeListener, TableModelLi
     private boolean isDynamicAdjustment;
     private Map<TableColumn, Integer> columnSizes = new HashMap<>();
 
+    private final Logger logger = LoggerFactory.getLogger(TableColumnAdjuster.class);
+    
     /**
      * This is the constructor of the class. It creates a new instance and
      * initialize its attributes with their default values.

@@ -38,6 +38,8 @@ package com.manolodominguez.fleco.gui;
 import java.awt.Image;
 import java.util.EnumMap;
 import javax.swing.ImageIcon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a image broker that preloads all images needed by FLECO
@@ -51,6 +53,8 @@ public class ImageBroker {
     private final EnumMap<AvailableImages, ImageIcon> imageIcons16x16;
     private final EnumMap<AvailableImages, ImageIcon> imageIcons32x32;
 
+    private final Logger logger = LoggerFactory.getLogger(ImageBroker.class);
+    
     /**
      * This method is the constructor of the class. It is create a new instance
      * of ImageBroker.
@@ -67,7 +71,7 @@ public class ImageBroker {
             }
         }
         catch (Exception e) {
-            System.out.println("Error loading icons");
+            logger.error("Error loading icons");
         }
     }
 

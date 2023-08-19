@@ -38,6 +38,8 @@ package com.manolodominguez.fleco.events;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import com.manolodominguez.fleco.genetics.Chromosome;
 import java.time.Instant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements a progress event that will allow knowing the state of
@@ -53,6 +55,8 @@ public class ProgressEvent extends FLECOEvent {
     private final long currentGeneration;
     private Chromosome currentBestChromosome;
     private boolean converged;
+
+    private final Logger logger = LoggerFactory.getLogger(ProgressEvent.class);
 
     private static final int ZERO = 0;
 
@@ -81,6 +85,7 @@ public class ProgressEvent extends FLECOEvent {
         this.currentBestChromosome = currentBestChromosome;
         this.converged = converged;
         if (currentBestChromosome == null) {
+            logger.error("currentBestChromosome cannot be null");
             throw new IllegalArgumentException("currentBestChromosome cannot be null");
         }
     }
@@ -138,7 +143,7 @@ public class ProgressEvent extends FLECOEvent {
      */
     public void print() {
         if ((currentGeneration % 100) == ZERO) {
-            System.out.println("Time: " + currentTime + "/" + totalTime + "(" + (float) currentTime / totalTime + "%) Generation: " + currentGeneration + " Current best solution: " + currentBestChromosome.getFitness());
+            logger.info("Time: " + currentTime + "/" + totalTime + "(" + (float) currentTime / totalTime + "%) Generation: " + currentGeneration + " Current best solution: " + currentBestChromosome.getFitness());
         }
     }
 

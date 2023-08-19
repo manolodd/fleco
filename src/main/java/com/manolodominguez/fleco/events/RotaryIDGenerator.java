@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class implements a ID generator that generates consecutive numeric IDs,
  * in a cycle that never ends.
@@ -48,6 +51,8 @@ public class RotaryIDGenerator {
 
     private int identifier;
 
+    private final Logger logger = LoggerFactory.getLogger(RotaryIDGenerator.class);
+    
     /**
      * This method is the constructor of the class. It is create a new instance.
      *

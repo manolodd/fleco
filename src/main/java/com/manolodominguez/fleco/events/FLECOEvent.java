@@ -38,6 +38,8 @@ package com.manolodominguez.fleco.events;
 import com.manolodominguez.fleco.algorithm.FLECO;
 import java.time.Instant;
 import java.util.EventObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is the superclass of all events generated in FLECO. It is an
@@ -51,6 +53,8 @@ public abstract class FLECOEvent extends EventObject implements Comparable<FLECO
     private long eventID;
     private Instant instant;
 
+    private final Logger logger = LoggerFactory.getLogger(FLECOEvent.class);
+    
     /**
      * This is the constructor of the class that will be called by all
      * subclasses to create a new event in FLECO.

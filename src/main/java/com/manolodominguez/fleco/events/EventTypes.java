@@ -35,6 +35,9 @@
  */
 package com.manolodominguez.fleco.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This enum define the different events that FLECO can generate.
  *
@@ -42,4 +45,7 @@ package com.manolodominguez.fleco.events;
  */
 public enum EventTypes {
     PROGRESS;
+    
+    private final Logger logger = LoggerFactory.getLogger(EventTypes.class);
+    
 }

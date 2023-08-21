@@ -95,6 +95,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
 
     private JMenuBar menuBar;
     private JMenu menuCase;
+    private JMenuItem menuCaseItemNewRandom;
     private JMenuItem menuCaseItemNew;
     private JMenuItem menuCaseItemLoad;
     private JMenuItem menuCaseItemSave;
@@ -165,6 +166,17 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 onNew();
             }
         });
+        menuCaseItemNewRandom = new JMenuItem("New random");
+        menuCaseItemNewRandom.setMnemonic('r');
+        KeyStroke ctrlNR = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK);
+        menuCaseItemNewRandom.setAccelerator(ctrlNR);
+        menuCaseItemNewRandom.setIcon(imageBroker.getImageIcon16x16(AvailableImages.RANDOM));
+        menuCaseItemNewRandom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onRandom();
+            }
+        });
         menuCaseItemLoad = new JMenuItem("Load");
         KeyStroke ctrlL = KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_DOWN_MASK);
         menuCaseItemLoad.setAccelerator(ctrlL);
@@ -223,6 +235,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
                 onExit();
             }
         });
+        menuCase.add(menuCaseItemNewRandom);
         menuCase.add(menuCaseItemNew);
         menuCase.add(menuCaseItemLoad);
         menuCase.add(menuCaseItemSave);

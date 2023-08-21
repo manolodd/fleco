@@ -85,8 +85,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is the constructor of the class, it creates a new instance and assigns
- * the corresponding default values to its attributes.
+ * This class implements a graphic user interface (GUI) to interact to FLECO
+ * algorithm. This GUI is called FLECO Studio and allow configuring, exploring,
+ * learning, testing... with different cybersecurity actions in order to reach
+ * an agreement between all functional areas involved in cybersecurity within
+ * the organization.
  *
  * @author Manuel Domínguez-Dorado
  */
@@ -130,7 +133,15 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     private CaseConfig caseConfig;
     private final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 
-    
+    /**
+     * This is the constructor of the class, it creates a new instance of
+     * MainWindow and sets the initial values for all its attributes.
+     *
+     * @author Manuel Domínguez-Dorado
+     *
+     * @throws HeadlessException when executed in a context without graphic
+     * environment.
+     */
     public MainWindow() throws HeadlessException {
         super();
 
@@ -334,7 +345,7 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
             @Override
             public void mousePressed(MouseEvent mouseEvent) {
                 JTable table = (JTable) mouseEvent.getSource();
-                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && (table.getSelectedColumn() == 0 || table.getSelectedColumn() == 1 || table.getSelectedColumn() == 2) ) {
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1 && (table.getSelectedColumn() == 0 || table.getSelectedColumn() == 1 || table.getSelectedColumn() == 2)) {
                     onDoubleClicOnTable(table);
                 }
             }
@@ -403,10 +414,25 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
         });
     }
 
+    /**
+     * This method is called when a double clic on a cybersecurity action within
+     * the main table of FLECO Studio is done. It opens a pop up window
+     * containing additional information regarding the cybersecurity action that
+     * was clicked on.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     private void onDoubleClicOnTable(JTable table) {
         logger.info("Doble clic en la fila: " + table.getSelectedRow() + " (" + tableModel.getValueAt(table.getSelectedRow(), 0) + ")");
     }
 
+    /**
+     * This method is called when a clic on "Load" menu item or "Load" icon is
+     * done. It allow loadin ga previously saved FLECO case from disk to
+     * continue working on it.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     private void onLoad() {
         boolean load = false;
         if (caseConfig.isInitialized()) {
@@ -802,9 +828,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     }
 
     /**
-     * This method is called when a clic on Random icon is done in the toolbar.
-     * It creates automatically an initial status with dummy values just to
-     * start plaing with FLECO Studio.
+     * This method is called when a clic on Random icon is done in the toolbar
+     * or in the corresponding menu item. It creates automatically an initial
+     * status with dummy values just to start plaing with FLECO Studio or learn.
      *
      * @author Manuel Domínguez-Dorado
      */

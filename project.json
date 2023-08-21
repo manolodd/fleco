@@ -1,6 +1,6 @@
 {
     "projectinfo": {
-        "name": "FLECO",
+        "name": "fleco",
         "version": "1.4-SNAPSHOT",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
@@ -14,15 +14,22 @@
             "link": "DYNAMIC"
         },
         {
+            "component": "TableColumnAdjuster",
+            "version": "unknown",
+            "license": "PUBLIC_DOMAIN",
+            "weight": "LOW",
+            "link": "STATIC"
+        },
+        {
             "component": "slf4j-api",
-            "version": "2.0.0-alpha6",
+            "version": "2.0.7",
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"
         },
         {
             "component": "slf4j-simple",
-            "version": "2.0.0-alpha6",
+            "version": "2.0.7",
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"

@@ -5,8 +5,8 @@
         <treetable.version>0.0.2</treetable.version>
         <miglayout-swing.version>11.1</miglayout-swing.version>
         <everit-json-schema.version>1.14.2</everit-json-schema.version>
-        <lsf4j-api.version>2.0.3</lsf4j-api.version>
-        <lsf4j-simple.version>2.0.3</lsf4j-simple.version>
+        <lsf4j-api.version>2.0.7</lsf4j-api.version>
+        <lsf4j-simple.version>2.0.7</lsf4j-simple.version>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>

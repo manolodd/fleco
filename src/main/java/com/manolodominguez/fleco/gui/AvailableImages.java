@@ -58,7 +58,8 @@ public enum AvailableImages {
     RUN("run.png"),
     SAVE("save.png"),
     QUESTION("question.png"),
-    SAVE_AS("saveas.png");
+    SAVE_AS("saveas.png"),
+    CLOSE("close.png");
 
     private final String imageFileName;
 

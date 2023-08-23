@@ -51,8 +51,12 @@ import javax.swing.JTextArea;
 import net.miginfocom.swing.MigLayout;
 
 /**
+ * This class implements a graphic window to show additional information
+ * regarding a given CyberTOMP metric. This is useful not only to design good
+ * cybersecurity actions but also to make the cyebrsecurity workforce learn and
+ * improve.
  *
- * @author manolodd
+ * @author Manuel Domínguez-Dorado
  */
 @SuppressWarnings("serial")
 public class MetricDetailsWindow extends JFrame {
@@ -83,6 +87,17 @@ public class MetricDetailsWindow extends JFrame {
     private JTextArea textArealabelAdditionalTip;
     private JButton closeButton;
 
+    /**
+     * This is the constructor of the class.It creates a new instance and fills
+     * it with information related to the gene (expected aoutcome) specified as
+     * an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param parent The windows this class is instantiated from. Used to
+     * compute the screen position of this window.
+     * @param gene The gene (expected outcome) whose information is being
+     * presented in this window.
+     */
     public MetricDetailsWindow(Frame parent, Genes gene) {
         super();
         this.parent = parent;
@@ -96,6 +111,16 @@ public class MetricDetailsWindow extends JFrame {
         initCommonComponents();
     }
 
+    /**
+     * This is the constructor of the class.It creates a new instance and fills
+     * it with information related to the category specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param parent The windows this class is instantiated from. Used to
+     * compute the screen position of this window.
+     * @param category The category whose information is being presented in this
+     * window.
+     */
     public MetricDetailsWindow(Frame parent, Categories category) {
         super();
         this.parent = parent;
@@ -109,6 +134,16 @@ public class MetricDetailsWindow extends JFrame {
         initCommonComponents();
     }
 
+    /**
+     * This is the constructor of the class.It creates a new instance and fills
+     * it with information related to the function specified as an argument.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param parent The windows this class is instantiated from. Used to
+     * compute the screen position of this window.
+     * @param function The function whose information is being presented in this
+     * window.
+     */
     public MetricDetailsWindow(Frame parent, Functions function) {
         super();
         this.parent = parent;
@@ -122,6 +157,14 @@ public class MetricDetailsWindow extends JFrame {
         initCommonComponents();
     }
 
+    /**
+     * This is the constructor of the class.It creates a new instance and fills
+     * it with information related to the business asset.
+     *
+     * @author Manuel Domínguez-Dorado
+     * @param parent The windows this class is instantiated from. Used to
+     * compute the screen position of this window.
+     */
     public MetricDetailsWindow(Frame parent) {
         super();
         this.parent = parent;
@@ -135,6 +178,11 @@ public class MetricDetailsWindow extends JFrame {
         initCommonComponents();
     }
 
+    /**
+     * This method creates all common graphical components of the window.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
     private void initCommonComponents() {
         imageBroker = new ImageBroker();
         addWindowStateListener((WindowEvent arg0) -> {
@@ -215,7 +263,12 @@ public class MetricDetailsWindow extends JFrame {
         buttonsPanel.add(closeButton, "align right");
     }
 
-    public void keep() {
+    /**
+     * This method prevent the window from being iconified or maximized.
+     *
+     * @author Manuel Domínguez-Dorado
+     */
+    private void keep() {
         this.setExtendedState(Frame.NORMAL);
     }
 }

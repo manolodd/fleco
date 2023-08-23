@@ -181,7 +181,7 @@ Following the selection of the desired implementation group, a comprehensive tab
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/complete.png)
 
-Modifiable data can be directly edited within the table by clicking on the corresponding cell. For instance, the initial status, referred to as the current status, should be adjusted to accurately reflect the actual cybersecurity status of each defined cybersecurity action in CyberTOMP, thereby representing the real status of the assets. Additionally, strategic constraints and goals can be defined using the "Constraint operator" and "Constraint value" columns. For example, consider the CyberTOMP metric "IDENTIFY" with a current status of "0.4." By selecting a constraint operator of "GREATER" and a constraint value of "0.8," FLECO is directed to seek a set of cybersecurity actions that collectively ensure the CyberTOMP metric "IDENTIFY" exceeds (strictly) 0.8.
+Modifiable data can be directly edited within the table by clicking on the corresponding cell. For instance, the initial status, referred to as the current status, should be adjusted to accurately reflect the actual cybersecurity status of each defined cybersecurity action in CyberTOMP, thereby representing the real status of the assets. Additionally, strategic constraints and goals can be defined using the "Constraint operator" and "Constraint value" columns. For example, consider the CyberTOMP metric "ID" with a current status of "0.37425002". By selecting a constraint operator of "GREATER" and a constraint value of "0.8", FLECO is directed to seek a set of cybersecurity actions that collectively ensure the CyberTOMP metric "ID" exceeds (strictly) 0.8.
 
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/constraint.png)
 
@@ -196,5 +196,9 @@ Each value in a cell within the "Target status" column signifies a specific cybe
 ![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/solution.png)
 
 If alternative solutions exist, they can be obtained by re-running FLECO.
+
+FLECo Studio offers online assistance for any of the existing metrics. This enables the cybersecurity team to engage in continuous learning and effectively involves all the required areas. To access this help, you just need to double-click on the row of the metric you wish to inquire about, in any of the first three columns (CyberTOMP metric, Purpose, Leading functional area), as shown in the following image.
+
+![](src/main/resources/com/manolodominguez/fleco/gui/screenshots/metric_detail.png)
 
 Furthermore, FLECO Studio provides additional features. For instance, it allows the ability to save the case as a JSON file and load it from disk. This functionality facilitates the seamless collaboration of the cross-functional cybersecurity workforce, enabling them to effectively work on the cybersecurity aspects of the corresponding asset continuously.

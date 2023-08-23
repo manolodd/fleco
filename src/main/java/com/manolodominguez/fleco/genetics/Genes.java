@@ -35,7 +35,6 @@
  */
 package com.manolodominguez.fleco.genetics;
 
-import com.manolodominguez.fleco.events.RotaryIDGenerator;
 import com.manolodominguez.fleco.uleo.Categories;
 import com.manolodominguez.fleco.uleo.FunctionalAreas;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;

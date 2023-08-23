@@ -23,11 +23,12 @@ It serves as a library that can be seamlessly incorporated into larger solutions
 
 ## Latest snapshot version being developed:
 
-- <b>FLECO 1.4-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.5-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
 
 ## Binary releases:
  
-- <b>FLECO 1.3</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.4</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.3</b> LGPL-3.0-or-later.
 - <b>FLECO 1.2</b> LGPL-3.0-or-later.
 - <b>FLECO 1.1</b> LGPL-3.0-or-later.
 - <b>FLECO 1.0</b> LGPL-3.0-or-later.

@@ -44,6 +44,8 @@ import com.manolodominguez.fleco.gui.flecoio.FLECOSaver;
 import com.manolodominguez.fleco.strategicconstraints.ComparisonOperators;
 import com.manolodominguez.fleco.strategicconstraints.Constraint;
 import com.manolodominguez.fleco.strategicconstraints.StrategicConstraints;
+import com.manolodominguez.fleco.uleo.Categories;
+import com.manolodominguez.fleco.uleo.Functions;
 import com.manolodominguez.fleco.uleo.ImplementationGroups;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -127,6 +129,8 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
     private JButton saveAsButton;
     private JButton generateConstraintsButton;
 
+    private MetricDetailsWindow popUp;
+
     private Object[] igOptions = {ImplementationGroups.IG1, ImplementationGroups.IG2, ImplementationGroups.IG3};
     private ImageBroker imageBroker = new ImageBroker();
 
@@ -144,10 +148,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      */
     public MainWindow() throws HeadlessException {
         super();
-
         caseConfig = new CaseConfig();
-
         gui = this;
+        popUp = null;
 
         getContentPane().setLayout(new MigLayout("fillx, filly"));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -423,7 +426,45 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * @author Manuel Domínguez-Dorado
      */
     private void onDoubleClicOnTable(JTable table) {
-        logger.info("Doble clic en la fila: " + table.getSelectedRow() + " (" + tableModel.getValueAt(table.getSelectedRow(), 0) + ")");
+        try {
+            Genes gene = Genes.valueOf((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+            if (popUp != null) {
+                popUp.dispose();
+                popUp = null;
+            }
+            popUp = new MetricDetailsWindow(this, gene);
+            popUp.setVisible(true);
+        }
+        catch (IllegalArgumentException e) {
+            try {
+                Categories category = Categories.valueOf((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+                if (popUp != null) {
+                    popUp.dispose();
+                    popUp = null;
+                }
+                popUp = new MetricDetailsWindow(this, category);
+                popUp.setVisible(true);
+            }
+            catch (IllegalArgumentException e2) {
+                try {
+                    Functions function = Functions.valueOf((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+                    if (popUp != null) {
+                        popUp.dispose();
+                        popUp = null;
+                    }
+                    popUp = new MetricDetailsWindow(this, function);
+                    popUp.setVisible(true);
+                }
+                catch (IllegalArgumentException e3) {
+                    if (popUp != null) {
+                        popUp.dispose();
+                        popUp = null;
+                    }
+                    popUp = new MetricDetailsWindow(this);
+                    popUp.setVisible(true);
+                }
+            }
+        }
     }
 
     /**
@@ -708,6 +749,9 @@ public class MainWindow extends JFrame implements IFLECOGUI, IFLECOTableModelCha
      * @author Manuel Domínguez-Dorado
      */
     private void onExit() {
+        if (popUp != null) {
+            popUp.dispose();
+        }
         if (caseConfig.isInitialized()) {
             if (caseConfig.isAlreadySaved()) {
                 if (caseConfig.isModified()) {

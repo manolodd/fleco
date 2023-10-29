@@ -33,7 +33,7 @@ It serves as a library that can be seamlessly incorporated into larger solutions
 - <b>FLECO 1.1</b> LGPL-3.0-or-later.
 - <b>FLECO 1.0</b> LGPL-3.0-or-later.
 
-# PEOPLE BEHIND OPENSIMMPLS
+# PEOPLE BEHIND FLECO
 
 ## Author:
     

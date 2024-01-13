@@ -1,14 +1,14 @@
 {
     "projectinfo": {
         "name": "fleco",
-        "version": "1.5-SNAPSHOT",
+        "version": "2.0",
         "redistribution": "SOFTWARE_PACKAGE_OR_SAAS",
         "licenses": ["LGPL_3_0_OR_LATER"]
     },
     "componentbindings": [
         {
             "component": "miglayout",
-            "version": "11.1",
+            "version": "11.3",
             "license": "BSD_3_CLAUSE",
             "weight": "HIGH",
             "link": "DYNAMIC"
@@ -22,21 +22,21 @@
         },
         {
             "component": "slf4j-api",
-            "version": "2.0.7",
+            "version": "2.1.0-alpha1",
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"
         },
         {
             "component": "slf4j-simple",
-            "version": "2.0.7",
+            "version": "2.1.0-alpha1",
             "license": "MIT",
             "weight": "NEAR_LOW",
             "link": "DYNAMIC"
         },
         {
             "component": "everit-json-schema",
-            "version": "1.14.2",
+            "version": "1.14.4",
             "license": "APACHE_2_0",
             "weight": "NEAR_HIGH",
             "link": "DYNAMIC"

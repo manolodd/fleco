@@ -23,11 +23,12 @@ It serves as a library that can be seamlessly incorporated into larger solutions
 
 ## Latest snapshot version being developed:
 
-- <b>FLECO 1.5-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
+- <b>FLECO 2.1-SNAPSHOT</b> (develop branch) - LGPL-3.0-or-later.
 
 ## Binary releases:
  
-- <b>FLECO 1.4</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 2.0</b> (current, master branch) - LGPL-3.0-or-later.
+- <b>FLECO 1.4</b> LGPL-3.0-or-later.
 - <b>FLECO 1.3</b> LGPL-3.0-or-later.
 - <b>FLECO 1.2</b> LGPL-3.0-or-later.
 - <b>FLECO 1.1</b> LGPL-3.0-or-later.
@@ -71,11 +72,11 @@ java -jar fleco-{YourVersion}-with-dependencies.jar
 
 FLECO utilizes several third-party components, each of which is governed by its own open-source software (OSS) license. In order to ensure compliance with these licenses, thorough consideration has been given to enable the release of FLECO under its existing OSS license. The components integrated within FLECO encompass the following:
 
-- miglayout-swing 11.1 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
-- miglayout-core 11.1 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
-- everit-json-schema 1.14.2 - Apache-2.0 - https://github.com/everit-org/json-schema
-- slf4j-api 2.0.7 - MIT - https://www.slf4j.org
-- slf4j-simple 2.0.7 - MIT - https://www.slf4j.org
+- miglayout-swing 11.3 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
+- miglayout-core 11.3 - BSD-3-clause - https://github.com/mikaelgrev/miglayout
+- everit-json-schema 1.14.4 - Apache-2.0 - https://github.com/everit-org/json-schema
+- slf4j-api 2.1.0-alpha1 - MIT - https://www.slf4j.org
+- slf4j-simple 2.1.0-alpha1 - MIT - https://www.slf4j.org
 - TableColumnAdjuster - Public-Domain - https://tips4java.wordpress.com/2008/11/10/table-column-adjuster/
 
 Thanks folks!

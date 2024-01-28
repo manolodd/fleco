@@ -19,7 +19,7 @@ It serves as a library that can be seamlessly incorporated into larger solutions
 1. Domínguez-Dorado, M.; Cortés-Polo, D.; Carmona-Murillo, J.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J. Fast, Lightweight, and Efficient Cybersecurity Optimization for Tactical–Operational Management. Appl. Sci. 2023, 13, 6327. https://doi.org/10.3390/app13106327
 2. Dominguez-Dorado, M., Carmona-Murillo, J., Cortés-Polo, D., and Rodríguez-Pérez, F. J. (2022). CyberTOMP: A novel systematic framework to manage asset-focused cybersecurity from tactical and operational levels. IEEE Access, 10, 122454-122485. https://doi.org/10.1109/ACCESS.2022.3223440
 3. Domínguez-Dorado, M.; Rodríguez-Pérez, F.J.; Carmona-Murillo, J.; Cortés-Polo, D.; Calle-Cancho, J. Boosting Holistic Cybersecurity Awareness with Outsourced Wide-Scope CyberSOC: A Generalization from a Spanish Public Organization Study. Information 2023, 14, 586. https://doi.org/10.3390/info14110586
-4. Domínguez-Dorado ,M.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J.; Calle-Cancho, J.; Cortés-Polo, D. FLECO: A tool to boost the adoption of holistic cybersecurity management. Softwsare Impacts 19 (2024) 100614. DOI:https://doi.org/10.1016/j.simpa.2024.100614
+4. Domínguez-Dorado ,M.; Rodríguez-Pérez, F.J.; Galeano-Brajones, J.; Calle-Cancho, J.; Cortés-Polo, D. FLECO: A tool to boost the adoption of holistic cybersecurity management. Softwsare Impacts 19 (2024) 100614. https://doi.org/10.1016/j.simpa.2024.100614
 
 # LICENSE
 

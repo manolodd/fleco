@@ -7,6 +7,7 @@
         <everit-json-schema.version>1.14.4</everit-json-schema.version>
         <lsf4j-api.version>2.1.0-alpha1</lsf4j-api.version>
         <lsf4j-simple.version>2.1.0-alpha1</lsf4j-simple.version>
+        <unirest-java-core.version>4.2.7</unirest-java-core.version>
         <!--- Dependency for testing -->
         <!-- Maven plugins versions -->
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -25,14 +26,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>9</maven.compiler.release> 
         <!-- About this version of FLECO (used for properties filtering) -->
-        <fleco.version>2.1</fleco.version>
+        <fleco.version>2.1-SNAPSHOT</fleco.version>
         <fleco.license>Apache-2.0</fleco.license>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.manolodominguez</groupId>
     <artifactId>fleco</artifactId>
-    <version>2.1</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Fast, Lightweigh and Efficient Cybersecurity Optimization (FLECO) adaptive and constrained genetic algorithm</name>
     <description>FLECO is a powerful genetic algorithm tailored for cybersecurity optimization. Its advanced algorithm allows for rapid identification of high-quality solutions to achieve the defined strategic cybersecurity goals. With FLECO, organizations can easily identify the specific set of cybersecurity measures required to meet their strategic cybersecurity goals and effectively protect their digital assets.</description>
@@ -217,6 +218,11 @@
  
     </build>
     <dependencies>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java-core</artifactId>
+            <version>${unirest-java-core.version}</version>
+        </dependency>        
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>

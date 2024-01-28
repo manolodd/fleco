@@ -27,7 +27,7 @@
         <maven.compiler.release>9</maven.compiler.release> 
         <!-- About this version of FLECO (used for properties filtering) -->
         <fleco.version>2.1-SNAPSHOT</fleco.version>
-        <fleco.license>Apache-2.0</fleco.license>
+        <fleco.license>LGPL-3.0-or-later</fleco.license>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
@@ -41,7 +41,7 @@
     <licenses>
         <license>
             <name>${fleco.license}</name>
-            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
         </license>
     </licenses>    
     <developers>

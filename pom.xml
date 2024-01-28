@@ -41,7 +41,7 @@
     <licenses>
         <license>
             <name>${fleco.license}</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
         </license>
     </licenses>    
     <developers>

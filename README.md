@@ -13,7 +13,9 @@
 # THE PROJECT
 
 <p align="center">
+
 ![](src/main/resources/com/manolodominguez/fleco/logo/FlecoStudioLogo.png#center)
+
 </p>
 
 <b>FLECO</b> (Fast, Lightweight, and Efficient Cybersecurity Optimization) (1) Adaptive, and Constrained Genetic Algorithm is a genetic algorithm designed to assist the Asset's Cybersecurity Committee (ACC) in making decisions during the application of CyberTOMP (2), aimed at managing comprehensive cybersecurity at both tactical and operational levels. It also provides a seamless integration to outsourced Cybersecurity Operation Centers that could be cooperating with tyhe main organizations (3) to enhance the holistic cybersecurity management skills of the cross functional cybersecurity workforce.

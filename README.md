@@ -12,9 +12,9 @@
 
 # THE PROJECT
 
-<p align="center">
+<center><img src="src/main/resources/com/manolodominguez/fleco/logo/FlecoStudioLogo.png"></center>
 
-![](src/main/resources/com/manolodominguez/fleco/logo/FlecoStudioLogo.png#center)
+![](src/main/resources/com/manolodominguez/fleco/logo/FlecoStudioLogo.png)
 
 </p>
 
